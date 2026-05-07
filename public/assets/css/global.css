@@ -1,0 +1,23 @@
+:root {
+  --primary-900: #3f2d52;
+  --primary-800: #59416f;
+  --primary-700: #72558e;
+  --primary-600: #886ca8;
+  --primary-500: #9f84c0;
+  --primary-400: #bba3d6;
+  --primary-300: #d6c4e9;
+  --primary-100: #f3edfa;
+  --primary-50: #fbf8ff;
+
+  --pink-500: #c78ab8;
+  --pink-100: #f7edf5;
+
+  --neutro-900: #111827;
+  --neutro-700: #374151;
+  --neutro-500: #6b7280;
+  --neutro-300: #d1d5db;
+  --neutro-100: #f3f4f6;
+  --neutro-50: #f9fafb;
+
+  --white: #ffffff;
+}
