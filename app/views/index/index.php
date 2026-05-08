@@ -48,10 +48,8 @@
                 <div class="row g-4 linha-servicos">
                     <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
                         <div class="card-servico-famoso">
-                            <i class="ph-fill ph-star"></i>
-                             <span class="badge-famoso">
-                             MAIS PEDIDO
-                            </span>
+                           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color: var(--pink-500); color: var(--white);">
+                         <i class="ph ph-star"></i> </span>
                             <i class="ph ph-scissors icone-servico-famoso"></i>
                             <h3 class="nome-servico-famoso">
                                 Corte de Cabelo
