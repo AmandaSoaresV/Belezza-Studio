@@ -1,0 +1,222 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.banner-principal {
+  height: 100vh;
+  background-image: url("https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1974&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.filtro-banner {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-700);
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.conteudo-banner {
+  position: relative;
+  color: var(--white);
+  max-width: 700px;
+  padding: 24px;
+  z-index: 1;
+}
+
+.subtitulo {
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.conteudo-banner h1 {
+  font-size: 64px;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.descricao {
+  font-size: 24px;
+  margin-bottom: 32px;
+}
+
+.botao-agendar-agora {
+  background-color: var(--white);
+  color: var(--primary-600);
+  text-decoration: none;
+  padding: 16px 32px;
+  border-radius: 40px;
+  font-weight: 600;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.botao-agendar-agora:hover {
+  background-color: var(--primary-600);
+  color: var(--white);
+  transform: scale(1.03);
+}
+
+.servicos-destaque {
+  padding: 24px;
+  text-align: center;
+}
+
+.cabecalho-servicos {
+  margin-bottom: 32px;
+}
+
+.titulo-servicos {
+  font-size: 32px;
+  color: var(--neutro-900);
+  margin-bottom: 8px;
+}
+
+.descricao-servicos {
+  font-size: 16px;
+  color: var(--neutro-500);
+}
+
+.coluna-card-servico {
+  display: flex;
+}
+
+.card-servico,
+.card-servico-famoso {
+  width: 100%;
+  padding: 32px 24px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.3s;
+}
+
+.card-servico {
+  background-color: var(--white);
+  border: 2px solid var(--primary-700);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-servico:hover {
+  transform: translateY(-5px);
+}
+
+.card-servico-famoso {
+  position: relative;
+  background-color: var(--primary-700);
+  border: 2px solid var(--pink-500);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-servico-famoso:hover {
+  transform: translateY(-5px);
+}
+
+.icone-servico-famoso {
+  font-size: 40px;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.icone-servico {
+  font-size: 32px;
+  color: var(--primary-700);
+  margin-bottom: 24px;
+}
+
+.nome-servico-famoso {
+  font-size: 24px;
+  color: var(--white);
+}
+
+.nome-servico {
+  font-size: 24px;
+  color: var(--neutro-900);
+}
+
+.descricao-servico-famoso {
+  font-size: 16px;
+  color: var(--pink-100);
+  margin: 16px 0;
+}
+
+.descricao-servico {
+  font-size: 16px;
+  color: var(--neutro-700);
+  margin: 16px 0;
+}
+
+.preco-servico-famoso {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.preco-servico {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-700);
+  margin-bottom: 16px;
+}
+
+.botao-agendar-servico-famoso {
+  background-color: var(--white);
+  color: var(--primary-700);
+  border: 2px solid var(--white);
+  text-decoration: none;
+  padding: 16px 24px;
+  border-radius: 40px;
+  font-weight: 600;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.botao-agendar-servico-famoso:hover {
+  background-color: var(--primary-400);
+  color: var(--white);
+  border-color: var(--primary-400);
+  transform: scale(1.05);
+}
+
+.botao-agendar-servico {
+  background-color: var(--white);
+  color: var(--primary-700);
+  border: 2px solid var(--primary-700);
+  text-decoration: none;
+  padding: 16px 24px;
+  border-radius: 40px;
+  font-weight: 600;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.botao-agendar-servico:hover {
+  background-color: var(--primary-700);
+  color: var(--white);
+  transform: scale(1.05);
+}
+
+.container-cuidados {
+  background-color: rgba(168, 85, 247, 0.09);
+  color: var(--neutro-900);
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.paragrafo-cuidados {
+  font-size: 16px;
+  color:var(--neutro-700);
+}

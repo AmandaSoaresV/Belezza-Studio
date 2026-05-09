@@ -11,12 +11,13 @@
 </head>
 
 <body>
-
+    <?php include '../componentes/header.php'; ?>
+    
     <section class="banner-principal">
         <div class="filtro-banner"></div>
         <div class="conteudo-banner">
             <p class="subtitulo">
-                ✦ BEM-VINDO AO BELLEZZA STUDIO ✦
+                ✦ BEM-VINDO AO BELEZZA STUDIO ✦
             </p>
 
             <h1>
