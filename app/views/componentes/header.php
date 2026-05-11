@@ -22,7 +22,7 @@
          class="nav col-12 col-lg-auto ms-auto mb-2 justify-content-center mb-md-0"
       >
         <li><a href="#" class="nav-link px-3 " style="color: var(--pink-500, #c78ab8); ">Home</a></li>
-        <li><a href="#" class="nav-link px-3 text-white">Serviços</a></li>
+        <li><a href="#servicos" class="nav-link px-3 text-white">Serviços</a></li>
         <li><a href="#" class="nav-link px-3 text-white">Meus Horários</a></li>
         <li><a href="#" class="nav-link btn-agendar text-white px-4" style="border-bottom: 2px solid #c78ab8;padding-bottom: 6px;font-weight: 600;transition: 0.3s;">Agendar</a></li>
       </ul>

@@ -35,7 +35,7 @@
     </section>
 
     <main class="conteudo-principal-index">
-        <section class="servicos-destaque">
+        <section id="servicos" class="servicos-destaque">
             <div class="cabecalho-servicos">
                 <h2 class="titulo-servicos">
                     Nossos Serviços
