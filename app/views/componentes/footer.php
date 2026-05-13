@@ -8,7 +8,7 @@
   <title>Belezza Studio</title>
 </head>
 <body>
-<footer class="text-center text-lg-start text-white" style="background-color: var(--primary-900, #3f2d52);">
+<footer class="text-center text-lg-start text-white " style="background-color: var(--primary-900, #3f2d52);">
   <section class="py-5">
     <div class="container text-center text-md-start">
       <div class="row">
