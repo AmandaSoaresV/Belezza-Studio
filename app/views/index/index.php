@@ -10,21 +10,25 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </head>
 
-<body>
-    <?php include '../componentes/header.php'; ?>
-    
+  <body>
+    <?php
+     $header = __DIR__ . '/../componentes/header.php'; 
+     if (file_exists($header))
+         { include $header; } 
+     else { include __DIR__ . '/../erro/erro.php'; } ?>
+
     <section class="banner-principal">
-        <div class="filtro-banner"></div>
+   <div class="filtro-banner"></div>
         <div class="conteudo-banner">
             <p class="subtitulo">
                 ✦ BEM-VINDO AO BELEZZA STUDIO ✦
             </p>
 
-            <h1>
+         <h1>
                 Agende seu horário de forma rápida e fácil
             </h1>
 
-            <p class="descricao">
+       <p class="descricao">
                 Cuidado premium com agendamento simples.
                 Sem filas, sem espera.
             </p>
@@ -45,7 +49,7 @@
                 </p>
             </div>
 
-            <div class="container">
+        <div class="container">
                 <div class="row g-4 linha-servicos">
                     <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
                         <div class="card-servico-famoso">
@@ -67,7 +71,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
+            <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
                         <div class="card-servico">
                             <i class="ph ph-paint-brush icone-servico"></i>
                             <h3 class="nome-servico">
@@ -85,7 +89,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
+            <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
                         <div class="card-servico">
                             <i class="ph ph-footprints icone-servico"></i>
                             <h3 class="nome-servico">
@@ -103,7 +107,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
+             <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
                         <div class="card-servico">
                             <i class="ph ph-hair-dryer icone-servico"></i>
                             <h3 class="nome-servico">
@@ -133,9 +137,17 @@
             </a>
             </div>
         </section>
-
     </main>
-<?php include '../componentes/footer.php'; ?>
+    
+   <?php
+        $footer = __DIR__ . '/../componentes/footer.php';
 
-</body>
+        if (file_exists($footer)) {
+            include $footer;
+        } else {
+            include __DIR__ . '/../erro/erro.php';
+        }
+    ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

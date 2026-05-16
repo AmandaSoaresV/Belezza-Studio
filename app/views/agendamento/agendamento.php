@@ -17,7 +17,11 @@
   </head>
 
   <body class="bg-light">
-    <?php include '../componentes/header.php'; ?>
+     <?php
+     $header = __DIR__ . '/../componentes/header.php'; 
+     if (file_exists($header))
+         { include $header; } 
+     else { include __DIR__ . '/../erro/erro.php'; } ?>
 
     <main class="container py-5">
       <div class="row justify-content-center">
@@ -185,7 +189,15 @@
       </div>
     </main>
     
-<?php include '../componentes/footer.php'; ?>
+   <?php
+        $footer = __DIR__ . '/../componentes/footer.php';
+
+        if (file_exists($footer)) {
+            include $footer;
+        } else {
+            include __DIR__ . '/../erro/erro.php';
+        }
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>

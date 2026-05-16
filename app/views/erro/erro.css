@@ -1,0 +1,7 @@
+body {
+  background-color: var(--neutro-300);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
