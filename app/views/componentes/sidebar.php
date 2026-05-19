@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agendamento</title>
-    <link rel="stylesheet" href="/public/assets/css/global.css" />
-    <link rel="stylesheet" href="/public/assets/css/sidebar.css" />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/sidebar.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -23,7 +23,7 @@
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
       >
         <img
-          src="/public/assets/img/logo-site.png"
+          src="/assets/img/logo-site.png"
           alt="Logo"
           style="width: 250px; height: auto; padding: 20px"
         />

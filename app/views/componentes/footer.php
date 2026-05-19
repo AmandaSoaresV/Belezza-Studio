@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-   <link rel="stylesheet" href="/public/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
   <title>Belezza Studio</title>
 </head>
 <body>
@@ -13,7 +13,7 @@
     <div class="container text-center text-md-start">
       <div class="row">
         <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
-         <img class="logo-site" src="/public/assets/img/logo-site.png" alt="Belezza Studio">
+         <img class="logo-site" src="/assets/img/logo-site.png" alt="Belezza Studio">
           <p>
             Seu espaço de cuidado e bem-estar. Qualidade premium com atendimento personalizado.
           </p>

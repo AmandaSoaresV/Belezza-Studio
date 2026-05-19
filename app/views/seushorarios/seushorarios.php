@@ -6,8 +6,8 @@
 
     <title>Agendamento</title>
 
-    <link rel="stylesheet" href="/public/assets/css/global.css" />
-    <link rel="stylesheet" href="/public/assets/css/seushorarios.css" />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/seushorarios.css" />
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
