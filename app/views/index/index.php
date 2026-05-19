@@ -32,7 +32,7 @@
                 Cuidado premium com agendamento simples.
                 Sem filas, sem espera.
             </p>
-            <a href="#" class="botao-agendar-agora">
+            <a href="/agendamento" class="botao-agendar-agora">
                 Agendar Agora
             </a>
         </div>
@@ -65,7 +65,7 @@
                             <p class="preco-servico-famoso">
                                 R$ 65,00
                             </p>
-                            <a href="#" class="botao-agendar-servico-famoso">
+                            <a href="/agendamento" class="botao-agendar-servico-famoso">
                                 Agendar
                             </a>
                         </div>
@@ -83,7 +83,7 @@
                             <p class="preco-servico">
                                 R$ 45,00
                             </p>
-                            <a href="#" class="botao-agendar-servico">
+                            <a href="/agendamento" class="botao-agendar-servico">
                                 Agendar
                             </a>
                         </div>
@@ -101,7 +101,7 @@
                             <p class="preco-servico">
                                 R$ 50,00
                             </p>
-                            <a href="#" class="botao-agendar-servico">
+                            <a href="/agendamento" class="botao-agendar-servico">
                                 Agendar
                             </a>
                         </div>
@@ -119,7 +119,7 @@
                             <p class="preco-servico">
                                 R$ 80,00
                             </p>
-                            <a href="#" class="botao-agendar-servico">
+                            <a href="/agendamento" class="botao-agendar-servico">
                                 Agendar
                             </a>
                         </div>
@@ -132,7 +132,7 @@
             <div class="container-cuidados">
                 <h3 class="titulo-cuidados">Pronto para se cuidar?</h3>
                 <p class="paragrafo-cuidados">Reserve seu horário agora mesmo rápido, fácil e sem complicação.</p>
-             <a href="#" class="botao-agendar-agora " style="background-color: var(--primary-500); color: var(--white);">
+             <a href="/agendamento" class="botao-agendar-agora " style="background-color: var(--primary-500); color: var(--white);">
                 Agendar Agora
             </a>
             </div>

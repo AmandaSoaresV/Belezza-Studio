@@ -21,6 +21,13 @@
 
   <body class="bg-light">
     <main class="container py-4 py-lg-5">
+      <div class="mb-3">
+        <a href="/" class="btn btn-outline-secondary">
+          <i class="ph ph-arrow-left"></i>
+          Voltar ao Início
+        </a>
+      </div>
+
       <div
         class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4"
       >
@@ -294,6 +301,6 @@
       </div>
     </main>
 
-    <script src="/app/views/relatorio/script.js"></script>
+    <script src="/assets/js/relatorio.js"></script>
   </body>
 </html>

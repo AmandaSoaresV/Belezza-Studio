@@ -16,7 +16,9 @@
   <header class="p-3  text-white" style="background-color: var(--primary-800,  #59416f);">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <img class="logo-site" src="/assets/img/logo-site.png" alt="Logo do Site" class="logo">
+      <a href="/" class="d-inline-flex align-items-center text-decoration-none">
+        <img class="logo-site" src="/assets/img/logo-site.png" alt="Logo do Site">
+      </a>
      
       <ul
          class="nav col-12 col-lg-auto ms-auto mb-2 justify-content-center mb-md-0"
