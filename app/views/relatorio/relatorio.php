@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatório</title>
+    <link rel="stylesheet" href="/public/assets/css/global.css" />
+    <link rel="stylesheet" href="/app/views/dashboard/dashboard.css" />
+    <link rel="stylesheet" href="/app/views/relatorio/relatorio.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body class="bg-light">
+    <main class="container py-4 py-lg-5">
+      <div
+        class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4"
+      >
+        <div>
+          <h1 class="fw-bold mb-1">
+            <i class="ph ph-chart-line-up"></i>
+            Painel Administrativo
+          </h1>
+          <p class="text-secondary mb-0">
+            Visão geral do desempenho do salão e estratégias para crescimento
+          </p>
+
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-warning">
+            Exportar Relatório
+            <i class="ph ph-download"></i>
+          </button>
+
+          <div class="text-end">
+            <strong class="d-block">Amanda Soares</strong>
+            <small class="text-secondary">Administrador</small>
+          </div>
+
+          <div
+            class="rounded-circle bg-warning d-flex justify-content-center align-items-center"
+            style="width: 48px; height: 48px"
+          >
+            <i class="ph ph-user text-white fs-4"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icon-box icone-azul">
+                <i class="ph ph-currency-dollar"></i>
+              </div>
+
+              <div>
+                <h2 class="quantidade">R$2.300</h2>
+                <p class="text-card mb-0">Receita total</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icon-box icone-verde">
+                <i class="ph ph-calendar"></i>
+              </div>
+
+              <div>
+                <h2 class="quantidade">144</h2>
+                <p class="text-card mb-0">Agendamentos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icon-box icone-amarelo">
+                <i class="ph ph-users-four"></i>
+              </div>
+
+              <div>
+                <h2 class="quantidade">89</h2>
+                <p class="text-card mb-0">Clientes únicos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icon-box icone-roxo">
+                <i class="ph ph-currency-dollar"></i>
+              </div>
+
+              <div>
+                <h2 class="quantidade">R$640</h2>
+                <p class="text-card mb-0">Receita hoje</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-lg-8">
+          <div class="card shadow-sm border-0 rounded-4 grafico-card h-100">
+            <div class="card-body p-3 p-lg-4">
+              <h2 class="h5 mb-1">Receita por período</h2>
+
+              <p class="text-body-secondary mb-3">
+                Receita diária acumulada nos últimos 30 dias
+              </p>
+
+              <div class="grafico-container rounded-3 p-2 p-lg-3">
+                <canvas id="graficoReceita"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-body p-4">
+              <div class="mb-4">
+                <h2 class="h5 mb-1">
+                  <i class="ph ph-trophy" style="color: pink"></i>
+                  Serviços Mais Populares
+                </h2>
+
+                <p class="text-body-secondary small mb-0">
+                  Ranking por número de agendamentos
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="ranking ranking-1">1</span>
+                    <strong>Corte de Cabelo</strong>
+                  </div>
+
+                  <span class="text-secondary">58 agend.</span>
+                </div>
+
+                <div class="progress progress-custom">
+                  <div
+                    class="progress-bar barra-1"
+                    style="width: 100%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="ranking ranking-2">2</span>
+                    <strong>Barba Completa</strong>
+                  </div>
+
+                  <span class="text-secondary">42 agend.</span>
+                </div>
+
+                <div class="progress progress-custom">
+                  <div class="progress-bar barra-2" style="width: 75%"></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="ranking ranking-3">3</span>
+                    <strong>Manicure</strong>
+                  </div>
+
+                  <span class="text-secondary">28 agend.</span>
+                </div>
+
+                <div class="progress progress-custom">
+                  <div class="progress-bar barra-3" style="width: 48%"></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="ranking ranking-4">4</span>
+                    <strong>Tratamento Facial</strong>
+                  </div>
+
+                  <span class="text-secondary">15 agend.</span>
+                </div>
+
+                <div class="progress progress-custom">
+                  <div class="progress-bar barra-4" style="width: 26%"></div>
+                </div>
+              </div>
+
+              <div class="grafico-donut">
+                <canvas id="graficoServicos"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 rounded-4 mt-4">
+        <div class="card-header fw-bold">Resumo do período</div>
+
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-6 col-md-3">
+              <div class="card h-100 border-0">
+                <div class="card-body text-center p-2">
+                  <h5 class="mb-0 fw-bold">
+                    <i class="ph ph-users-four"></i>
+                    94%
+                  </h5>
+
+                  <small class="fw-light">
+                    Taxa de comparecimento
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="card h-100 border-0">
+                <div class="card-body text-center p-2">
+                  <h5 class="mb-0 fw-bold">
+                    <i class="ph ph-star"></i>
+                    4.8
+                  </h5>
+
+                  <small class="fw-light">Avaliação média</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="card h-100 border-0">
+                <div class="card-body text-center p-2">
+                  <h5 class="mb-0 fw-bold">
+                    <i class="ph ph-users"></i>
+                    67%
+                  </h5>
+
+                  <small class="fw-light">
+                    Clientes recorrentes
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="card h-100 border-0">
+                <div class="card-body text-center p-2">
+                  <h5 class="mb-0 fw-bold">
+                    <i class="ph ph-clock"></i>
+                    45 min
+                  </h5>
+
+                  <small class="fw-light">
+                    Tempo médio de atendimento
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="/app/views/relatorio/script.js"></script>
+  </body>
+</html>
