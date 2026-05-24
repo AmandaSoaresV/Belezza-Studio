@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </head>
 
+<?php
+    require_once __DIR__ . '/../../../config/conexao.php';
+
+   $resultado = $conn->query("SELECT * FROM servicos");    
+?>
+
   <body>
     <?php
     $header = __DIR__ . '/../includes/header.php'; 
@@ -49,84 +55,33 @@
                 </p>
             </div>
 
-        <div class="container">
-                <div class="row g-4 linha-servicos">
-                    <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
-                        <div class="card-servico-famoso">
-                           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color: var(--pink-500); color: var(--white);">
-                         <i class="ph ph-star"></i> </span>
-                            <i class="ph ph-scissors icone-servico-famoso"></i>
-                            <h3 class="nome-servico-famoso">
-                                Corte de Cabelo
-                            </h3>
-                            <p class="descricao-servico-famoso">
-                                Corte moderno com finalização profissional e lavagem inclusa.
-                            </p>
-                            <p class="preco-servico-famoso">
-                                R$ 65,00
-                            </p>
-                            <a href="/agendamento" class="botao-agendar-servico-famoso">
-                                Agendar
-                            </a>
-                        </div>
-                    </div>
+<div class="container">
+    <div class="row g-4 linha-servicos">
 
-            <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
-                        <div class="card-servico">
-                            <i class="ph ph-paint-brush icone-servico"></i>
-                            <h3 class="nome-servico">
-                                Manicure
-                            </h3>
-                            <p class="descricao-servico">
-                                Tratamento completo para suas unhas.
-                            </p>
-                            <p class="preco-servico">
-                                R$ 45,00
-                            </p>
-                            <a href="/agendamento" class="botao-agendar-servico">
-                                Agendar
-                            </a>
-                        </div>
-                    </div>
+        <?php while ($servico = $resultado->fetch_assoc()): ?>
 
-            <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
-                        <div class="card-servico">
-                            <i class="ph ph-footprints icone-servico"></i>
-                            <h3 class="nome-servico">
-                                Pedicure
-                            </h3>
-                            <p class="descricao-servico">
-                                Cuidado especial para seus pés.
-                            </p>
-                            <p class="preco-servico">
-                                R$ 50,00
-                            </p>
-                            <a href="/agendamento" class="botao-agendar-servico">
-                                Agendar
-                            </a>
-                        </div>
-                    </div>
-
-             <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
-                        <div class="card-servico">
-                            <i class="ph ph-hair-dryer icone-servico"></i>
-                            <h3 class="nome-servico">
-                                Lavagem de Cabelo
-                            </h3>
-                            <p class="descricao-servico">
-                                Lavagem profunda com produtos de alta qualidade.
-                            </p>
-                            <p class="preco-servico">
-                                R$ 80,00
-                            </p>
-                            <a href="/agendamento" class="botao-agendar-servico">
-                                Agendar
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
+        <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
+            <div class="card-servico">
+                    <i class="ph ph-flower-lotus icone-servico"></i>
+                <h3 class="nome-servico">
+                    <?php echo $servico['nome']; ?>
+                </h3>
+                <p class="descricao-servico">
+                    <?php echo $servico['descricao']; ?>
+                </p>
+                <p class="preco-servico">
+                    <?php echo 'R$ ' . number_format($servico['preco'], 2, ',', '.'); ?>
+                </p>
+                <a href="/agendamento" class="botao-agendar-servico">
+                    Agendar
+                </a>
             </div>
+        </div>
+
+        <?php endwhile; ?>
+
+    </div>
+</div>
         </section>
         <section class="cuidados">
             <div class="container-cuidados">
