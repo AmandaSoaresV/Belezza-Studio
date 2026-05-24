@@ -22,7 +22,7 @@
 
   <body>
       <?php
-        $header = __DIR__ . '/../componentes/header.php';
+        $header = __DIR__ . '/../includes/header.php';
 
         if (file_exists($header)) {
             include $header;
@@ -174,7 +174,7 @@
     </div>
 
    <?php
-        $footer = __DIR__ . '/../componentes/footer.php';
+        $footer = __DIR__ . '/../includes/footer.php';
 
         if (file_exists($footer)) {
             include $footer;
