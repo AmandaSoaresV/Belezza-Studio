@@ -5,23 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Agendamento</title>
-
     <link rel="stylesheet" href="/assets/css/global.css" />
     <link rel="stylesheet" href="/assets/css/seushorarios.css" />
-
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
     <link
       rel="stylesheet"
       href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
     />
   </head>
 
+  <?php
+    require_once __DIR__ . '/../../../config/conexao.php';
+
+    $consulta = <<<CONSULTA
+      SELECT
+        usuarios.nome AS nome_cliente, 
+        agendamentos.data_hora_servico, 
+        servicos.nome AS nome_servico, 
+        agendamentos.status 
+      FROM `agendamentos` 
+      INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario 
+      INNER JOIN servicos On agendamentos.id_servico = servicos.id_servico 
+      WHERE usuarios.id_usuario = 12
+    CONSULTA;
+
+    $resultado = $conn->query($consulta);
+
+    if (!$resultado) {
+        die("erro na consulta: " . $conn->error);
+    }
+  ?>
+
   <body>
-      <?php
+
+     <?php
         $header = __DIR__ . '/../includes/header.php';
 
         if (file_exists($header)) {
@@ -48,129 +68,112 @@
     </div>
 
     <div class="container py-4">
-      <div
+
+      <?php while ($agendamentos = $resultado->fetch_assoc()): ?>
+
+        <?php
+          $status = $agendamentos['status'];
+
+          if ($status == 'confirmado') {
+              $classeBadge = 'text-bg-success';
+          } elseif ($status == 'pendente') {
+              $classeBadge = 'text-bg-warning';
+          } elseif ($status == 'cancelado') {
+              $classeBadge = 'text-bg-danger';
+          } elseif ($status == 'concluido') {
+              $classeBadge = 'text-bg-primary';
+          } else {
+              $classeBadge = 'text-bg-secondary';
+          }
+        ?>
+
+        <div
         class="container-horarios rounded p-3 p-md-4 mb-4"
         style="background-color: var(--neutro-300)"
       >
-        <p class="text-black fw-bold mb-4">Hoje, 22 de maio</p>
-
-        <div
-          class="card border-0 w-100 mb-3"
-          style="background-color: var(--neutro-100)"
-        >
-          <div class="card-body p-3 p-md-4">
-            <h5 class="card-title fw-bold" style="color: var(--neutro-500)">
-              Corte de Cabelo
-            </h5>
-
-            <p class="card-text fw-bold mb-1" style="color: var(--neutro-900)">
-              Agendado para 14:00
-            </p>
-
-            <p class="card-text mb-3" style="color: var(--neutro-500)">
-              Amanda Soares Vieira
-            </p>
-
-            <div
-              class="d-flex flex-column flex-xl-row justify-content-between align-items-start align-items-xl-center gap-3"
-            >
-              <button type="button" class="btn btn-danger">
-                <i class="ph ph-x-circle"></i>
-                Cancelar Agendamento
-              </button>
-
-              <span class="badge text-bg-success px-3 py-2">
-                Confirmado
-              </span>
-            </div>
-          </div>
-        </div>
-
         <div
           class="card border-0 w-100"
           style="background-color: var(--neutro-100)"
         >
-          <div class="card-body p-3 p-md-4">
+            <div class="card-body p-3 p-md-4">
             <h5 class="card-title fw-bold" style="color: var(--neutro-500)">
-              Escova Progressiva
-            </h5>
+                <?php echo $agendamentos['nome_servico']; ?>
+              </h5>
 
-            <p class="card-text fw-bold mb-1" style="color: var(--neutro-900)">
-              Agendado para 16:30
-            </p>
+             <p class="card-text fw-bold mb-1" style="color: var(--neutro-900)">
+                <?php echo $agendamentos['data_hora_servico']; ?>
+              </p>
 
-            <p class="card-text mb-3" style="color: var(--neutro-500)">
-              Juliana Martins
-            </p>
+              <p class="card-text mb-3" style="color: var(--neutro-500)">
+                <?php echo $agendamentos['nome_cliente']; ?>
+              </p>
 
-            <div
+             <div
               class="d-flex flex-column flex-xl-row justify-content-between align-items-start align-items-xl-center gap-3"
             >
-              <div class="d-flex flex-column flex-sm-row gap-2">
-                <button type="button" class="btn btn-success">
-                  <i class="ph ph-whatsapp-logo"></i>
-                  Confirmar no WhatsApp
-                </button>
 
-                <button type="button" class="btn btn-danger">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+
+                  <?php if ($status == 'confirmado'): ?>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger d-flex align-items-center gap-2"
+                    >
                   <i class="ph ph-x-circle"></i>
                   Cancelar Agendamento
                 </button>
-              </div>
 
-              <span class="badge text-bg-warning px-3 py-2">
-                Pendente
-              </span>
+                  <?php elseif ($status == 'pendente'): ?>
+                    <a
+                     href="https://wa.me/5544998870670?text=Olá,%20quero%20confirmar%20meu%20agendamento"
+                     target="_blank"
+                     class="btn btn-success d-flex align-items-center gap-2"
+>
+                      <i class="ph ph-whatsapp-logo"></i>
+                      Confirmar no WhatsApp
+                    </a>
+
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger d-flex align-items-center gap-2"
+                    >
+                      <i class="ph ph-x-circle"></i>
+                      Cancelar Agendamento
+                    </button>
+
+                  <?php elseif ($status == 'concluido'): ?>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary d-flex align-items-center gap-2"
+                      disabled
+                    >
+                      <i class="ph ph-check-circle"></i>
+                      Finalizado
+                    </button>
+
+                  <?php elseif ($status == 'cancelado'): ?>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary d-flex align-items-center gap-2"
+                      disabled
+                    >
+                      <i class="ph ph-prohibit"></i>
+                      Agendamento Cancelado
+                    </button>
+                  <?php endif; ?>
+
+                </div>
+
+                <span class="badge <?php echo $classeBadge; ?> px-3 py-2">
+                  <?php echo $status; ?>
+                </span>
+
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div
-        class="container-horarios rounded p-3 p-md-4 mb-4"
-        style="background-color: var(--neutro-300)"
-      >
-        <p class="text-black fw-bold mb-4">Sexta-feira, 23 de maio</p>
-
-        <div
-          class="card border-0 w-100"
-          style="background-color: var(--neutro-100)"
-        >
-          <div class="card-body p-3 p-md-4">
-            <h5 class="card-title fw-bold" style="color: var(--neutro-500)">
-              Design de Sobrancelha
-            </h5>
-
-            <p class="card-text fw-bold mb-1" style="color: var(--neutro-900)">
-              Agendado para 11:45
-            </p>
-
-            <p class="card-text mb-3" style="color: var(--neutro-500)">
-              Camila Rodrigues
-            </p>
-
-            <div
-              class="d-flex flex-column flex-xl-row justify-content-between align-items-start align-items-xl-center gap-3"
-            >
-              <div class="d-flex flex-column flex-sm-row gap-2">
-                <button type="button" class="btn btn-success disabled" disabled>
-                  <i class="ph ph-whatsapp-logo"></i>
-                  Confirmar no WhatsApp
-                </button>
-
-                <button type="button" class="btn btn-danger disabled" disabled>
-                  <i class="ph ph-x-circle"></i>
-                  Cancelar Agendamento
-                </button>
-              </div>
-
-              <span class="badge text-bg-secondary px-3 py-2">
-                Finalizado
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php endwhile; ?>
     </div>
 
    <?php
@@ -181,6 +184,8 @@
         } else {
             include __DIR__ . '/../erro/erro.php';
         }
+
+      $conn->close();
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
