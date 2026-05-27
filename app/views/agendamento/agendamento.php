@@ -16,6 +16,22 @@
     />
   </head>
 
+  <?php
+    require_once __DIR__ . '/../../../config/conexao.php';
+
+    $consulta = <<<CONSULTA
+      SELECT
+        nome 
+      FROM `servicos` 
+    CONSULTA;
+
+    $resultado = $conn->query($consulta);
+
+    if (!$resultado) {
+        die("erro na consulta: " . $conn->error);
+    }
+  ?>
+
   <body class="bg-light">
      <?php
     $header = __DIR__ . '/../includes/header.php'; 
@@ -90,15 +106,13 @@
                       Selecione um serviço
                     </option>
 
-                    <option value="corte">Corte de Cabelo - R$ 30,00</option>
-
-                    <option value="barba">Barba - R$ 20,00</option>
-
-                    <option value="sobrancelha">Sobrancelha - R$ 15,00</option>
-
-                    <option value="unhas">Unhas - R$ 45,00</option>
-                  </select>
-                </div>
+             <?php while ($servico = $resultado->fetch_assoc()): ?>
+            <option value="<?php echo $servico['nome']; ?>">
+                <?php echo $servico['nome']; ?>
+            </option>
+            <?php endwhile; ?>
+            </select>
+          </div>
 
                 <div class="mb-4">
                   <label for="data" class="form-label fw-semibold">
@@ -197,6 +211,7 @@
         } else {
             include __DIR__ . '/../erro/erro.php';
         }
+    $conn->close();
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
