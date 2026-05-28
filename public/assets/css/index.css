@@ -92,8 +92,7 @@
   display: flex;
 }
 
-.card-servico,
-.card-servico-famoso {
+.card-servico {
   width: 100%;
   padding: 32px 24px;
   border-radius: 16px;
@@ -113,43 +112,15 @@
   transform: translateY(-5px);
 }
 
-.card-servico-famoso {
-  position: relative;
-  background-color: var(--primary-700);
-  border: 2px solid var(--pink-500);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.card-servico-famoso:hover {
-  transform: translateY(-5px);
-}
-
-.icone-servico-famoso {
-  font-size: 40px;
-  color: var(--white);
-  margin-bottom: 16px;
-}
-
 .icone-servico {
   font-size: 32px;
   color: var(--primary-700);
   margin-bottom: 24px;
 }
 
-.nome-servico-famoso {
-  font-size: 24px;
-  color: var(--white);
-}
-
 .nome-servico {
   font-size: 24px;
   color: var(--neutro-900);
-}
-
-.descricao-servico-famoso {
-  font-size: 16px;
-  color: var(--pink-100);
-  margin: 16px 0;
 }
 
 .descricao-servico {
@@ -158,37 +129,11 @@
   margin: 16px 0;
 }
 
-.preco-servico-famoso {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--white);
-  margin-bottom: 20px;
-}
-
 .preco-servico {
   font-size: 24px;
   font-weight: bold;
   color: var(--primary-700);
   margin-bottom: 16px;
-}
-
-.botao-agendar-servico-famoso {
-  background-color: var(--white);
-  color: var(--primary-700);
-  border: 2px solid var(--white);
-  text-decoration: none;
-  padding: 16px 24px;
-  border-radius: 40px;
-  font-weight: 600;
-  display: inline-block;
-  transition: 0.3s;
-}
-
-.botao-agendar-servico-famoso:hover {
-  background-color: var(--primary-400);
-  color: var(--white);
-  border-color: var(--primary-400);
-  transform: scale(1.05);
 }
 
 .botao-agendar-servico {
@@ -218,5 +163,9 @@
 
 .paragrafo-cuidados {
   font-size: 16px;
-  color:var(--neutro-700);
+  color: var(--neutro-700);
+}
+
+.card-servico {
+  position: relative;
 }
