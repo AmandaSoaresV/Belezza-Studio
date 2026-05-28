@@ -13,10 +13,10 @@
 <?php
     require_once __DIR__ . '/../../../config/conexao.php';
 
-   $consulta =<<<CONSULTA
+   $sqlServicos =<<<CONSULTA
      SELECT * FROM servicos
    CONSULTA;
-    $resultado = $conn->query($consulta);
+    $resultado = $conn->query($sqlServicos);
 ?>
 
   <body>

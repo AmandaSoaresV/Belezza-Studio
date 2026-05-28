@@ -19,13 +19,13 @@
   <?php
     require_once __DIR__ . '/../../../config/conexao.php';
 
-    $consulta = <<<CONSULTA
+    $sqlServicos = <<<CONSULTA
       SELECT
         nome 
       FROM `servicos` 
     CONSULTA;
 
-    $resultado = $conn->query($consulta);
+    $resultado = $conn->query($sqlServicos);
 
     if (!$resultado) {
         die("erro na consulta: " . $conn->error);

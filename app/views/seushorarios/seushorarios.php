@@ -20,7 +20,7 @@
   <?php
     require_once __DIR__ . '/../../../config/conexao.php';
 
-    $consulta = <<<CONSULTA
+    $sqlSeusHorarios = <<<CONSULTA
       SELECT
         usuarios.nome AS nome_cliente, 
         agendamentos.data_hora_servico, 
@@ -29,10 +29,10 @@
       FROM `agendamentos` 
       INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario 
       INNER JOIN servicos On agendamentos.id_servico = servicos.id_servico 
-      WHERE usuarios.id_usuario = 12
+      WHERE usuarios.id_usuario = 3
     CONSULTA;
 
-    $resultado = $conn->query($consulta);
+    $resultado = $conn->query($sqlSeusHorarios);
 
     if (!$resultado) {
         die("erro na consulta: " . $conn->error);
