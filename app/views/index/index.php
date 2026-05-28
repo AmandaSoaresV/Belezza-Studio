@@ -65,6 +65,13 @@
 
         <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
             <div class="card-servico">
+                
+                <?php if ($servico['preco'] > 300): ?>
+                     <span class="badge  mb-2 px-2 py-2" style="background-color: var(--primary-500); color: var(--white);">
+                   <i class="ph ph-crown icone-premium" style="color: yellow; padding:4px;"></i>
+                    Premium</span>
+                <?php endif; ?>
+
                     <i class="ph ph-flower-lotus icone-servico"></i>
                 <h3 class="nome-servico">
                     <?php echo $servico['nome']; ?>
