@@ -233,7 +233,7 @@
                 >
                   <div class="d-flex align-items-center gap-2">
                     <span class="ranking ranking-1">1</span>
-                    <strong>Corte de Cabelo</strong>
+                    <strong>Escova Progressiva</strong>
                   </div>
 
                   <span class="text-secondary">58 agend.</span>
@@ -253,7 +253,7 @@
                 >
                   <div class="d-flex align-items-center gap-2">
                     <span class="ranking ranking-2">2</span>
-                    <strong>Barba Completa</strong>
+                    <strong>Dia da Noiva</strong>
                   </div>
 
                   <span class="text-secondary">42 agend.</span>
@@ -270,7 +270,7 @@
                 >
                   <div class="d-flex align-items-center gap-2">
                     <span class="ranking ranking-3">3</span>
-                    <strong>Manicure</strong>
+                    <strong>Tratamento Facial Gold Therapy</strong>
                   </div>
 
                   <span class="text-secondary">28 agend.</span>
