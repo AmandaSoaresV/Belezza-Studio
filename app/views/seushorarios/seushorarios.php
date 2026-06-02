@@ -37,6 +37,7 @@
     if (!$resultado) {
         die("erro na consulta: " . $conn->error);
     }
+    $seusHorarios = $resultado->fetch_all(MYSQLI_ASSOC);
   ?>
 
   <body>
@@ -69,7 +70,7 @@
 
     <div class="container py-4">
 
-      <?php while ($agendamentos = $resultado->fetch_assoc()): ?>
+      <?php foreach ($seusHorarios as $agendamentos): ?>
 
         <?php
           $status = $agendamentos['status'];
@@ -173,7 +174,7 @@
           </div>
         </div>
 
-      <?php endwhile; ?>
+      <?php endforeach; ?>
     </div>
 
    <?php

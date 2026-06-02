@@ -30,6 +30,7 @@
     if (!$resultado) {
         die("erro na consulta: " . $conn->error);
     }
+    $servicos = $resultado->fetch_all(MYSQLI_ASSOC);
   ?>
 
   <body class="bg-light">
@@ -106,11 +107,11 @@
                       Selecione um serviço
                     </option>
 
-             <?php while ($servico = $resultado->fetch_assoc()): ?>
+             <?php foreach ($servicos as $servico): ?>
             <option value="<?php echo $servico['nome']; ?>">
                 <?php echo $servico['nome']; ?>
             </option>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
             </select>
           </div>
 

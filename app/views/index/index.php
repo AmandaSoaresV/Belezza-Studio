@@ -17,6 +17,11 @@
      SELECT * FROM servicos
    CONSULTA;
     $resultado = $conn->query($sqlServicos);
+    if (!$resultado) {
+        die("erro na consulta: " . $conn->error);
+    }
+    
+    $servicos = $resultado->fetch_all(MYSQLI_ASSOC);
 ?>
 
   <body>
@@ -61,13 +66,13 @@
 <div class="container">
     <div class="row g-4 linha-servicos">
 
-        <?php while ($servico = $resultado->fetch_assoc()): ?>
+        <?php foreach ($servicos as $servico): ?>
 
         <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
             <div class="card-servico">
                 
                 <?php if ($servico['preco'] > 300): ?>
-                     <span class="badge  mb-2 px-2 py-2" style="background-color: var(--primary-500); color: var(--white);">
+                   <span class="badge  mb-2 px-2 py-2" style="background-color: var(--primary-500); color: var(--white);">
                    <i class="ph ph-crown icone-premium" style="color: yellow; padding:4px;"></i>
                     Premium</span>
                 <?php endif; ?>
@@ -88,7 +93,7 @@
             </div>
         </div>
 
-        <?php endwhile; ?>
+        <?php endforeach; ?>
 
     </div>
 </div>
