@@ -18,6 +18,70 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
+  
+   <?php
+    require_once __DIR__ . '/../../../config/conexao.php';
+
+    $sqlReceitaTotal = <<<CONSULTA
+    SELECT
+      SUM(servico.preco) AS receita_total
+    FROM agendamentos AS agendamento
+    INNER JOIN servicos AS servico
+    ON servico.id_servico = agendamento.id_servico
+    WHERE agendamento.status = 'concluido';
+    CONSULTA;
+
+    $resultadoReceitaTotal = $conn->query($sqlReceitaTotal);
+    $receitaTotal = $resultadoReceitaTotal->fetch_assoc()['receita_total'];
+
+    if (!$resultadoReceitaTotal) {
+        die("erro na consulta: " . $conn->error);
+    }
+
+    $sqlHoje = <<<CONSULTA
+    SELECT
+      COUNT(*) AS total_hoje
+    FROM agendamentos
+    WHERE DATE(data_hora_servico) = CURDATE()
+    CONSULTA;
+
+    $resultadoHoje = $conn->query($sqlHoje);
+    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
+
+    if (!$resultadoHoje) {
+        die("erro na consulta: " . $conn->error);
+    }
+
+    $sqlClientes = <<<CONSULTA
+    SELECT
+      COUNT(DISTINCT id_cliente) AS total_clientes
+    FROM agendamentos
+    CONSULTA;
+
+    $resultadoClientes = $conn->query($sqlClientes);
+    $totalClientes = $resultadoClientes->fetch_assoc()['total_clientes'];
+
+    if (!$resultadoClientes) {
+        die("erro na consulta: " . $conn->error);
+    }
+
+    $sqlReceitaHoje = <<<CONSULTA
+    SELECT
+      SUM(servico.preco) AS receita_hoje
+    FROM agendamentos AS agendamento
+    INNER JOIN servicos AS servico
+    ON servico.id_servico = agendamento.id_servico
+    WHERE agendamento.status = 'concluido'
+    AND DATE(agendamento.data_hora_servico) = CURDATE();
+    CONSULTA;
+
+    $resultadoReceitaHoje = $conn->query($sqlReceitaHoje);
+    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
+
+    if (!$resultadoReceitaHoje) {
+        die("erro na consulta: " . $conn->error);
+    }
+    ?>
 
   <body class="bg-light">
     <main class="container py-4 py-lg-5">
@@ -71,7 +135,9 @@
               </div>
 
               <div>
-                <h2 class="quantidade">R$2.300</h2>
+                <h2 class="quantidade">
+                  R$<?php echo number_format($receitaTotal, 2, ',', '.'); ?>
+                </h2>
                 <p class="text-card mb-0">Receita total</p>
               </div>
             </div>
@@ -86,7 +152,9 @@
               </div>
 
               <div>
-                <h2 class="quantidade">144</h2>
+                <h2 class="quantidade">
+                  <?php echo $totalHoje; ?>
+                </h2>
                 <p class="text-card mb-0">Agendamentos</p>
               </div>
             </div>
@@ -101,7 +169,9 @@
               </div>
 
               <div>
-                <h2 class="quantidade">89</h2>
+                <h2 class="quantidade">
+                  <?php echo $totalClientes; ?>
+                </h2>
                 <p class="text-card mb-0">Clientes únicos</p>
               </div>
             </div>
@@ -116,7 +186,9 @@
               </div>
 
               <div>
-                <h2 class="quantidade">R$640</h2>
+                <h2 class="quantidade">
+                  R$<?php echo number_format($receitaHoje, 2, ',', '.'); ?>
+                </h2>
                 <p class="text-card mb-0">Receita hoje</p>
               </div>
             </div>
