@@ -12,25 +12,25 @@
     CONSULTA;
 
     $resultadoReceitaTotal = $conn->query($sqlReceitaTotal);
-    $receitaTotal = $resultadoReceitaTotal->fetch_assoc()['receita_total'];
-
     if (!$resultadoReceitaTotal) {
-        die("erro na consulta: " . $conn->error);
+      die("erro na consulta: " . $conn->error);
     }
 
+    $receitaTotal = $resultadoReceitaTotal->fetch_assoc()['receita_total'];
+
     $sqlHoje = <<<CONSULTA
-    SELECT
-      COUNT(*) AS total_hoje
+    SELECT COUNT(*) AS total_hoje
     FROM agendamentos
-    WHERE DATE(data_hora_servico) = CURDATE()
+    WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
+    AND agendamentos.status IN ('confirmado', 'concluido');
     CONSULTA;
 
     $resultadoHoje = $conn->query($sqlHoje);
-    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
-
     if (!$resultadoHoje) {
-        die("erro na consulta: " . $conn->error);
+      die("erro na consulta: " . $conn->error);
     }
+
+    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
 
     $sqlClientes = <<<CONSULTA
     SELECT
@@ -39,11 +39,11 @@
     CONSULTA;
 
     $resultadoClientes = $conn->query($sqlClientes);
-    $totalClientes = $resultadoClientes->fetch_assoc()['total_clientes'];
-
     if (!$resultadoClientes) {
-        die("erro na consulta: " . $conn->error);
+      die("erro na consulta: " . $conn->error);
     }
+
+    $totalClientes = $resultadoClientes->fetch_assoc()['total_clientes'];
 
     $sqlReceitaHoje = <<<CONSULTA
     SELECT
@@ -56,11 +56,11 @@
     CONSULTA;
 
     $resultadoReceitaHoje = $conn->query($sqlReceitaHoje);
-    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
-
     if (!$resultadoReceitaHoje) {
-        die("erro na consulta: " . $conn->error);
+      die("erro na consulta: " . $conn->error);
     }
+
+    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
     ?>
 
 <html lang="pt-BR">
@@ -174,7 +174,7 @@
                 <h2 class="quantidade">
                   <?php echo $totalClientes; ?>
                 </h2>
-                <p class="text-card mb-0">Clientes únicos</p>
+                <p class="text-card mb-0">Clientes Ativos</p>
               </div>
             </div>
           </div>

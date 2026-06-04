@@ -11,6 +11,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .nav-link{ transition: background-color .15s ease, color .15s ease; }
+    .nav-link:hover{ background-color: rgba(255,255,255,0.08); color: var(--pink-500, #c78ab8) !important; border-radius:6px; }
+    .btn-agendar{ transition: background-color .15s ease, transform .08s ease; }
+    .btn-agendar:hover{ background-color: rgba(255,255,255,0.12); transform: translateY(-1px); }
+  </style>
 </head>
 <body>
   <header class="p-3  text-white" style="background-color: var(--primary-800,  #59416f);">
@@ -24,7 +30,7 @@
          class="nav col-12 col-lg-auto ms-auto mb-2 justify-content-center mb-md-0"
       >
         <li>
-  <a href="/" class="nav-link px-3" style="color: var(--pink-500, #c78ab8);">
+  <a href="/" class="nav-link px-3 text-white">
     Home
   </a>
 </li>
@@ -45,7 +51,6 @@
   <a
     href="/agendamento"
     class="nav-link btn-agendar text-white px-4"
-    style="border-bottom: 2px solid #c78ab8;padding-bottom: 6px;font-weight: 600;transition: 0.3s;"
   >
     Agendar
   </a>
