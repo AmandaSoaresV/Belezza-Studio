@@ -1,3 +1,20 @@
+  <?php
+    require_once __DIR__ . '/../../../config/conexao.php';
+
+    $sqlServicos = <<<CONSULTA
+      SELECT
+        nome 
+      FROM `servicos` 
+    CONSULTA;
+
+    $resultado = $conn->query($sqlServicos);
+
+    if (!$resultado) {
+        die("erro na consulta: " . $conn->error);
+    }
+    $servicos = $resultado->fetch_all(MYSQLI_ASSOC);
+  ?>
+
 <!doctype html>
 <html lang="pt-BR">
   <head>
@@ -16,22 +33,6 @@
     />
   </head>
 
-  <?php
-    require_once __DIR__ . '/../../../config/conexao.php';
-
-    $sqlServicos = <<<CONSULTA
-      SELECT
-        nome 
-      FROM `servicos` 
-    CONSULTA;
-
-    $resultado = $conn->query($sqlServicos);
-
-    if (!$resultado) {
-        die("erro na consulta: " . $conn->error);
-    }
-    $servicos = $resultado->fetch_all(MYSQLI_ASSOC);
-  ?>
 
   <body class="bg-light">
      <?php
