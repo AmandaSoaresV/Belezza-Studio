@@ -31,6 +31,20 @@ if (!validarServicos($servicos)) {
     die("Serviços inválidos.");
 }
 
+function filtrarPremium(array $servicos): array
+{
+    $premium = [];
+
+    foreach ($servicos as $servico) {
+        if ($servico['preco'] > 300) {
+            $premium[] = $servico;
+        }
+    }
+
+    return $premium;
+}
+
+$servicosPremium = filtrarPremium($servicos);
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +96,20 @@ if (!validarServicos($servicos)) {
                 <p class="descricao-servicos">
                     Experiências pensadas para cada detalhe do seu bem-estar.
                 </p>
+
+            <div class="premium-info">
+                <div class="premium-info-icone">
+                    <i class="ph ph-crown"></i>
+                </div>
+
+                <div class="premium-info-conteudo">
+                    <h4>Experiências Premium</h4>
+                    <p>
+                        Descubra nossos <?= count($servicosPremium) ?> serviços premium com desconto exclusivo para agendamentos online.
+                    </p>
+                </div>
             </div>
+        </div>
 
 <div class="container">
     <div class="row g-4 linha-servicos">
