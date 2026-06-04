@@ -88,6 +88,43 @@
   color: var(--neutro-500);
 }
 
+.premium-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+}
+
+.premium-info-icone {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: 50%;
+  background: var(--primary-700);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.premium-info-conteudo h4 {
+  margin: 0 0 6px;
+  color: var(--primary-700);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.premium-info-conteudo p {
+  margin: 0;
+  color: var(--neutro-700);
+}
+
 .coluna-card-servico {
   display: flex;
 }
@@ -99,13 +136,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: 0.3s;
-}
-
-.card-servico {
+  position: relative;
   background-color: var(--white);
   border: 2px solid var(--primary-700);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
 }
 
 .card-servico:hover {
@@ -136,6 +171,30 @@
   margin-bottom: 16px;
 }
 
+.badge-premium {
+  background-color: var(--primary-700);
+  color: var(--white);
+}
+
+.texto-promocao {
+  color: var(--texto-verde);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.preco-antigo {
+  color: var(--neutro-500);
+  text-decoration: line-through;
+  margin-bottom: 4px;
+}
+
+.preco-promocional {
+  color: var(--texto-verde);
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
 .botao-agendar-servico {
   background-color: var(--white);
   color: var(--primary-700);
@@ -161,11 +220,12 @@
   padding: 48px 24px;
 }
 
+.titulo-cuidados {
+  margin-bottom: 8px;
+}
+
 .paragrafo-cuidados {
   font-size: 16px;
   color: var(--neutro-700);
-}
-
-.card-servico {
-  position: relative;
+  margin-bottom: 24px;
 }

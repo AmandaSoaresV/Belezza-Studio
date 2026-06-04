@@ -27,8 +27,9 @@ function validarServicos(array $servicos)
     return true;
 }
 
-if (!validarServicos($servicos)) {
-    die("Serviços inválidos.");
+function calcularDesconto(float $preco, float $percentual): float
+{
+    return $preco - ($preco * ($percentual / 100));
 }
 
 function filtrarPremium(array $servicos): array
@@ -42,6 +43,10 @@ function filtrarPremium(array $servicos): array
     }
 
     return $premium;
+}
+
+if (!validarServicos($servicos)) {
+    die("Serviços inválidos.");
 }
 
 $servicosPremium = filtrarPremium($servicos);
@@ -132,9 +137,31 @@ $servicosPremium = filtrarPremium($servicos);
                 <p class="descricao-servico">
                     <?php echo $servico['descricao']; ?>
                 </p>
+
+                        <?php if ($servico['preco'] > 300): ?>
+
+                            <?php $precoPromocional = calcularDesconto($servico['preco'], 10); ?>
+
+                            <p class="texto-promocao">
+                            <i class="ph ph-fire" style="color: red;"></i>
+                            10% OFF</p>
+
+                            <p class="preco-antigo">
+                                R$ <?= number_format($servico['preco'], 2, ',', '.'); ?>
+                            </p>
+
+                            <p class="preco-promocional">
+                                R$ <?= number_format($precoPromocional, 2, ',', '.'); ?>
+                            </p>
+
+                        <?php else: ?>
+
                 <p class="preco-servico">
                     <?php echo 'R$ ' . number_format($servico['preco'], 2, ',', '.'); ?>
                 </p>
+
+                        <?php endif; ?>
+
                 <a href="/agendamento" class="botao-agendar-servico">
                     Agendar
                 </a>
