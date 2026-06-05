@@ -1,23 +1,85 @@
+<?php require_once __DIR__ . '/../../../config/conexao.php';
+
+    $sqlHoje = <<<CONSULTA
+    SELECT COUNT(*) AS total_hoje
+    FROM agendamentos
+    WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
+    AND agendamentos.status IN ('confirmado', 'concluido');
+    CONSULTA;
+
+    $resultadoHoje = $conn->query($sqlHoje);
+    if (!$resultadoHoje) { 
+      die("erro na consulta" . $conn->error); }
+
+    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
+
+    $sqlTotalConfirmados = <<<CONSULTA
+    SELECT COUNT(*) AS total_confirmados
+    FROM agendamentos
+    WHERE agendamentos.status = 'confirmado';
+    CONSULTA;
+
+    $resultadoTotalConfirmados = $conn->query($sqlTotalConfirmados);
+    if (!$resultadoTotalConfirmados) { 
+      die("erro na consulta" . $conn->error); }
+
+    $totalConfirmados = $resultadoTotalConfirmados->fetch_assoc()['total_confirmados'];
+
+    $sqlTotalPendentes = <<<CONSULTA
+    SELECT COUNT(*) AS total_pendentes
+    FROM agendamentos
+    WHERE agendamentos.status = 'pendente';
+    CONSULTA;
+
+    $resultadoTotalPendentes = $conn->query($sqlTotalPendentes);
+    if (!$resultadoTotalPendentes) { 
+      die("erro na consulta" . $conn->error); }
+
+    $totalPendentes = $resultadoTotalPendentes->fetch_assoc()['total_pendentes'];
+
+    $sqlReceitaHoje = <<<CONSULTA
+    SELECT COALESCE(SUM(servicos.preco), 0) AS receita_hoje
+    FROM agendamentos
+    INNER JOIN servicos ON agendamentos.id_servico = servicos.id_servico
+    WHERE agendamentos.status = 'concluido'
+    AND DATE(agendamentos.data_hora_servico) = CURDATE();
+    CONSULTA;
+
+    $resultadoReceitaHoje = $conn->query($sqlReceitaHoje);
+    if (!$resultadoReceitaHoje) { 
+      die("erro na consulta" . $conn->error); }
+      
+    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
+
+    $sqlAgendamentos = <<<CONSULTA
+    SELECT
+        usuarios.nome AS nome_cliente,
+        agendamentos.data_hora_servico,
+        servicos.nome AS nome_servico,
+        agendamentos.status
+    FROM agendamentos
+    INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario
+    INNER JOIN servicos ON agendamentos.id_servico = servicos.id_servico
+    ORDER BY agendamentos.data_hora_servico ASC;
+    CONSULTA;
+
+    $resultadoAgendamentos = $conn->query($sqlAgendamentos);
+    if (!$resultadoAgendamentos) { 
+      die("erro na consulta" . $conn->error); }
+
+    $agendamentos = $resultadoAgendamentos->fetch_all(MYSQLI_ASSOC);
+?>
+
 <!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Dashboard</title>
-
     <link rel="stylesheet" href="/assets/css/global.css" />
     <link rel="stylesheet" href="/assets/css/dashboard.css" />
-
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   </head>
 
   <body class="body-dashboard">
@@ -26,7 +88,7 @@
      if (file_exists($header))
          { include $header; } 
      else { include __DIR__ . '/../erro/erro.php'; } ?>
-
+     
     <div class="container py-4">
       <div class="row g-4">
         <div class="col-md-3">
@@ -35,9 +97,9 @@
               <div class="icon-box icone-azul">
                 <i class="ph ph-calendar"></i>
               </div>
-
               <div>
-                <h2 class="quantidade">12</h2>
+                <h2 class="quantidade">
+                  <?php echo $totalHoje; ?></h2>
                 <p class="text-card mb-0">Hoje</p>
               </div>
             </div>
@@ -50,9 +112,9 @@
               <div class="icon-box icone-verde">
                 <i class="ph ph-check-circle"></i>
               </div>
-
               <div>
-                <h2 class="quantidade">8</h2>
+                <h2 class="quantidade">
+                  <?php echo $totalConfirmados; ?></h2>
                 <p class="text-card mb-0">Confirmados</p>
               </div>
             </div>
@@ -65,9 +127,9 @@
               <div class="icon-box icone-amarelo">
                 <i class="ph ph-clock"></i>
               </div>
-
               <div>
-                <h2 class="quantidade">3</h2>
+                <h2 class="quantidade">
+                  <?php echo $totalPendentes; ?></h2>
                 <p class="text-card mb-0">Pendentes</p>
               </div>
             </div>
@@ -80,9 +142,9 @@
               <div class="icon-box icone-roxo">
                 <i class="ph ph-currency-dollar"></i>
               </div>
-
               <div>
-                <h2 class="quantidade">R$640</h2>
+                <h2 class="quantidade">R$
+                   <?php echo number_format($receitaHoje, 2, ',', '.'); ?></h2>
                 <p class="text-card mb-0">Receita hoje</p>
               </div>
             </div>
@@ -95,7 +157,7 @@
           <div
             class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
           >
-            <h4 class="mb-0">Agendamentos do dia</h4>
+            <h4 class="mb-0">Agendamentos</h4>
 
             <button
               class="btn btn-sm"
@@ -119,18 +181,27 @@
               </thead>
 
               <tbody>
+                <?php foreach ($agendamentos as $agendamento): ?>
                 <tr>
-                  <td>Amanda</td>
-                  <td>Corte de Cabelo</td>
-                  <td>22/05/2026</td>
-                  <td>14:00</td>
+                  <td><?php echo $agendamento['nome_cliente']; ?></td>
+                  <td><?php echo $agendamento['nome_servico']; ?></td>
+                  <td><?php echo date('d/m/Y', strtotime($agendamento['data_hora_servico'])); ?></td>
+                  <td><?php echo date('H:i', strtotime($agendamento['data_hora_servico'])); ?></td>
 
                   <td>
-                    <span class="badge bg-success">
-                      Confirmado
-                    </span>
-                  </td>
+                    <?php if ($agendamento['status'] === 'confirmado'): ?>
+                      <span class="badge bg-success">Confirmado</span>
 
+                    <?php elseif ($agendamento['status'] === 'pendente'): ?>
+                      <span class="badge bg-warning text-dark">Pendente</span>
+
+                    <?php elseif ($agendamento['status'] === 'concluido'): ?>
+                      <span class="badge bg-secondary">Concluído</span>
+                      
+                    <?php elseif ($agendamento['status'] === 'cancelado'): ?>
+                      <span class="badge bg-danger">Cancelado</span>
+                    <?php endif; ?>
+                  </td>
                   <td>
                     <div class="d-flex justify-content-center gap-2">
                       <button class="btn btn-outline-primary btn-sm">
@@ -143,56 +214,7 @@
                     </div>
                   </td>
                 </tr>
-
-                <tr>
-                  <td>Ana</td>
-                  <td>Manicure</td>
-                  <td>23/05/2026</td>
-                  <td>15:30</td>
-
-                  <td>
-                    <span class="badge bg-warning text-dark">
-                      Pendente
-                    </span>
-                  </td>
-
-                  <td>
-                    <div class="d-flex justify-content-center gap-2">
-                      <button class="btn btn-outline-primary btn-sm">
-                        <i class="ph ph-pencil"></i>
-                      </button>
-
-                      <button class="btn btn-outline-danger btn-sm">
-                        <i class="ph ph-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>John</td>
-                  <td>Corte de Cabelo</td>
-                  <td>24/05/2026</td>
-                  <td>16:00</td>
-
-                  <td>
-                    <span class="badge bg-success">
-                      Confirmado
-                    </span>
-                  </td>
-
-                  <td>
-                    <div class="d-flex justify-content-center gap-2">
-                      <button class="btn btn-outline-primary btn-sm">
-                        <i class="ph ph-pencil"></i>
-                      </button>
-
-                      <button class="btn btn-outline-danger btn-sm">
-                        <i class="ph ph-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
