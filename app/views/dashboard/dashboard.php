@@ -1,5 +1,13 @@
 <?php require_once __DIR__ . '/../../../config/conexao.php';
 
+$porPagina = 10; 
+$paginaAtual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
+$offset = ($paginaAtual - 1) * $porPagina;
+
+$sqlTotal = "SELECT COUNT(*) AS total FROM agendamentos";
+$totalRegistros = $conn->query($sqlTotal)->fetch_assoc()['total'];
+$totalPaginas = ceil($totalRegistros / $porPagina);
+
     $sqlHoje = <<<CONSULTA
     SELECT COUNT(*) AS total_hoje
     FROM agendamentos
@@ -60,7 +68,8 @@
     FROM agendamentos
     INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario
     INNER JOIN servicos ON agendamentos.id_servico = servicos.id_servico
-    ORDER BY agendamentos.data_hora_servico ASC;
+    ORDER BY agendamentos.data_hora_servico ASC
+    LIMIT $porPagina OFFSET $offset;
     CONSULTA;
 
     $resultadoAgendamentos = $conn->query($sqlAgendamentos);
@@ -217,6 +226,27 @@
                 <?php endforeach; ?>
               </tbody>
             </table>
+            <nav aria-label="Paginação de agendamentos">
+              <ul class="pagination justify-content-center mt-3">
+              <li class="page-item <?php echo $paginaAtual <= 1 ? 'disabled' : ''; ?>">
+              <a class="page-link" href="?pagina=<?php echo $paginaAtual - 1; ?>">
+              <span aria-hidden="true">&laquo;</span>
+              </a>
+              </li>
+
+              <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+              <li class="page-item <?php echo $i === $paginaAtual ? 'active' : ''; ?>">
+              <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+              </li>
+              <?php endfor; ?>
+
+             <li class="page-item <?php echo $paginaAtual >= $totalPaginas ? 'disabled' : ''; ?>">
+             <a class="page-link" href="?pagina=<?php echo $paginaAtual + 1; ?>">
+            <span aria-hidden="true">&raquo;</span>
+             </a>
+             </li>
+  </ul>
+</nav>
           </div>
         </div>
       </div>
