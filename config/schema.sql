@@ -1,6 +1,6 @@
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Tabela Usuários
--------------------------------------------------------------
+-- -------------------------------------------------------------
 CREATE TABLE `usuarios`(
     `id_usuario` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nome` VARCHAR(40) NOT NULL,
@@ -17,9 +17,9 @@ CREATE TABLE `usuarios`(
 ALTER TABLE `usuarios` ADD UNIQUE `usuarios_cpf_unique`(`cpf`);
 ALTER TABLE `usuarios` ADD UNIQUE `usuarios_email_unique`(`email`);
 
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Tabela Profissionais
--------------------------------------------------------------
+-- -------------------------------------------------------------
 CREATE TABLE `profissionais`(
     `id_profissional` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `nome` VARCHAR(80) NOT NULL,
@@ -28,9 +28,9 @@ CREATE TABLE `profissionais`(
     `updated_at` DATETIME NOT NULL
 );
 
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Tabela Serviços
--------------------------------------------------------------
+-- -------------------------------------------------------------
 CREATE TABLE `servicos`(
     `id_servico` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `preco` DECIMAL(10, 2) NOT NULL,
@@ -41,9 +41,9 @@ CREATE TABLE `servicos`(
     `updated_at` DATETIME NOT NULL
 );
 
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Tabela Agendamentos (depois das dependências)
--------------------------------------------------------------
+-- -------------------------------------------------------------
 CREATE TABLE `agendamentos`(
     `id_agendamento` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_cliente` BIGINT UNSIGNED NOT NULL,
@@ -56,18 +56,18 @@ CREATE TABLE `agendamentos`(
     `updated_at` DATETIME NOT NULL
 );
 
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Tabela Profissional_Servico
--------------------------------------------------------------
+-- -------------------------------------------------------------
 CREATE TABLE `profissional_servico`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_servico` BIGINT UNSIGNED NOT NULL,
     `id_profissional` BIGINT UNSIGNED NOT NULL
 );
 
--------------------------------------------------------------
+-- -------------------------------------------------------------
 -- Restrições de Chaves Estrangeiras
--------------------------------------------------------------
+-- -------------------------------------------------------------
 ALTER TABLE `agendamentos`
     ADD CONSTRAINT `agendamentos_id_cliente_foreign`
     FOREIGN KEY(`id_cliente`) REFERENCES `usuarios`(`id_usuario`);
