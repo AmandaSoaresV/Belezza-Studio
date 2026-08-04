@@ -27,7 +27,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agendamento</title>
-    <link rel="stylesheet" href="/assets/css/global.css" />
+     <link rel="stylesheet" href="/assets/css/global.css" />
     <link rel="stylesheet" href="/assets/css/seushorarios.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -39,7 +39,7 @@
     />
   </head>
 
-  <body>
+  <body class="pagina-horarios">
 
      <?php
         $header = __DIR__ . '/../includes/header.php';
@@ -51,122 +51,96 @@
         }
     ?>
 
-    <div class="container py-4">
-      <div class="card container-agenda text-white border-0">
-        <div class="card-body d-flex flex-column justify-content-center p-4 p-md-5">
-          <span class="badge text-bg-light text-dark mb-3 align-self-start px-3 py-2">
-            Agenda do Cliente
-          </span>
-
-          <h1 class="display-6 fw-bold">Seus Horários Agendados</h1>
-
-          <p class="mb-0 fs-6" style="color: var(--pink-100)">
-            Gerencie seus horários agendados
-          </p>
-        </div>
+    <div class="container-marca pt-5">
+      <div class="banner-agenda text-white">
+        <p class="eyebrow" style="color: var(--pink-300);">Agenda do Cliente</p>
+        <h1 class="display-marca text-white" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Seus Horários Agendados</h1>
+        <p class="mb-0" style="color: var(--primary-100);">
+          Acompanhe, confirme ou cancele seus agendamentos.
+        </p>
       </div>
     </div>
 
-    <div class="container py-4">
+    <div class="container-marca secao">
+
+      <?php if (empty($seusHorarios)): ?>
+        <div class="superficie text-center p-5">
+          <i class="ph ph-calendar-blank" style="font-size: 2.5rem; color: var(--primary-400);"></i>
+          <p class="texto-lead mt-3 mb-0">Você ainda não tem agendamentos.</p>
+        </div>
+      <?php endif; ?>
 
       <?php foreach ($seusHorarios as $agendamentos): ?>
 
         <?php
           $status = $agendamentos['status'];
-
-          if ($status == 'confirmado') {
-              $classeBadge = 'text-bg-success';
-          } elseif ($status == 'pendente') {
-              $classeBadge = 'text-bg-warning';
-          } elseif ($status == 'cancelado') {
-              $classeBadge = 'text-bg-danger';
-          } elseif ($status == 'concluido') {
-              $classeBadge = 'text-bg-primary';
-          } else {
-              $classeBadge = 'text-bg-secondary';
-          }
+          $classeStatus = 'status-chip--' . $status;
         ?>
 
-        <div
-        class="container-horarios rounded p-3 p-md-4 mb-4"
-        style="background-color: var(--neutro-300)"
-      >
-        <div
-          class="card border-0 w-100"
-          style="background-color: var(--neutro-100)"
-        >
-            <div class="card-body p-3 p-md-4">
-            <h5 class="card-title fw-bold" style="color: var(--neutro-500)">
-                <?php echo $agendamentos['nome_servico']; ?>
-              </h5>
+        <div class="superficie cartao-horario mb-4">
+          <div class="cartao-horario-faixa cartao-horario-faixa--<?php echo $status; ?>"></div>
 
-             <p class="card-text fw-bold mb-1" style="color: var(--neutro-900)">
+          <div class="cartao-horario-corpo">
+            <div>
+              <h3 class="cartao-horario-servico"><?php echo $agendamentos['nome_servico']; ?></h3>
+              <p class="cartao-horario-data">
+                <i class="ph ph-clock"></i>
                 <?php echo $agendamentos['data_hora_servico']; ?>
               </p>
-
-              <p class="card-text mb-3" style="color: var(--neutro-500)">
+              <p class="cartao-horario-cliente">
+                <i class="ph ph-user"></i>
                 <?php echo $agendamentos['nome_cliente']; ?>
               </p>
+            </div>
 
-             <div
-              class="d-flex flex-column flex-xl-row justify-content-between align-items-start align-items-xl-center gap-3"
-            >
+            <div class="cartao-horario-acoes">
+              <span class="status-chip <?php echo $classeStatus; ?>">
+                <?php echo ucfirst($status); ?>
+              </span>
 
               <div class="d-flex flex-column flex-sm-row gap-2">
 
-                  <?php if ($status == 'confirmado'): ?>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger d-flex align-items-center gap-2"
-                    >
-                  <i class="ph ph-x-circle"></i>
-                  Cancelar Agendamento
-                </button>
+                <?php if ($status == 'confirmado'): ?>
+                  <button
+                    type="button"
+                    class="btn-marca btn-marca--contorno btn-marca--pequeno">
+                    <i class="ph ph-x-circle"></i>
+                     Cancelar
+                  </button>
 
-                  <?php elseif ($status == 'pendente'): ?>
-                    <a
-                     href="https://wa.me/5544998870670?text=Olá,%20quero%20confirmar%20meu%20agendamento"
-                     target="_blank"
-                     class="btn btn-success d-flex align-items-center gap-2"
->
-                      <i class="ph ph-whatsapp-logo"></i>
-                      Confirmar no WhatsApp
-                    </a>
+                <?php elseif ($status == 'pendente'): ?>
+                  <a
+                    href="https://wa.me/5544998870670?text=Olá,%20quero%20confirmar%20meu%20agendamento"
+                    target="_blank"
+                    class="btn-marca btn-marca--pequeno"
+                    style="background-color: var(--cor-sucesso);"
+                  >
+                    <i class="ph ph-whatsapp-logo"></i> Confirmar no WhatsApp
+                  </a>
 
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger d-flex align-items-center gap-2"
-                    >
-                      <i class="ph ph-x-circle"></i>
-                      Cancelar Agendamento
-                    </button>
+                  <button
+                   type="button"
+                   class="btn-marca btn-marca--contorno btn-marca--pequeno">
+                    <i class="ph ph-x-circle"></i>
+                     Cancelar
+                  </button>
 
-                  <?php elseif ($status == 'concluido'): ?>
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary d-flex align-items-center gap-2"
-                      disabled
-                    >
-                      <i class="ph ph-check-circle"></i>
-                      Finalizado
-                    </button>
+                <?php elseif ($status == 'concluido'): ?>
+                  <button
+                   type="button" 
+                   class="btn-marca btn-marca--contorno btn-marca--pequeno" disabled>
+                    <i class="ph ph-check-circle"></i> 
+                    Finalizado
+                  </button>
 
-                  <?php elseif ($status == 'cancelado'): ?>
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary d-flex align-items-center gap-2"
-                      disabled
-                    >
-                      <i class="ph ph-prohibit"></i>
-                      Agendamento Cancelado
-                    </button>
-                  <?php endif; ?>
-
-                </div>
-
-                <span class="badge <?php echo $classeBadge; ?> px-3 py-2">
-                  <?php echo $status; ?>
-                </span>
+                <?php elseif ($status == 'cancelado'): ?>
+                  <button
+                   type="button" 
+                   class="btn-marca btn-marca--contorno btn-marca--pequeno" disabled>
+                    <i class="ph ph-prohibit"></i> 
+                    Agendamento Cancelado
+                  </button>
+                <?php endif; ?>
 
               </div>
             </div>
