@@ -4,125 +4,79 @@
   box-sizing: border-box;
 }
 
+
 .banner-principal {
-  height: 100vh;
-  background-image: url("https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1974&auto=format&fit=crop");
+  min-height: 92vh;
+  background-image:
+    linear-gradient(120deg, rgba(11, 11, 15, 0.92), rgba(44, 16, 101, 0.72)),
+    url("https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1974&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  text-align: center;
 }
 
-.filtro-banner {
-  width: 100%;
-  height: 100%;
-  background-color: var(--primary-700);
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
+.banner-grade {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--sp-8);
+  padding-bottom: var(--sp-8);
 }
 
 .conteudo-banner {
-  position: relative;
-  color: var(--white);
-  max-width: 700px;
-  padding: 24px;
-  z-index: 1;
+  max-width: 640px;
 }
 
-.subtitulo {
-  font-size: 14px;
-  letter-spacing: 3px;
-  margin-bottom: 16px;
+.banner-eyebrow {
+  color: var(--pink-300);
+  margin-bottom: var(--sp-3);
 }
 
-.conteudo-banner h1 {
-  font-size: 64px;
-  line-height: 1.1;
-  margin-bottom: 24px;
+.banner-destaque {
+  background: linear-gradient(90deg, var(--primary-400), var(--pink-300));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.descricao {
-  font-size: 24px;
-  margin-bottom: 32px;
+.banner-descricao {
+  color: var(--texto-secundario);
+  margin: var(--sp-4) 0 var(--sp-5);
 }
 
-.botao-agendar-agora {
-  background-color: var(--white);
-  color: var(--primary-600);
-  text-decoration: none;
-  padding: 16px 32px;
-  border-radius: 40px;
-  font-weight: 600;
-  display: inline-block;
-  transition: 0.3s;
-}
-
-.botao-agendar-agora:hover {
-  background-color: var(--primary-600);
-  color: var(--white);
-  transform: scale(1.03);
-}
-
-.servicos-destaque {
-  padding: 24px;
-  text-align: center;
-}
 
 .cabecalho-servicos {
-  margin-bottom: 32px;
+  max-width: 620px;
+  margin-bottom: var(--sp-6);
 }
 
 .titulo-servicos {
-  font-size: 32px;
-  color: var(--neutro-900);
-  margin-bottom: 8px;
-}
-
-.descricao-servicos {
-  font-size: 16px;
-  color: var(--neutro-500);
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  margin: var(--sp-2) 0 var(--sp-2);
 }
 
 .premium-info {
   display: flex;
   align-items: center;
-  gap: 16px;
-  max-width: 700px;
-  margin: 0 auto 40px;
-  padding: 20px;
-  border-radius: 16px;
-  background: rgba(168, 85, 247, 0.08);
-  border: 1px solid rgba(168, 85, 247, 0.15);
-}
-
-.premium-info-icone {
-  width: 60px;
-  height: 60px;
-  min-width: 60px;
-  border-radius: 50%;
-  background: var(--primary-700);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
+  gap: var(--sp-4);
+  max-width: 720px;
+  margin: 0 0 var(--sp-6);
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.28);
 }
 
 .premium-info-conteudo h4 {
-  margin: 0 0 6px;
-  color: var(--primary-700);
-  font-size: 18px;
-  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--primary-300);
+  font-size: 1.05rem;
 }
 
 .premium-info-conteudo p {
   margin: 0;
-  color: var(--neutro-700);
+  color: var(--texto-secundario);
 }
 
 .coluna-card-servico {
@@ -131,101 +85,129 @@
 
 .card-servico {
   width: 100%;
-  padding: 32px 24px;
-  border-radius: 16px;
+  padding: var(--sp-5) var(--sp-4);
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  background-color: var(--white);
-  border: 2px solid var(--primary-700);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: 0.3s;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--borda-sutil);
+  box-shadow: var(--sombra-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .card-servico:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: var(--brilho-marca);
+  border-color: var(--primary-700);
+}
+
+.badge-servico-premium {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(90deg, var(--primary-600), var(--pink-600));
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
 }
 
 .icone-servico {
-  font-size: 32px;
-  color: var(--primary-700);
-  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: var(--primary-400);
+  margin-bottom: var(--sp-4);
 }
 
 .nome-servico {
-  font-size: 24px;
-  color: var(--neutro-900);
+  font-size: 1.3rem;
+  color: var(--texto-primario);
 }
 
 .descricao-servico {
-  font-size: 16px;
-  color: var(--neutro-700);
-  margin: 16px 0;
+  font-size: 0.95rem;
+  color: var(--texto-secundario);
+  margin: var(--sp-3) 0;
 }
 
 .preco-servico {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--primary-700);
-  margin-bottom: 16px;
-}
-
-.badge-premium {
-  background-color: var(--primary-700);
-  color: var(--white);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-300);
+  margin-bottom: var(--sp-3);
 }
 
 .texto-promocao {
-  color: var(--texto-verde);
+  color: var(--cor-sucesso);
   font-weight: 700;
   margin-bottom: 4px;
+  font-size: 0.85rem;
 }
 
 .preco-antigo {
-  color: var(--neutro-500);
+  color: var(--texto-terciario);
   text-decoration: line-through;
   margin-bottom: 4px;
 }
 
 .preco-promocional {
-  color: var(--texto-verde);
-  font-size: 26px;
+  color: var(--cor-sucesso);
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: var(--sp-3);
 }
 
 .botao-agendar-servico {
-  background-color: var(--white);
-  color: var(--primary-700);
-  border: 2px solid var(--primary-700);
+  text-align: center;
+  background-color: transparent;
+  color: var(--primary-300);
+  border: 1.5px solid var(--borda-forte);
   text-decoration: none;
-  padding: 16px 24px;
-  border-radius: 40px;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
   font-weight: 600;
-  display: inline-block;
-  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.2s;
 }
 
 .botao-agendar-servico:hover {
-  background-color: var(--primary-700);
+  background-color: var(--primary-600);
   color: var(--white);
-  transform: scale(1.05);
+  border-color: var(--primary-600);
+}
+
+
+.cuidados {
+  padding: var(--sp-7) var(--sp-4);
 }
 
 .container-cuidados {
-  background-color: rgba(168, 85, 247, 0.09);
-  color: var(--neutro-900);
+  max-width: 720px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, var(--primary-800), var(--pink-700));
+  color: var(--white);
   text-align: center;
-  padding: 48px 24px;
+  padding: var(--sp-7) var(--sp-5);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--brilho-marca);
 }
 
 .titulo-cuidados {
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-2);
+  color: var(--white);
+  font-size: 1.8rem;
 }
 
 .paragrafo-cuidados {
-  font-size: 16px;
-  color: var(--neutro-700);
-  margin-bottom: 24px;
+  font-size: 1.05rem;
+  color: var(--primary-100);
+  margin-bottom: var(--sp-5);
 }
