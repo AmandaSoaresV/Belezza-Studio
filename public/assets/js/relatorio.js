@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  if (window.Chart) {
+    Chart.defaults.color = "#a6a6b3";
+    Chart.defaults.borderColor = "rgba(255, 255, 255, 0.08)";
+  }
+
   const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
 
   const dadosReceita = [1200, 1800, 1500, 2100, 3000, 2800];
@@ -7,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dadosServicos = {
     labels: ["Escova Progressiva", "Dia da Noiva", "Tratamento Facial Gold Therapy", "Tratamento Facial"],
     valores: [58, 42, 28, 15],
-    cores: ["#8b5cf6", "#10b981", "#fef3c0", "#c78ab8"],
+    cores: ["#7c3aed", "#34d399", "#fbbf24", "#e879f9"],
   };
 
   const configReceita = {
@@ -17,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
       datasets: [{
         label: "Receita (R$)",
         data: dadosReceita,
-        borderColor: "#3f2d52",
-        backgroundColor: "rgba(63, 45, 82, 0.2)",
+        borderColor: "#a78bfa",
+        backgroundColor: "rgba(124, 58, 237, 0.18)",
         fill: true,
         tension: 0.4,
       }],
@@ -30,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
         legend: { position: "top", display: true },
       },
       scales: {
-        y: { beginAtZero: true },
+        y: { beginAtZero: true, grid: { color: "rgba(255, 255, 255, 0.08)" } },
+        x: { grid: { color: "rgba(255, 255, 255, 0.08)" } },
       },
     },
   };

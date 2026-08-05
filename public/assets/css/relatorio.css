@@ -1,24 +1,31 @@
+body.pagina-relatorio .btn-exportar.btn-outline-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.88rem;
+  background-color: transparent;
+  color: var(--primary-300);
+  border: 1.5px solid var(--borda-forte);
+}
+
+body.pagina-relatorio .btn-exportar.btn-outline-warning:hover,
+body.pagina-relatorio .btn-exportar.btn-outline-warning:focus {
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
+  color: var(--white);
+}
+
 .grafico-card {
   overflow: hidden;
 }
 
 .grafico-container {
   min-height: 220px;
-  background: var(--neutro-50);
-}
-
-.grafico-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.grafico-card {
-  overflow: hidden;
-}
-
-.grafico-container {
-  min-height: 220px;
-  background: var(--neutro-50);
+  background: var(--bg-surface-2);
+  border-radius: var(--radius-sm);
 }
 
 .grafico-container canvas {
@@ -28,66 +35,62 @@
 
 .progress-custom {
   height: 8px;
-  border-radius: 64px;
-  background: var(--neutro-50);
+  border-radius: var(--radius-pill);
+  background: var(--bg-surface-3);
 }
 
 .progress-bar {
-  border-radius: 64px;
+  border-radius: var(--radius-pill);
 }
 
 .barra-1 {
-  background: linear-gradient(90deg, var(--primary-900), var(--pink-500));
+  background: linear-gradient(90deg, var(--primary-600), var(--pink-500));
 }
 
 .barra-2 {
-  background: linear-gradient(
-    90deg,
-    var(--texto-amarelo),
-    var(--fundo-amarelo)
-  );
+  background: linear-gradient(90deg, var(--cor-aviso), #fde68a);
 }
 
 .barra-3 {
-  background: linear-gradient(90deg, var(--fundo-verde), var(--texto-verde));
+  background: linear-gradient(90deg, var(--cor-sucesso), #6ee7b7);
 }
 
 .barra-4 {
-  background: linear-gradient(90deg, var(--fundo-azul), var(--neutro-900));
+  background: linear-gradient(90deg, var(--primary-400), var(--primary-800));
 }
 
 .ranking {
-  width: 32px;
-  height: 32px;
-  border-radius: 64px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 0.9rem;
   font-weight: bold;
 }
 
 .ranking-1 {
-  background: var(--fundo-amarelo);
-  color: var(--texto-amarelo);
+  background: var(--cor-aviso-fundo);
+  color: var(--cor-aviso);
 }
 
 .ranking-2 {
-  background: var(--fundo-roxo);
-  color: var(--texto-roxo);
+  background: var(--cor-info-fundo);
+  color: var(--cor-info);
 }
 
 .ranking-3 {
-  background: var(--fundo-verde);
-  color: var(--texto-verde);
+  background: var(--cor-sucesso-fundo);
+  color: var(--cor-sucesso);
 }
 
 .ranking-4 {
-  background: var(--pink-100);
-  color: var(--pink-500);
+  background: rgba(232, 121, 249, 0.16);
+  color: var(--pink-300);
 }
 
 .grafico-donut {
   width: 180px;
-  margin: 32px auto 0;
+  margin: var(--sp-5) auto 0;
 }

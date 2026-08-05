@@ -68,9 +68,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Relatório</title>
-    <link rel="stylesheet" href="/assets/css/global.css" />
-    <link rel="stylesheet" href="/assets/css/dashboard.css" />
-    <link rel="stylesheet" href="/assets/css/relatorio.css" />
+        <link rel="stylesheet" href="/assets/css/global.css" />
+        <link rel="stylesheet" href="/assets/css/admin.css" />
+        <link rel="stylesheet" href="/assets/css/dashboard.css" />
+        <link rel="stylesheet" href="/assets/css/relatorio.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -83,56 +84,49 @@
     <script src="/assets/js/relatorio.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  
 
-  <body class="bg-light">
-    <main class="container py-4 py-lg-5">
-      <div class="mb-3">
-        <a href="/" class="btn btn-outline-secondary">
-          <i class="ph ph-arrow-left"></i>
-          Voltar ao Início
-        </a>
+
+  <body class="pagina-relatorio">
+    <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../includes/sidebar.php'; ?>
+
+    <header class="admin-topbar">
+      <div>
+        <h1 class="admin-topbar-titulo">
+          <i class="ph ph-chart-line-up"></i>
+          Painel Administrativo
+        </h1>
+        <p class="admin-topbar-subtitulo">
+          Visão geral do desempenho do salão e estratégias para crescimento
+        </p>
       </div>
 
-      <div
-        class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4"
-      >
-        <div>
-          <h1 class="fw-bold mb-1">
-            <i class="ph ph-chart-line-up"></i>
-            Painel Administrativo
-          </h1>
-          <p class="text-secondary mb-0">
-            Visão geral do desempenho do salão e estratégias para crescimento
-          </p>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn-outline-warning btn-exportar">
+          Exportar Relatório
+          <i class="ph ph-download"></i>
+        </button>
 
+        <div class="text-end">
+          <strong class="d-block">Amanda Soares</strong>
+          <small class="text-secondary">Administrador</small>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
-          <button class="btn btn-outline-warning">
-            Exportar Relatório
-            <i class="ph ph-download"></i>
-          </button>
-
-          <div class="text-end">
-            <strong class="d-block">Amanda Soares</strong>
-            <small class="text-secondary">Administrador</small>
-          </div>
-
-          <div
-            class="rounded-circle bg-warning d-flex justify-content-center align-items-center"
-            style="width: 48px; height: 48px"
-          >
-            <i class="ph ph-user text-white fs-4"></i>
-          </div>
+        <div
+          class="rounded-circle d-flex justify-content-center align-items-center"
+          style="width: 44px; height: 44px; background: var(--primary-800);"
+        >
+          <i class="ph ph-user text-white fs-5"></i>
         </div>
       </div>
+    </header>
+
+    <main class="admin-container">
 
       <div class="row g-4 mb-4">
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-azul">
+              <div class="icone-tile icone-tile--marca">
                 <i class="ph ph-currency-dollar"></i>
               </div>
 
@@ -147,9 +141,9 @@
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-verde">
+              <div class="icone-tile icone-tile--sucesso">
                 <i class="ph ph-calendar"></i>
               </div>
 
@@ -164,9 +158,9 @@
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-amarelo">
+              <div class="icone-tile icone-tile--aviso">
                 <i class="ph ph-users-four"></i>
               </div>
 
@@ -181,9 +175,9 @@
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-roxo">
+              <div class="icone-tile icone-tile--info">
                 <i class="ph ph-currency-dollar"></i>
               </div>
 
@@ -375,6 +369,6 @@
       </div>
     </main>
 
-    <script src="/assets/js/relatorio.js"></script>
+    <?php include __DIR__ . '/../includes/admin-footer.php'; ?>
   </body>
 </html>
