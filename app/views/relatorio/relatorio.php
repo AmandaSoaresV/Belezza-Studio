@@ -87,7 +87,7 @@
 
 
   <body class="pagina-relatorio">
-    <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../includes/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <header class="admin-topbar">
       <div>
@@ -369,6 +369,6 @@
       </div>
     </main>
 
-    <?php include __DIR__ . '/../includes/admin-footer.php'; ?>
+    <?php include __DIR__ . '/../layouts/admin-footer.php'; ?>
   </body>
 </html>

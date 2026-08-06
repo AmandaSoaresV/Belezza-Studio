@@ -36,7 +36,7 @@
 
   <body class="pagina-agendamento">
      <?php
-    $header = __DIR__ . '/../includes/header.php';
+    $header = __DIR__ . '/../layouts/header.php';
      if (file_exists($header))
          { include $header; }
      else { include __DIR__ . '/../erro/erro.php'; } ?>
@@ -197,7 +197,7 @@
     <script src="/assets/js/agendamento.js"></script>
 
    <?php
-        $footer = __DIR__ . '/../includes/footer.php';
+        $footer = __DIR__ . '/../layouts/footer.php';
 
         if (file_exists($footer)) {
             include $footer;

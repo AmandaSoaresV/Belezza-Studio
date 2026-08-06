@@ -19,6 +19,10 @@ switch ($page) {
     case 'seushorarios':
         require_once __DIR__ . '/../app/views/seushorarios/seushorarios.php';
         break;
+    
+    case 'login':
+        require_once __DIR__ . '/../app/views/login/login.php';
+        break;
 
     default:
         require_once __DIR__ . '/../app/views/index/index.php';

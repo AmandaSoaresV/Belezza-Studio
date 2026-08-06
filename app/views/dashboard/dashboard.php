@@ -94,7 +94,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
   </head>
 
   <body class="body-dashboard">
-    <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../includes/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <header class="admin-topbar">
       <div>
@@ -242,7 +242,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
       </div>
     </div>
 
-    <?php include __DIR__ . '/../includes/admin-footer.php'; ?>
+    <?php include __DIR__ . '/../layouts/admin-footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>
