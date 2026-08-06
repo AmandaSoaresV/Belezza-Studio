@@ -85,30 +85,38 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/assets/css/global.css" />
-    <link rel="stylesheet" href="/assets/css/dashboard.css" />
+        <link rel="stylesheet" href="/assets/css/global.css" />
+        <link rel="stylesheet" href="/assets/css/dashboard.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/admin.css" />
   </head>
 
   <body class="body-dashboard">
-    <?php
-    $header = __DIR__ . '/../includes/header.php'; 
-     if (file_exists($header))
-         { include $header; } 
-     else { include __DIR__ . '/../erro/erro.php'; } ?>
-     
-    <div class="container py-4">
+    <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../includes/sidebar.php'; ?>
+
+    <header class="admin-topbar">
+      <div>
+        <h1 class="admin-topbar-titulo">Dashboard</h1>
+        <p class="admin-topbar-subtitulo">Visão geral dos agendamentos do salão</p>
+      </div>
+
+      <a href="/agendamento" class="btn-marca btn-marca--pequeno">
+        <i class="ph ph-plus"></i> Novo Agendamento
+      </a>
+    </header>
+
+    <div class="admin-container">
       <div class="row g-4">
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-azul">
+              <div class="icone-tile icone-tile--info">
                 <i class="ph ph-calendar"></i>
               </div>
               <div>
-                <h2 class="quantidade">
-                  <?php echo $totalHoje; ?></h2>
+                <h2 class="quantidade"><?php echo $totalHoje; ?></h2>
                 <p class="text-card mb-0">Hoje</p>
               </div>
             </div>
@@ -116,14 +124,13 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-verde">
+              <div class="icone-tile icone-tile--sucesso">
                 <i class="ph ph-check-circle"></i>
               </div>
               <div>
-                <h2 class="quantidade">
-                  <?php echo $totalConfirmados; ?></h2>
+                <h2 class="quantidade"><?php echo $totalConfirmados; ?></h2>
                 <p class="text-card mb-0">Confirmados</p>
               </div>
             </div>
@@ -131,14 +138,13 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-amarelo">
+              <div class="icone-tile icone-tile--aviso">
                 <i class="ph ph-clock"></i>
               </div>
               <div>
-                <h2 class="quantidade">
-                  <?php echo $totalPendentes; ?></h2>
+                <h2 class="quantidade"><?php echo $totalPendentes; ?></h2>
                 <p class="text-card mb-0">Pendentes</p>
               </div>
             </div>
@@ -146,9 +152,9 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         </div>
 
         <div class="col-md-3">
-          <div class="card dashboard-card shadow-sm border-0">
+          <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
-              <div class="icon-box icone-roxo">
+              <div class="icone-tile icone-tile--marca">
                 <i class="ph ph-currency-dollar"></i>
               </div>
               <div>
@@ -161,24 +167,17 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
         </div>
       </div>
 
-      <div class="card shadow-sm border-0 mt-5">
+      <div class="superficie mt-5">
         <div class="card-body">
           <div
             class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
           >
             <h4 class="mb-0">Agendamentos</h4>
-
-            <button
-              class="btn btn-sm"
-              style="background-color: var(--primary-700); color: #fff"
-            >
-              Novo Agendamento
-            </button>
           </div>
 
           <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
+            <table class="table table-hover align-middle tabela-marca">
+              <thead>
                 <tr>
                   <th>Cliente</th>
                   <th>Serviço</th>
@@ -198,18 +197,9 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
                   <td><?php echo date('H:i', strtotime($agendamento['data_hora_servico'])); ?></td>
 
                   <td>
-                    <?php if ($agendamento['status'] === 'confirmado'): ?>
-                      <span class="badge bg-success">Confirmado</span>
-
-                    <?php elseif ($agendamento['status'] === 'pendente'): ?>
-                      <span class="badge bg-warning text-dark">Pendente</span>
-
-                    <?php elseif ($agendamento['status'] === 'concluido'): ?>
-                      <span class="badge bg-secondary">Concluído</span>
-                      
-                    <?php elseif ($agendamento['status'] === 'cancelado'): ?>
-                      <span class="badge bg-danger">Cancelado</span>
-                    <?php endif; ?>
+                    <span class="status-chip status-chip--<?php echo $agendamento['status']; ?>">
+                      <?php echo ucfirst($agendamento['status']); ?>
+                    </span>
                   </td>
                   <td>
                     <div class="d-flex justify-content-center gap-2">
@@ -252,15 +242,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
       </div>
     </div>
 
-    <?php
-        $footer = __DIR__ . '/../includes/footer.php';
-
-        if (file_exists($footer)) {
-            include $footer;
-        } else {
-            include __DIR__ . '/../erro/erro.php';
-        }
-    ?>
+    <?php include __DIR__ . '/../includes/admin-footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>
