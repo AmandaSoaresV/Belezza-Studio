@@ -70,6 +70,12 @@
             <a href="/relatorio" class="nav-link">Relatório</a>
           </li>
           <li>
+            <a href="/login" class="nav-link">Entrar</a>
+          </li>
+          <li>
+            <a href="/usuarios/cadastrar" class="nav-link">Cadastrar</a>
+          </li>
+          <li>
             <a href="/agendamento" class="nav-link nav-link--cta">Agendar</a>
           </li>
         </ul>
