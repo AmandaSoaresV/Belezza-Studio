@@ -22,6 +22,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agendamento</title>
     <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/agendamento.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -33,70 +34,46 @@
   </head>
 
 
-  <body class="bg-light">
+  <body class="pagina-agendamento">
      <?php
-    $header = __DIR__ . '/../includes/header.php'; 
+    $header = __DIR__ . '/../includes/header.php';
      if (file_exists($header))
-         { include $header; } 
+         { include $header; }
      else { include __DIR__ . '/../erro/erro.php'; } ?>
 
-    <main class="container py-5">
+    <main class="container-marca secao">
       <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-          <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body p-4 p-md-5">
-              <div class="text-center mb-4">
-                <span class="badge mb-3 px-3 py-2" style="background-color:var(--primary-800) ">
-                  Agendamento Online
-                </span>
+        <div class="col-lg-7 col-md-9">
 
-                <h1 class="fw-bold">Reserve seu horário</h1>
+          <div class="text-center mb-5">
+            <p class="eyebrow cor-marca justify-content-center">Agendamento Online</p>
+            <h1 class="display-marca" style="font-size: clamp(1.9rem, 4vw, 2.6rem);">Reserve seu horário</h1>
+            <p class="texto-lead">Três passos rápidos e seu horário está garantido.</p>
+          </div>
 
-                <p class="text-secondary mb-0">
-                  Preencha os dados abaixo para agendar seu serviço.
-                </p>
-              </div>
+          <div class="passos-indicador mb-4" id="passosIndicador">
+            <div class="passo-item passo-item--ativo" data-passo="1">
+              <span class="passo-numero">1</span>
+              <span class="passo-nome">Serviço</span>
+            </div>
+            <div class="passo-linha"></div>
+            <div class="passo-item" data-passo="2">
+              <span class="passo-numero">2</span>
+              <span class="passo-nome">Data &amp; horário</span>
+            </div>
+            <div class="passo-linha"></div>
+            <div class="passo-item" data-passo="3">
+              <span class="passo-numero">3</span>
+              <span class="passo-nome">Seus dados</span>
+            </div>
+          </div>
 
-              <form
-                class="form-agendamento"
-                action=""
-                method="POST"
-              >
-                <div class="mb-3">
-                  <label for="inputNome" class="form-label fw-semibold">
-                    Nome Completo
-                  </label>
+          <div class="superficie superficie--elevada p-4 p-md-5">
+            <form class="form-agendamento" action="" method="POST" id="formAgendamento">
+              <section class="etapa-agendamento" data-etapa="1">
+                <h2 class="h5 fw-semibold mb-4">Qual serviço você deseja?</h2>
 
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="inputNome"
-                    name="nome"
-                    placeholder="Digite seu nome completo"
-                    required
-                  />
-                </div>
-
-                <div class="mb-3">
-                  <label for="inputTelefone" class="form-label fw-semibold">
-                    Telefone
-                  </label>
-
-                  <input
-                    type="tel"
-                    class="form-control form-control-lg"
-                    id="inputTelefone"
-                    name="telefone"
-                    placeholder="(44) 99999-9999"
-                    required
-                  />
-                </div>
-
-                <div class="mb-3">
-                  <label for="servico" class="form-label fw-semibold">
-                    Serviço
-                  </label>
-
+                <div class="mb-4">
                   <select
                     class="form-select form-select-lg"
                     id="servico"
@@ -107,16 +84,26 @@
                       Selecione um serviço
                     </option>
 
-             <?php foreach ($servicos as $servico): ?>
-            <option value="<?php echo $servico['nome']; ?>">
-                <?php echo $servico['nome']; ?>
-            </option>
-            <?php endforeach; ?>
-            </select>
-          </div>
+                    <?php foreach ($servicos as $servico): ?>
+                    <option value="<?php echo $servico['nome']; ?>">
+                      <?php echo $servico['nome']; ?>
+                    </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn-marca btn-etapa-avancar">
+                    Continuar <i class="ph ph-arrow-right"></i>
+                  </button>
+                </div>
+              </section>
+
+              <section class="etapa-agendamento d-none" data-etapa="2">
+                <h2 class="h5 fw-semibold mb-4">Escolha a data e o horário</h2>
 
                 <div class="mb-4">
-                  <label for="data" class="form-label fw-semibold">
+                  <label for="data" class="form-label">
                     Data do Agendamento
                   </label>
 
@@ -130,80 +117,85 @@
                 </div>
 
                 <div class="mb-4">
-                  <label class="form-label fw-semibold">
+                  <label class="form-label">
                     Horários Disponíveis
                   </label>
 
                   <div class="d-flex flex-wrap gap-2" id="horarios">
-                    <button type="button" class="btn btn-outline-success">
-                      09:00
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      disabled
-                    >
-                      09:30
-                    </button>
-
-                    <button type="button" class="btn btn-outline-success">
-                      10:00
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      disabled
-                    >
-                      10:30
-                    </button>
-
-                    <button type="button" class="btn btn-outline-success">
-                      11:00
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      disabled
-                    >
-                      11:30
-                    </button>
-                    <button
-                    type="button"
-                    class="btn btn-outline-success"
-                    >
-                      12:00
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      disabled
-                    >
-                      12:30
-                    </button>
-                    <button
-                      type="button"                      
-                      class="btn btn-outline-success"
-                    >
-                      13:00
-                    </button>
+                    <button type="button" class="botao-horario botao-horario--livre">09:00</button>
+                    <button type="button" class="botao-horario" disabled>09:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">10:00</button>
+                    <button type="button" class="botao-horario" disabled>10:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">11:00</button>
+                    <button type="button" class="botao-horario" disabled>11:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">12:00</button>
+                    <button type="button" class="botao-horario" disabled>12:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">13:00</button>
                   </div>
+                  <input type="hidden" name="horario" id="horarioEscolhido" />
                 </div>
 
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-agendar" style="background-color:var(--primary-800); color:var(--white)">
-                    Agendar Horário
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn-marca btn-marca--contorno btn-etapa-voltar">
+                    <i class="ph ph-arrow-left"></i> Voltar
+                  </button>
+                  <button type="button" class="btn-marca btn-etapa-avancar">
+                    Continuar <i class="ph ph-arrow-right"></i>
                   </button>
                 </div>
-              </form>
-            </div>
+              </section>
+
+              <section class="etapa-agendamento d-none" data-etapa="3">
+                <h2 class="h5 fw-semibold mb-4">Seus dados</h2>
+
+                <div class="mb-3">
+                  <label for="inputNome" class="form-label">
+                    Nome Completo
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    id="inputNome"
+                    name="nome"
+                    placeholder="Digite seu nome completo"
+                    required
+                  />
+                </div>
+
+                <div class="mb-4">
+                  <label for="inputTelefone" class="form-label">
+                    Telefone
+                  </label>
+
+                  <input
+                    type="tel"
+                    class="form-control form-control-lg"
+                    id="inputTelefone"
+                    name="telefone"
+                    placeholder="(44) 99999-9999"
+                    required
+                  />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn-marca btn-marca--contorno btn-etapa-voltar">
+                    <i class="ph ph-arrow-left"></i> Voltar
+                  </button>
+                  <button type="submit" class="btn-marca">
+                    Confirmar Agendamento <i class="ph ph-check"></i>
+                  </button>
+                </div>
+              </section>
+
+            </form>
           </div>
         </div>
       </div>
     </main>
-    
+
+    <script src="/assets/js/agendamento.js"></script>
+
    <?php
         $footer = __DIR__ . '/../includes/footer.php';
 

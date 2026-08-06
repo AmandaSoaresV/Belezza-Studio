@@ -1,0 +1,88 @@
+.pagina-agendamento {
+  background: var(--bg-base);
+  min-height: 100vh;
+}
+
+.passos-indicador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  max-width: 480px;
+  margin: 0 auto var(--sp-5);
+}
+
+.passo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-terciario);
+}
+
+.passo-numero {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: var(--bg-surface-2);
+  color: var(--texto-terciario);
+  border: 2px solid var(--borda-forte);
+  transition: 0.2s;
+}
+
+.passo-nome {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.passo-item--ativo .passo-numero,
+.passo-item--concluido .passo-numero {
+  background: var(--primary-600);
+  color: var(--white);
+  border-color: var(--primary-600);
+}
+
+.passo-item--ativo .passo-nome,
+.passo-item--concluido .passo-nome {
+  color: var(--primary-300);
+}
+
+.passo-linha {
+  flex: 1;
+  height: 2px;
+  background: var(--borda-forte);
+  margin-top: -20px;
+}
+
+.botao-horario {
+  min-width: 84px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--borda-forte);
+  background: var(--bg-surface-2);
+  color: var(--texto-terciario);
+  font-weight: 600;
+  transition: 0.15s;
+}
+
+.botao-horario--livre {
+  color: var(--primary-300);
+  border-color: var(--borda-forte);
+}
+
+.botao-horario--livre:hover {
+  background: var(--bg-surface-3);
+  border-color: var(--primary-500);
+}
+
+.botao-horario--selecionado {
+  background: var(--primary-600) !important;
+  border-color: var(--primary-600) !important;
+  color: var(--white) !important;
+}
