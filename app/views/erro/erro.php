@@ -7,34 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/erro.css" />
     <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
 
 </head>
 <body>
 
-    <div class="modal show d-block" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
-
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Erro 404</h5>
-                </div>
-
-                <div class="modal-body text-center">
-                    <h3>Página não encontrada</h3>
-                    <p>
-                        A página que você tentou acessar não existe
-                        ou está indisponível no momento.
-                    </p>
-                </div>
-
-                <div class="modal-footer">
-                    <a href="../index/index.php" class="btn btn-primary">
-                        Voltar para o início
-                    </a>
-                </div>
-
-            </div>
-        </div>
+    <div class="superficie superficie--elevada text-center p-5" style="max-width: 420px;">
+        <i class="ph ph-flower-lotus" style="font-size: 2.5rem; color: var(--primary-500);"></i>
+        <p class="eyebrow cor-marca justify-content-center mt-3">Erro 404</p>
+        <h3 class="mb-2">Página não encontrada</h3>
+        <p class="texto-lead mb-4">
+            A página que você tentou acessar não existe
+            ou está indisponível no momento.
+        </p>
+        <a href="/" class="btn-marca">
+            Voltar para o início
+        </a>
     </div>
 
 </body>

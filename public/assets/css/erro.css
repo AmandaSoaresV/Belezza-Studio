@@ -1,7 +1,8 @@
 body {
-  background-color: var(--neutro-300);
-  height: 100vh;
+  background-color: var(--bg-base);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: var(--sp-4);
 }
