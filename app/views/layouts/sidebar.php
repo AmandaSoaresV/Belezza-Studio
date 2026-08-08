@@ -13,7 +13,28 @@
         <i class="ph ph-chart-line-up"></i> Relatório
       </a>
       <a href="/agendamento" class="admin-nav-link">
-        <i class="ph ph-calendar-plus"></i> Novo Agendamento
+        <i class="ph ph-calendar-plus"></i> Agendar (cliente)
+      </a>
+
+      <span class="admin-sidebar-secao">Formulários</span>
+
+      <a href="/usuarios/editar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios-editar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-user-gear"></i> Editar Usuário
+      </a>
+      <a href="/servicos/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-plus-circle"></i> Cadastrar Serviço
+      </a>
+      <a href="/servicos/editar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos-editar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-scissors"></i> Editar Serviço
+      </a>
+      <a href="/agendamentos/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'agendamentos-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-calendar-plus"></i> Cadastrar Agendamento
+      </a>
+      <a href="/agendamentos/editar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'agendamentos-editar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-calendar-check"></i> Editar Agendamento
+      </a>
+      <a href="/profissionais/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'profissionais-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-identification-badge"></i> Cadastrar Profissional
       </a>
     </nav>
 

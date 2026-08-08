@@ -28,6 +28,18 @@ body.pagina-relatorio {
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  overflow-y: auto;
+}
+
+.admin-sidebar-secao {
+  display: block;
+  margin: var(--sp-4) 0 var(--sp-2);
+  padding: 0 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-terciario);
 }
 
 .admin-nav-link {
