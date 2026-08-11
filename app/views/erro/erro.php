@@ -25,5 +25,6 @@
         </a>
     </div>
 
+    <script src="/assets/js/tema.js"></script>
 </body>
 </html>

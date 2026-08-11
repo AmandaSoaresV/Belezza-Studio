@@ -14,7 +14,8 @@
     <div class="container-marca">
       <div class="row gy-4">
         <div class="col-md-4">
-          <img class="logo-site" src="/assets/img/logo-site.png" alt="Belezza Studio">
+          <img class="logo-site logo-escura" src="/assets/img/logo-tema-escuro.png" alt="Belezza Studio">
+          <img class="logo-site logo-clara" src="/assets/img/logo-tema-claro.png" alt="Belezza Studio">
           <p class="mb-0" style="color: var(--texto-secundario); max-width: 320px;">
             Seu espaço de cuidado e bem-estar. Qualidade premium com atendimento personalizado.
           </p>
@@ -43,5 +44,6 @@
 </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/tema.js"></script>
 </body>
 </html>

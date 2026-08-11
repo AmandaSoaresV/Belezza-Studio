@@ -50,7 +50,8 @@
     <div class="container-marca">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between gap-3">
         <a href="/" class="d-inline-flex align-items-center text-decoration-none">
-          <img class="logo-site" src="/assets/img/logo-site.png" alt="Logo do Site">
+          <img class="logo-site logo-escura" src="/assets/img/logo-tema-escuro.png" alt="Logo do Site">
+          <img class="logo-site logo-clara" src="/assets/img/logo-tema-claro.png" alt="Logo do Site">
         </a>
 
         <ul class="nav col-12 col-lg-auto justify-content-center align-items-center mb-0 gap-1">
@@ -77,6 +78,12 @@
           </li>
           <li>
             <a href="/agendamento" class="nav-link nav-link--cta">Agendar</a>
+          </li>
+          <li>
+            <button type="button" class="nav-link btn-tema-toggle" data-tema-toggle aria-label="Alternar tema">
+              <i class="fas fa-sun icon-tema-claro"></i>
+              <i class="fas fa-moon icon-tema-escuro"></i>
+            </button>
           </li>
         </ul>
       </div>

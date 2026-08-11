@@ -2,7 +2,8 @@
 <div class="admin-shell">
   <aside class="admin-sidebar">
     <a href="/" class="admin-sidebar-logo">
-      <img src="/assets/img/logo-site.png" alt="Belezza Studio">
+      <img class="logo-escura" src="/assets/img/logo-tema-escuro.png" alt="Belezza Studio">
+      <img class="logo-clara" src="/assets/img/logo-tema-claro.png" alt="Belezza Studio">
     </a>
 
     <nav class="admin-sidebar-nav">
@@ -37,6 +38,11 @@
         <i class="ph ph-identification-badge"></i> Cadastrar Profissional
       </a>
     </nav>
+
+    <button type="button" class="admin-nav-link btn-tema-toggle" data-tema-toggle aria-label="Alternar tema">
+      <i class="ph ph-sun icon-tema-claro"></i>
+      <i class="ph ph-moon icon-tema-escuro"></i> Alternar tema
+    </button>
 
     <a href="/" class="admin-sidebar-voltar">
       <i class="ph ph-arrow-left"></i> Voltar ao site
