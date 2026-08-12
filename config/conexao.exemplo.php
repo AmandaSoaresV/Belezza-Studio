@@ -2,20 +2,15 @@
 // Arquivo de exemplo da conexão.
 // Copie para conexao.php e preencha com os dados reais do seu ambiente.
 
-$servername = "localhost";
-$username = "seu_usuario";
-$password = "sua_senha";
-$dbname = "seu_banco";
+$host = "localhost";
+$db   = "seu_banco";
+$user = "seu_usuario";
+$pass = "sua_senha";
+$port = 3306;
 
-$conn = new mysqli(
-    $servername,
-    $username,
-    $password,
-    $dbname
-);
-
-if($conn->connect_error){
-    die("Erro na conexão: " . $conn->connect_error);
+try {
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro na conexão: " . $e->getMessage());
 }
-
-?>

@@ -13,12 +13,12 @@
       WHERE usuarios.id_usuario = 3
     CONSULTA;
 
-    $resultado = $conn->query($sqlSeusHorarios);
-
-    if (!$resultado) {
-        die("erro na consulta: " . $conn->error);
+    try {
+        $resultado = $pdo->query($sqlSeusHorarios);
+        $seusHorarios = $resultado->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("erro na consulta: " . $e->getMessage());
     }
-    $seusHorarios = $resultado->fetch_all(MYSQLI_ASSOC);
   ?>
   
 <!doctype html>
@@ -159,7 +159,7 @@
             include __DIR__ . '/../erro/erro.php';
         }
 
-      $conn->close();
+      $pdo = null;
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

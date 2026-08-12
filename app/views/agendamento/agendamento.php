@@ -7,12 +7,12 @@
       FROM `servicos` 
     CONSULTA;
 
-    $resultado = $conn->query($sqlServicos);
-
-    if (!$resultado) {
-        die("erro na consulta: " . $conn->error);
+    try {
+        $resultado = $pdo->query($sqlServicos);
+        $servicos = $resultado->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("erro na consulta: " . $e->getMessage());
     }
-    $servicos = $resultado->fetch_all(MYSQLI_ASSOC);
   ?>
 
 <!doctype html>
@@ -204,7 +204,7 @@
         } else {
             include __DIR__ . '/../erro/erro.php';
         }
-    $conn->close();
+    $pdo = null;
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

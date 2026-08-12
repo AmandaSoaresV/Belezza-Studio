@@ -11,56 +11,40 @@
     WHERE agendamento.status = 'concluido';
     CONSULTA;
 
-    $resultadoReceitaTotal = $conn->query($sqlReceitaTotal);
-    if (!$resultadoReceitaTotal) {
-      die("erro na consulta: " . $conn->error);
+    try {
+      $receitaTotal = $pdo->query($sqlReceitaTotal)->fetch(PDO::FETCH_ASSOC)['receita_total'];
+
+      $sqlHoje = <<<CONSULTA
+      SELECT COUNT(*) AS total_hoje
+      FROM agendamentos
+      WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
+      AND agendamentos.status IN ('confirmado', 'concluido');
+      CONSULTA;
+
+      $totalHoje = $pdo->query($sqlHoje)->fetch(PDO::FETCH_ASSOC)['total_hoje'];
+
+      $sqlClientes = <<<CONSULTA
+      SELECT
+        COUNT(DISTINCT id_cliente) AS total_clientes
+      FROM agendamentos
+      CONSULTA;
+
+      $totalClientes = $pdo->query($sqlClientes)->fetch(PDO::FETCH_ASSOC)['total_clientes'];
+
+      $sqlReceitaHoje = <<<CONSULTA
+      SELECT
+        SUM(servico.preco) AS receita_hoje
+      FROM agendamentos AS agendamento
+      INNER JOIN servicos AS servico
+      ON servico.id_servico = agendamento.id_servico
+      WHERE agendamento.status = 'concluido'
+      AND DATE(agendamento.data_hora_servico) = CURDATE();
+      CONSULTA;
+
+      $receitaHoje = $pdo->query($sqlReceitaHoje)->fetch(PDO::FETCH_ASSOC)['receita_hoje'];
+    } catch (PDOException $e) {
+      die("erro na consulta: " . $e->getMessage());
     }
-
-    $receitaTotal = $resultadoReceitaTotal->fetch_assoc()['receita_total'];
-
-    $sqlHoje = <<<CONSULTA
-    SELECT COUNT(*) AS total_hoje
-    FROM agendamentos
-    WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
-    AND agendamentos.status IN ('confirmado', 'concluido');
-    CONSULTA;
-
-    $resultadoHoje = $conn->query($sqlHoje);
-    if (!$resultadoHoje) {
-      die("erro na consulta: " . $conn->error);
-    }
-
-    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
-
-    $sqlClientes = <<<CONSULTA
-    SELECT
-      COUNT(DISTINCT id_cliente) AS total_clientes
-    FROM agendamentos
-    CONSULTA;
-
-    $resultadoClientes = $conn->query($sqlClientes);
-    if (!$resultadoClientes) {
-      die("erro na consulta: " . $conn->error);
-    }
-
-    $totalClientes = $resultadoClientes->fetch_assoc()['total_clientes'];
-
-    $sqlReceitaHoje = <<<CONSULTA
-    SELECT
-      SUM(servico.preco) AS receita_hoje
-    FROM agendamentos AS agendamento
-    INNER JOIN servicos AS servico
-    ON servico.id_servico = agendamento.id_servico
-    WHERE agendamento.status = 'concluido'
-    AND DATE(agendamento.data_hora_servico) = CURDATE();
-    CONSULTA;
-
-    $resultadoReceitaHoje = $conn->query($sqlReceitaHoje);
-    if (!$resultadoReceitaHoje) {
-      die("erro na consulta: " . $conn->error);
-    }
-
-    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
     ?>
 
 <html lang="pt-BR">

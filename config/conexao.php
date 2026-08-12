@@ -1,21 +1,13 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "belezza_studio";
+$host = "localhost";
+$db   = "belezza_studio";
+$user = "root";
+$pass = "";
 $port = 3307;
 
-$conn = new mysqli(
-    $servername,
-    $username,
-    $password,
-    $dbname,
-    $port
-);
-
-if ($conn->connect_error) {
-    die("Erro na conexão: " . $conn->connect_error);
+try {
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro na conexão: " . $e->getMessage());
 }
-
-$conn->set_charset("utf8mb4");
-?>

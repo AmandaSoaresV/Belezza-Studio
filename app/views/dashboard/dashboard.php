@@ -4,9 +4,10 @@ $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
-$sqlTotal = "SELECT COUNT(*) AS total FROM agendamentos";
-$totalRegistros = $conn->query($sqlTotal)->fetch_assoc()['total'];
-$totalPaginas = ceil($totalRegistros / $porPagina);
+try {
+    $sqlTotal = "SELECT COUNT(*) AS total FROM agendamentos";
+    $totalRegistros = $pdo->query($sqlTotal)->fetch(PDO::FETCH_ASSOC)['total'];
+    $totalPaginas = ceil($totalRegistros / $porPagina);
 
     $sqlHoje = <<<CONSULTA
     SELECT COUNT(*) AS total_hoje
@@ -15,11 +16,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     AND agendamentos.status IN ('confirmado', 'concluido');
     CONSULTA;
 
-    $resultadoHoje = $conn->query($sqlHoje);
-    if (!$resultadoHoje) { 
-      die("erro na consulta" . $conn->error); }
-
-    $totalHoje = $resultadoHoje->fetch_assoc()['total_hoje'];
+    $totalHoje = $pdo->query($sqlHoje)->fetch(PDO::FETCH_ASSOC)['total_hoje'];
 
     $sqlTotalConfirmados = <<<CONSULTA
     SELECT COUNT(*) AS total_confirmados
@@ -27,11 +24,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     WHERE agendamentos.status = 'confirmado';
     CONSULTA;
 
-    $resultadoTotalConfirmados = $conn->query($sqlTotalConfirmados);
-    if (!$resultadoTotalConfirmados) { 
-      die("erro na consulta" . $conn->error); }
-
-    $totalConfirmados = $resultadoTotalConfirmados->fetch_assoc()['total_confirmados'];
+    $totalConfirmados = $pdo->query($sqlTotalConfirmados)->fetch(PDO::FETCH_ASSOC)['total_confirmados'];
 
     $sqlTotalPendentes = <<<CONSULTA
     SELECT COUNT(*) AS total_pendentes
@@ -39,11 +32,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     WHERE agendamentos.status = 'pendente';
     CONSULTA;
 
-    $resultadoTotalPendentes = $conn->query($sqlTotalPendentes);
-    if (!$resultadoTotalPendentes) { 
-      die("erro na consulta" . $conn->error); }
-
-    $totalPendentes = $resultadoTotalPendentes->fetch_assoc()['total_pendentes'];
+    $totalPendentes = $pdo->query($sqlTotalPendentes)->fetch(PDO::FETCH_ASSOC)['total_pendentes'];
 
     $sqlReceitaHoje = <<<CONSULTA
     SELECT COALESCE(SUM(servicos.preco), 0) AS receita_hoje
@@ -53,11 +42,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     AND DATE(agendamentos.data_hora_servico) = CURDATE();
     CONSULTA;
 
-    $resultadoReceitaHoje = $conn->query($sqlReceitaHoje);
-    if (!$resultadoReceitaHoje) { 
-      die("erro na consulta" . $conn->error); }
-      
-    $receitaHoje = $resultadoReceitaHoje->fetch_assoc()['receita_hoje'];
+    $receitaHoje = $pdo->query($sqlReceitaHoje)->fetch(PDO::FETCH_ASSOC)['receita_hoje'];
 
     $sqlAgendamentos = <<<CONSULTA
     SELECT
@@ -72,11 +57,10 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
     LIMIT $porPagina OFFSET $offset;
     CONSULTA;
 
-    $resultadoAgendamentos = $conn->query($sqlAgendamentos);
-    if (!$resultadoAgendamentos) { 
-      die("erro na consulta" . $conn->error); }
-
-    $agendamentos = $resultadoAgendamentos->fetch_all(MYSQLI_ASSOC);
+    $agendamentos = $pdo->query($sqlAgendamentos)->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("erro na consulta: " . $e->getMessage());
+}
 ?>
 
 <!doctype html>
