@@ -1,6 +1,6 @@
 <!doctype html>
    <?php
-    require_once __DIR__ . '/../../../config/conexao.php';
+    require_once __DIR__ . '/../../../api/conexao.php';
 
     $sqlReceitaTotal = <<<CONSULTA
     SELECT
@@ -71,7 +71,7 @@
 
 
   <body class="pagina-relatorio">
-    <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../layouts/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
       <div>
@@ -353,6 +353,6 @@
       </div>
     </main>
 
-    <?php include __DIR__ . '/../layouts/admin-footer.php'; ?>
+    <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
   </body>
 </html>

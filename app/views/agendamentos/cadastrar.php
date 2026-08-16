@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </head>
 <body class="body-dashboard">
-    <?php $paginaAdminAtiva = 'agendamentos-cadastrar'; include __DIR__ . '/../layouts/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'agendamentos-cadastrar'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
         <div>
@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <?php include __DIR__ . '/../layouts/admin-footer.php'; ?>
+    <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

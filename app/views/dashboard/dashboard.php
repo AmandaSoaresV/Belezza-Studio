@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../../config/conexao.php';
+<?php require_once __DIR__ . '/../../../api/conexao.php';
 
 $porPagina = 10; 
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
@@ -78,7 +78,7 @@ try {
   </head>
 
   <body class="body-dashboard">
-    <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../layouts/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
       <div>
@@ -226,7 +226,7 @@ try {
       </div>
     </div>
 
-    <?php include __DIR__ . '/../layouts/admin-footer.php'; ?>
+    <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>

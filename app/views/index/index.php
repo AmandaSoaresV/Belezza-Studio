@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../../config/conexao.php';
+<?php require_once __DIR__ . '/../../../api/conexao.php';
 
 $sqlServicos = <<<CONSULTA
 SELECT * FROM servicos
@@ -65,7 +65,7 @@ $servicosPremium = filtrarPremium($servicos);
 
   <body>
     <?php
-    $header = __DIR__ . '/../layouts/header.php'; 
+    $header = __DIR__ . '/../../../includes/header.php'; 
      if (file_exists($header))
          { include $header; } 
      else { include __DIR__ . '/../erro/erro.php'; } ?>
@@ -193,7 +193,7 @@ $servicosPremium = filtrarPremium($servicos);
     </main>
     
    <?php
-        $footer = __DIR__ . '/../layouts/footer.php';
+        $footer = __DIR__ . '/../../../includes/footer.php';
 
         if (file_exists($footer)) {
             include $footer;
