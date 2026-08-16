@@ -32,12 +32,8 @@ switch ($page) {
         require_once __DIR__ . '/../app/views/usuarios/editar.php';
         break;
 
-    case 'servicos/cadastrar':
-        require_once __DIR__ . '/../app/views/servicos/cadastrar.php';
-        break;
-
-    case 'servicos/editar':
-        require_once __DIR__ . '/../app/views/servicos/editar.php';
+    case 'servicos':
+        require_once __DIR__ . '/../app/views/servicos/index.php';
         break;
 
     case 'agendamentos/cadastrar':

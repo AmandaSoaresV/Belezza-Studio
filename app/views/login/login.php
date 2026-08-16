@@ -1,3 +1,17 @@
+<?php
+session_start(); 
+
+if (isset($_POST['login'])){
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    if (($email == 'admin@gmail.com') && ($senha == 'admin')) {
+        $_SESSION['usuario'] = $email; 
+        echo "Login bem-sucedido!";
+    } else {
+        echo "Login ou senha incorretos.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -13,7 +27,7 @@
 </head>
 <body>
     <?php
-        $header = __DIR__ . '/../layouts/header.php';
+        $header = __DIR__ . '/../../../includes/header.php';
         if (file_exists($header)) {
             include $header;
         } else {
@@ -71,7 +85,7 @@
     </main>
 
     <?php
-        $footer = __DIR__ . '/../layouts/footer.php';
+        $footer = __DIR__ . '/../../../includes/footer.php';
         if (file_exists($footer)) {
             include $footer;
         } else {

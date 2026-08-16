@@ -2,7 +2,7 @@
 
 session_start();
 
-$login =trim($_POST['login'] ?? null);   //trim tira espaços em branco do inicio e do final da string
+$login =trim($_POST['login'] ?? null); 
 
 if (empty($login)) {
    echo "Preencha o campo de login.";
