@@ -1,8 +1,18 @@
 <?php
 
+require_once __DIR__ . '/../includes/app.php';
+
 $page = $_GET['page'] ?? 'index';
 
 switch ($page) {
+
+    case 'api/agendamentos':
+        require_once __DIR__ . '/../api/agendamentos.php';
+        exit;
+
+    case 'api/servicos':
+        require_once __DIR__ . '/../api/servicos.php';
+        exit;
 
     case 'agendamento':
         require_once __DIR__ . '/../app/views/agendamento/agendamento.php';
