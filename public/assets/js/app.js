@@ -12,21 +12,18 @@ async function carregarDashboard() {
     catch (erro) {
         console.error('Falha ao carregar serviços:', erro);
         alert('Erro ao carregar os dados da API PHP. Verifique o console.');
-        definirTexto('total-servicos', '0');
-        definirTexto('media-precos', formatarPreco(0));
-        definirTexto('servico-mais-caro', '—');
+        mostrarSemDados();
     }
 }
 function atualizarCards(servicos) {
-    if (servicos.length === 0) {
-        definirTexto('total-servicos', '0');
-        definirTexto('media-precos', formatarPreco(0));
-        definirTexto('servico-mais-caro', '—');
+    if (!Array.isArray(servicos) || servicos.length === 0) {
+        mostrarSemDados();
         return;
     }
     const totalServicos = servicos.length;
     const somaPrecos = servicos.reduce((acumulador, item) => {
-        return acumulador + Number(item.preco);
+        const preco = Number(item.preco);
+        return acumulador + (Number.isFinite(preco) ? preco : 0);
     }, 0);
     const mediaPrecos = somaPrecos / totalServicos;
     const servicoMaisCaro = servicos.reduce((maior, item) => {
@@ -35,6 +32,15 @@ function atualizarCards(servicos) {
     definirTexto('total-servicos', totalServicos.toString());
     definirTexto('media-precos', formatarPreco(mediaPrecos));
     definirTexto('servico-mais-caro', servicoMaisCaro.nome);
+}
+function mostrarSemDados() {
+    const mensagem = document.getElementById('mensagem-dashboard');
+    if (mensagem) {
+        mensagem.classList.remove('d-none');
+    }
+    definirTexto('total-servicos', '0');
+    definirTexto('media-precos', formatarPreco(0));
+    definirTexto('servico-mais-caro', 'Nenhum serviço registrado');
 }
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', {

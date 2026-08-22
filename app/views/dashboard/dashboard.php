@@ -7,7 +7,7 @@ $offset = ($paginaAtual - 1) * $porPagina;
 try {
     $sqlTotal = "SELECT COUNT(*) AS total FROM agendamentos";
     $totalRegistros = $pdo->query($sqlTotal)->fetch(PDO::FETCH_ASSOC)['total'];
-    $totalPaginas = ceil($totalRegistros / $porPagina);
+    $totalPaginas = max(1, (int) ceil($totalRegistros / $porPagina));
 
     $sqlHoje = <<<CONSULTA
     SELECT COUNT(*) AS total_hoje
@@ -92,6 +92,10 @@ try {
     </header>
 
     <div class="admin-container">
+      <div id="mensagem-dashboard" class="alert alert-light border text-center d-none" role="status">
+        Nenhum dado registrado.
+      </div>
+
       <div class="row g-4">
         <div class="col-md-3">
           <div class="superficie dashboard-card">
@@ -217,6 +221,11 @@ try {
               </thead>
 
               <tbody>
+                <?php if (empty($agendamentos)): ?>
+                <tr>
+                  <td colspan="6" class="text-center py-4">Nenhum dado registrado.</td>
+                </tr>
+                <?php else: ?>
                 <?php foreach ($agendamentos as $agendamento): ?>
                 <tr>
                   <td><?php echo $agendamento['nome_cliente']; ?></td>
@@ -242,6 +251,7 @@ try {
                   </td>
                 </tr>
                 <?php endforeach; ?>
+                <?php endif; ?>
               </tbody>
             </table>
             <nav aria-label="Paginação de agendamentos">

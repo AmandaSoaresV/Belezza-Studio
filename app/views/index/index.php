@@ -44,11 +44,8 @@ function filtrarPremium(array $servicos): array
     return $premium;
 }
 
-if (!validarServicos($servicos)) {
-    die("Serviços inválidos.");
-}
-
 $servicosPremium = filtrarPremium($servicos);
+$catalogoValido = validarServicos($servicos);
 ?>
 
 <!DOCTYPE html>
@@ -118,13 +115,22 @@ $servicosPremium = filtrarPremium($servicos);
                     <div class="premium-info-conteudo">
                         <h4>Experiências Premium</h4>
                         <p>
-                            Descubra nossos <?= count($servicosPremium) ?> serviços premium com desconto exclusivo para agendamentos online.
+                            <?php if (empty($servicosPremium)): ?>
+                                Nenhum dado registrado.
+                            <?php else: ?>
+                                Descubra nossos <?= count($servicosPremium) ?> serviços premium com desconto exclusivo para agendamentos online.
+                            <?php endif; ?>
                         </p>
                     </div>
                 </div>
 
                 <div class="row g-4 linha-servicos">
 
+                    <?php if (empty($servicos)): ?>
+                    <div class="col-12">
+                        <p class="texto-lead text-center mb-0">Nenhum dado registrado.</p>
+                    </div>
+                    <?php else: ?>
                     <?php foreach ($servicos as $servico): ?>
 
                     <div class="col-12 col-md-6 col-lg-3 coluna-card-servico">
@@ -175,6 +181,7 @@ $servicosPremium = filtrarPremium($servicos);
                     </div>
 
                     <?php endforeach; ?>
+                    <?php endif; ?>
 
                 </div>
             </div>
