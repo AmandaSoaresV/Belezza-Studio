@@ -31,6 +31,7 @@
       rel="stylesheet"
       href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
     />
+    <?php include __DIR__ . '/../../../includes/form-validacao-head.php'; ?>
   </head>
 
 
@@ -69,7 +70,7 @@
           </div>
 
           <div class="superficie superficie--elevada p-4 p-md-5">
-            <form class="form-agendamento" action="" method="POST" id="formAgendamento">
+            <form class="form-agendamento" action="" method="POST" id="formAgendamento" data-parsley-validate="">
               <section class="etapa-agendamento" data-etapa="1">
                 <h2 class="h5 fw-semibold mb-4">Qual serviço você deseja?</h2>
 
@@ -79,6 +80,8 @@
                     id="servico"
                     name="servico"
                     required
+                    data-parsley-group="passo1"
+                    data-parsley-required-message="Preencha este campo"
                   >
                     <option value="" selected disabled>
                       Selecione um serviço
@@ -113,6 +116,8 @@
                     id="data"
                     name="data"
                     required
+                    data-parsley-group="passo2"
+                    data-parsley-required-message="Preencha este campo"
                   />
                 </div>
 
@@ -132,7 +137,7 @@
                     <button type="button" class="botao-horario" disabled>12:30</button>
                     <button type="button" class="botao-horario botao-horario--livre">13:00</button>
                   </div>
-                  <input type="hidden" name="horario" id="horarioEscolhido" />
+                  <input type="hidden" name="horario" id="horarioEscolhido" data-parsley-group="passo2" required data-parsley-required-message="Preencha este campo" />
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -160,21 +165,25 @@
                     name="nome"
                     placeholder="Digite seu nome completo"
                     required
+                    data-parsley-group="passo3"
+                    data-parsley-required-message="Preencha este campo"
                   />
                 </div>
 
                 <div class="mb-4">
-                  <label for="inputTelefone" class="form-label">
+                  <label for="telefone" class="form-label">
                     Telefone
                   </label>
 
                   <input
-                    type="tel"
+                    type="text"
                     class="form-control form-control-lg"
-                    id="inputTelefone"
+                    id="telefone"
                     name="telefone"
                     placeholder="(44) 99999-9999"
                     required
+                    data-parsley-group="passo3"
+                    data-parsley-required-message="Preencha este campo"
                   />
                 </div>
 
@@ -194,6 +203,7 @@
       </div>
     </main>
 
+    <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
     <script src="/assets/js/agendamento.js"></script>
 
    <?php

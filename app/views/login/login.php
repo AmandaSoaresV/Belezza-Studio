@@ -24,6 +24,7 @@ if (isset($_POST['login'])){
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <?php include __DIR__ . '/../../../includes/form-validacao-head.php'; ?>
 </head>
 <body>
     <?php
@@ -45,7 +46,7 @@ if (isset($_POST['login'])){
                 </div>
 
                 <div class="superficie superficie--elevada p-4 p-md-5">
-                    <form method="POST" action="">
+                    <form method="POST" action="" name="formLogin" data-parsley-validate="">
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
                             <input
@@ -55,6 +56,8 @@ if (isset($_POST['login'])){
                                 name="email"
                                 placeholder="seu@email.com"
                                 required
+                                data-parsley-required-message="Digite seu email"
+                                data-parsley-type-message="Insira um email válido"
                             >
                         </div>
 
@@ -67,6 +70,7 @@ if (isset($_POST['login'])){
                                 name="senha"
                                 placeholder="Sua senha"
                                 required
+                                data-parsley-required-message="Digite a senha"
                             >
                         </div>
 
@@ -78,6 +82,7 @@ if (isset($_POST['login'])){
                             Não tem conta?
                             <a href="/usuarios/cadastrar" class="cor-marca fw-semibold text-decoration-none">Cadastre-se</a>
                         </p>
+
                     </form>
                 </div>
             </div>
@@ -94,5 +99,6 @@ if (isset($_POST['login'])){
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
 </body>
 </html>

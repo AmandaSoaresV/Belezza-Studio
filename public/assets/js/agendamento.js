@@ -1,53 +1,59 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("formAgendamento");
-  if (!form) return;
+$(document).ready(function () {
+  var form = $('#formAgendamento');
+  if (!form.length) return;
 
-  const etapas = Array.from(form.querySelectorAll(".etapa-agendamento"));
-  const indicadores = Array.from(document.querySelectorAll(".passo-item"));
+  var etapas = form.find('.etapa-agendamento');
+  var indicadores = $('.passo-item');
+  var parsleyForm = form.parsley();
 
   function mostrarEtapa(numero) {
-    etapas.forEach((etapa) => {
-      etapa.classList.toggle("d-none", Number(etapa.dataset.etapa) !== numero);
+    etapas.each(function () {
+      $(this).toggleClass('d-none', Number($(this).data('etapa')) !== numero);
     });
 
-    indicadores.forEach((item) => {
-      const passo = Number(item.dataset.passo);
-      item.classList.toggle("passo-item--ativo", passo === numero);
-      item.classList.toggle("passo-item--concluido", passo < numero);
+    indicadores.each(function () {
+      var passo = Number($(this).data('passo'));
+      $(this).toggleClass('passo-item--ativo', passo === numero);
+      $(this).toggleClass('passo-item--concluido', passo < numero);
     });
   }
 
-  form.querySelectorAll(".btn-etapa-avancar").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const etapaAtual = botao.closest(".etapa-agendamento");
-      const camposObrigatorios = etapaAtual.querySelectorAll("[required]");
+  function validarEtapa(numero) {
+    if (parsleyForm) {
+      return parsleyForm.validate({ group: 'passo' + numero });
+    }
+    return true;
+  }
 
-      for (const campo of camposObrigatorios) {
-        if (!campo.checkValidity()) {
-          campo.reportValidity();
-          return;
-        }
-      }
+  form.find('.btn-etapa-avancar').on('click', function () {
+    var etapaAtual = $(this).closest('.etapa-agendamento');
+    var numeroEtapa = Number(etapaAtual.data('etapa'));
 
-      mostrarEtapa(Number(etapaAtual.dataset.etapa) + 1);
-    });
+    if (!validarEtapa(numeroEtapa)) return;
+
+    mostrarEtapa(numeroEtapa + 1);
   });
 
-  form.querySelectorAll(".btn-etapa-voltar").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const etapaAtual = botao.closest(".etapa-agendamento");
-      mostrarEtapa(Number(etapaAtual.dataset.etapa) - 1);
-    });
+  form.find('.btn-etapa-voltar').on('click', function () {
+    var etapaAtual = $(this).closest('.etapa-agendamento');
+    mostrarEtapa(Number(etapaAtual.data('etapa')) - 1);
   });
 
-  const horarios = document.querySelectorAll(".botao-horario--livre");
-  const horarioEscolhido = document.getElementById("horarioEscolhido");
+  var horarios = $('.botao-horario--livre');
+  var horarioEscolhido = $('#horarioEscolhido');
 
-  horarios.forEach((botao) => {
-    botao.addEventListener("click", () => {
-      horarios.forEach((h) => h.classList.remove("botao-horario--selecionado"));
-      botao.classList.add("botao-horario--selecionado");
-      if (horarioEscolhido) horarioEscolhido.value = botao.textContent.trim();
-    });
+  horarios.on('click', function () {
+    horarios.removeClass('botao-horario--selecionado');
+    $(this).addClass('botao-horario--selecionado');
+    horarioEscolhido.val($(this).text().trim());
+
+    var campoHorario = horarioEscolhido.parsley();
+    if (campoHorario) campoHorario.reset();
+  });
+
+  form.on('submit', function (evento) {
+    if (parsleyForm && !parsleyForm.validate()) {
+      evento.preventDefault();
+    }
   });
 });
