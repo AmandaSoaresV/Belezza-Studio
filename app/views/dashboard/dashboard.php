@@ -151,6 +151,50 @@ try {
         </div>
       </div>
 
+      <div class="row g-4 mt-1">
+        <div class="col-md-4">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--info">
+                <i class="ph ph-scissors"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="total-servicos">—</h2>
+                <p class="text-card mb-0">Serviços cadastrados</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--sucesso">
+                <i class="ph ph-tag"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="media-precos">—</h2>
+                <p class="text-card mb-0">Preço médio</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--aviso">
+                <i class="ph ph-star"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="servico-mais-caro">—</h2>
+                <p class="text-card mb-0">Serviço mais caro</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="superficie mt-5">
         <div class="card-body">
           <div
@@ -229,5 +273,6 @@ try {
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/app.js"></script>
   </body>
 </html>

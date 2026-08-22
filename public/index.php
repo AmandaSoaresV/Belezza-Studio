@@ -6,12 +6,14 @@ $page = $_GET['page'] ?? 'index';
 
 switch ($page) {
 
+    case 'api/agendamento':
     case 'api/agendamentos':
-        require_once __DIR__ . '/../api/agendamentos.php';
+        require_once __DIR__ . '/../api/agendamento.php';
         exit;
 
+    case 'api/servico':
     case 'api/servicos':
-        require_once __DIR__ . '/../api/servicos.php';
+        require_once __DIR__ . '/../api/servico.php';
         exit;
 
     case 'agendamento':

@@ -1,5 +1,8 @@
 /api/conexao.php
 **/conexao.php
+node_modules/
+public/assets/js/types.js
+dist/
 
 .htaccess
 .htacesss
