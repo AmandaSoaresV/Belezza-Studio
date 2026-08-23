@@ -16,6 +16,10 @@ switch ($page) {
         require_once __DIR__ . '/../api/servico.php';
         exit;
 
+    case 'api/dashboard':
+        require_once __DIR__ . '/../api/dashboard.php';
+        exit;
+
     case 'agendamento':
         require_once __DIR__ . '/../app/views/agendamento/agendamento.php';
         break;

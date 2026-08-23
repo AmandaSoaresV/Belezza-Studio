@@ -1,49 +1,23 @@
 <!doctype html>
    <?php
     require_once __DIR__ . '/../../../api/conexao.php';
+    require_once __DIR__ . '/../../../includes/analytics.php';
 
-    $sqlReceitaTotal = <<<CONSULTA
-    SELECT
-      SUM(servico.preco) AS receita_total
-    FROM agendamentos AS agendamento
-    INNER JOIN servicos AS servico
-    ON servico.id_servico = agendamento.id_servico
-    WHERE agendamento.status = 'concluido';
-    CONSULTA;
+    $receitaTotal = 0;
+    $totalHoje = 0;
+    $totalClientes = 0;
+    $receitaHoje = 0;
+    $erroConsulta = false;
 
     try {
-      $receitaTotal = $pdo->query($sqlReceitaTotal)->fetch(PDO::FETCH_ASSOC)['receita_total'];
+      $resumo = obterResumoRelatorio($pdo);
 
-      $sqlHoje = <<<CONSULTA
-      SELECT COUNT(*) AS total_hoje
-      FROM agendamentos
-      WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
-      AND agendamentos.status IN ('confirmado', 'concluido');
-      CONSULTA;
-
-      $totalHoje = $pdo->query($sqlHoje)->fetch(PDO::FETCH_ASSOC)['total_hoje'];
-
-      $sqlClientes = <<<CONSULTA
-      SELECT
-        COUNT(DISTINCT id_cliente) AS total_clientes
-      FROM agendamentos
-      CONSULTA;
-
-      $totalClientes = $pdo->query($sqlClientes)->fetch(PDO::FETCH_ASSOC)['total_clientes'];
-
-      $sqlReceitaHoje = <<<CONSULTA
-      SELECT
-        SUM(servico.preco) AS receita_hoje
-      FROM agendamentos AS agendamento
-      INNER JOIN servicos AS servico
-      ON servico.id_servico = agendamento.id_servico
-      WHERE agendamento.status = 'concluido'
-      AND DATE(agendamento.data_hora_servico) = CURDATE();
-      CONSULTA;
-
-      $receitaHoje = $pdo->query($sqlReceitaHoje)->fetch(PDO::FETCH_ASSOC)['receita_hoje'];
+      $receitaTotal = $resumo['receita_total'];
+      $totalHoje = $resumo['total_hoje'];
+      $totalClientes = $resumo['total_clientes'];
+      $receitaHoje = $resumo['receita_hoje'];
     } catch (PDOException $e) {
-      die("erro na consulta: " . $e->getMessage());
+      $erroConsulta = true;
     }
     ?>
 
@@ -105,6 +79,12 @@
     </header>
 
     <main class="admin-container">
+
+      <?php if ($erroConsulta): ?>
+      <div class="alert alert-warning text-center mb-4" role="alert">
+        Não foi possível carregar os dados analíticos. Verifique se a view <code>vw_agendamentos_completos</code> foi importada no banco.
+      </div>
+      <?php endif; ?>
 
       <div class="row g-4 mb-4">
         <div class="col-md-3">

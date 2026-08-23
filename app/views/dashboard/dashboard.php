@@ -1,66 +1,46 @@
-<?php require_once __DIR__ . '/../../../api/conexao.php';
+<?php
+require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/analytics.php';
 
-$porPagina = 10; 
-$paginaAtual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
+$porPagina = 10;
+$paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
+$statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
+$statusFiltro = isset($_GET['status']) && in_array($_GET['status'], $statusPermitidos, true)
+    ? $_GET['status']
+    : null;
+
+$totalHoje = 0;
+$totalConfirmados = 0;
+$totalPendentes = 0;
+$receitaHoje = 0;
+$agendamentos = [];
+$totalPaginas = 1;
+$erroConsulta = false;
+
 try {
-    $sqlTotal = "SELECT COUNT(*) AS total FROM agendamentos";
-    $totalRegistros = $pdo->query($sqlTotal)->fetch(PDO::FETCH_ASSOC)['total'];
+    $indicadores = obterIndicadoresDashboard($pdo);
+
+    $totalHoje = $indicadores['total_hoje'];
+    $totalConfirmados = $indicadores['total_confirmados'];
+    $totalPendentes = $indicadores['total_pendentes'];
+    $receitaHoje = $indicadores['receita_hoje'];
+
+    $totalRegistros = contarAgendamentosDashboard($pdo, $statusFiltro);
     $totalPaginas = max(1, (int) ceil($totalRegistros / $porPagina));
 
-    $sqlHoje = <<<CONSULTA
-    SELECT COUNT(*) AS total_hoje
-    FROM agendamentos
-    WHERE DATE(agendamentos.data_hora_servico) = CURDATE()
-    AND agendamentos.status IN ('confirmado', 'concluido');
-    CONSULTA;
+    if ($paginaAtual > $totalPaginas) {
+        $paginaAtual = $totalPaginas;
+        $offset = ($paginaAtual - 1) * $porPagina;
+    }
 
-    $totalHoje = $pdo->query($sqlHoje)->fetch(PDO::FETCH_ASSOC)['total_hoje'];
-
-    $sqlTotalConfirmados = <<<CONSULTA
-    SELECT COUNT(*) AS total_confirmados
-    FROM agendamentos
-    WHERE agendamentos.status = 'confirmado';
-    CONSULTA;
-
-    $totalConfirmados = $pdo->query($sqlTotalConfirmados)->fetch(PDO::FETCH_ASSOC)['total_confirmados'];
-
-    $sqlTotalPendentes = <<<CONSULTA
-    SELECT COUNT(*) AS total_pendentes
-    FROM agendamentos
-    WHERE agendamentos.status = 'pendente';
-    CONSULTA;
-
-    $totalPendentes = $pdo->query($sqlTotalPendentes)->fetch(PDO::FETCH_ASSOC)['total_pendentes'];
-
-    $sqlReceitaHoje = <<<CONSULTA
-    SELECT COALESCE(SUM(servicos.preco), 0) AS receita_hoje
-    FROM agendamentos
-    INNER JOIN servicos ON agendamentos.id_servico = servicos.id_servico
-    WHERE agendamentos.status = 'concluido'
-    AND DATE(agendamentos.data_hora_servico) = CURDATE();
-    CONSULTA;
-
-    $receitaHoje = $pdo->query($sqlReceitaHoje)->fetch(PDO::FETCH_ASSOC)['receita_hoje'];
-
-    $sqlAgendamentos = <<<CONSULTA
-    SELECT
-        usuarios.nome AS nome_cliente,
-        agendamentos.data_hora_servico,
-        servicos.nome AS nome_servico,
-        agendamentos.status
-    FROM agendamentos
-    INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario
-    INNER JOIN servicos ON agendamentos.id_servico = servicos.id_servico
-    ORDER BY agendamentos.data_hora_servico ASC
-    LIMIT $porPagina OFFSET $offset;
-    CONSULTA;
-
-    $agendamentos = $pdo->query($sqlAgendamentos)->fetchAll(PDO::FETCH_ASSOC);
+    $agendamentos = listarAgendamentosDashboard($pdo, $porPagina, $offset, $statusFiltro);
 } catch (PDOException $e) {
-    die("erro na consulta: " . $e->getMessage());
+    $erroConsulta = true;
 }
+
+$queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
 ?>
 
 <!doctype html>
@@ -92,6 +72,12 @@ try {
     </header>
 
     <div class="admin-container">
+      <?php if ($erroConsulta): ?>
+      <div class="alert alert-warning text-center" role="alert">
+        Não foi possível carregar os dados verifique se a view e as procedures foram importadas no banco.
+      </div>
+      <?php endif; ?>
+
       <div id="mensagem-dashboard" class="alert alert-light border text-center d-none" role="status">
         Nenhum dado registrado.
       </div>
@@ -205,6 +191,17 @@ try {
             class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
           >
             <h4 class="mb-0">Agendamentos</h4>
+
+            <form method="get" class="d-flex align-items-center gap-2">
+              <label for="filtro-status" class="form-label mb-0 small text-secondary">Status</label>
+              <select id="filtro-status" name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="" <?php echo $statusFiltro === null ? 'selected' : ''; ?>>Todos</option>
+                <option value="pendente" <?php echo $statusFiltro === 'pendente' ? 'selected' : ''; ?>>Pendente</option>
+                <option value="confirmado" <?php echo $statusFiltro === 'confirmado' ? 'selected' : ''; ?>>Confirmado</option>
+                <option value="concluido" <?php echo $statusFiltro === 'concluido' ? 'selected' : ''; ?>>Concluído</option>
+                <option value="cancelado" <?php echo $statusFiltro === 'cancelado' ? 'selected' : ''; ?>>Cancelado</option>
+              </select>
+            </form>
           </div>
 
           <div class="table-responsive">
@@ -257,19 +254,19 @@ try {
             <nav aria-label="Paginação de agendamentos">
               <ul class="pagination justify-content-center mt-3">
               <li class="page-item <?php echo $paginaAtual <= 1 ? 'disabled' : ''; ?>">
-              <a class="page-link" href="?pagina=<?php echo $paginaAtual - 1; ?>">
+              <a class="page-link" href="?pagina=<?php echo $paginaAtual - 1 . $queryPaginacao; ?>">
               <span aria-hidden="true">&laquo;</span>
               </a>
               </li>
 
               <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
               <li class="page-item <?php echo $i === $paginaAtual ? 'active' : ''; ?>">
-              <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+              <a class="page-link" href="?pagina=<?php echo $i . $queryPaginacao; ?>"><?php echo $i; ?></a>
               </li>
               <?php endfor; ?>
 
              <li class="page-item <?php echo $paginaAtual >= $totalPaginas ? 'disabled' : ''; ?>">
-             <a class="page-link" href="?pagina=<?php echo $paginaAtual + 1; ?>">
+             <a class="page-link" href="?pagina=<?php echo $paginaAtual + 1 . $queryPaginacao; ?>">
             <span aria-hidden="true">&raquo;</span>
              </a>
              </li>

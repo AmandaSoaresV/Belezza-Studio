@@ -3,14 +3,13 @@
 
     $sqlSeusHorarios = <<<CONSULTA
       SELECT
-        usuarios.nome AS nome_cliente, 
-        agendamentos.data_hora_servico, 
-        servicos.nome AS nome_servico, 
-        agendamentos.status 
-      FROM `agendamentos` 
-      INNER JOIN usuarios ON agendamentos.id_cliente = usuarios.id_usuario 
-      INNER JOIN servicos On agendamentos.id_servico = servicos.id_servico 
-      WHERE usuarios.id_usuario = 3
+        nome_cliente,
+        data_hora_servico,
+        nome_servico,
+        status
+      FROM vw_agendamentos_completos
+      WHERE id_cliente = 3
+      ORDER BY data_hora_servico ASC
     CONSULTA;
 
     try {
