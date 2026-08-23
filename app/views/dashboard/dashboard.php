@@ -142,7 +142,7 @@ $queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
       </div>
 
       <div class="row g-4 mt-1">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
               <div class="icone-tile icone-tile--info">
@@ -156,7 +156,7 @@ $queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
               <div class="icone-tile icone-tile--sucesso">
@@ -170,7 +170,7 @@ $queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="superficie dashboard-card">
             <div class="card-body d-flex align-items-center gap-4">
               <div class="icone-tile icone-tile--aviso">
@@ -179,6 +179,20 @@ $queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
               <div>
                 <h2 class="quantidade" id="servico-mais-caro">—</h2>
                 <p class="text-card mb-0">Serviço mais caro</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--marca">
+                <i class="ph ph-crown"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="total-premium">—</h2>
+                <p class="text-card mb-0">Serviços premium</p>
               </div>
             </div>
           </div>

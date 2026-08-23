@@ -13,6 +13,7 @@ async function carregarDashboard(): Promise<void> {
         atualizarCards(servicos);
     } catch (erro) {
         console.error('Falha ao carregar serviços:', erro);
+        alert('Erro ao carregar os dados da API PHP. Verifique o console.');
         mostrarSemDados();
     }
 }
@@ -36,9 +37,12 @@ function atualizarCards(servicos: Servico[]): void {
         return Number(item.preco) > Number(maior.preco) ? item : maior;
     }, servicos[0]);
 
+    const servicosPremium = servicos.filter((servico) => Number(servico.preco) > 300);
+
     definirTexto('total-servicos', totalServicos.toString());
     definirTexto('media-precos', formatarPreco(mediaPrecos));
     definirTexto('servico-mais-caro', servicoMaisCaro.nome);
+    definirTexto('total-premium', servicosPremium.length.toString());
 }
 
 function mostrarSemDados(): void {
@@ -51,6 +55,7 @@ function mostrarSemDados(): void {
     definirTexto('total-servicos', '0');
     definirTexto('media-precos', formatarPreco(0));
     definirTexto('servico-mais-caro', 'Nenhum serviço registrado');
+    definirTexto('total-premium', '0');
 }
 
 function formatarPreco(valor: number): string {

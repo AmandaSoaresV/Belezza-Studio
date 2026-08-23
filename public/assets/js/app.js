@@ -29,9 +29,11 @@ function atualizarCards(servicos) {
     const servicoMaisCaro = servicos.reduce((maior, item) => {
         return Number(item.preco) > Number(maior.preco) ? item : maior;
     }, servicos[0]);
+    const servicosPremium = servicos.filter((servico) => Number(servico.preco) > 300);
     definirTexto('total-servicos', totalServicos.toString());
     definirTexto('media-precos', formatarPreco(mediaPrecos));
     definirTexto('servico-mais-caro', servicoMaisCaro.nome);
+    definirTexto('total-premium', servicosPremium.length.toString());
 }
 function mostrarSemDados() {
     const mensagem = document.getElementById('mensagem-dashboard');
@@ -41,6 +43,7 @@ function mostrarSemDados() {
     definirTexto('total-servicos', '0');
     definirTexto('media-precos', formatarPreco(0));
     definirTexto('servico-mais-caro', 'Nenhum serviço registrado');
+    definirTexto('total-premium', '0');
 }
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', {
