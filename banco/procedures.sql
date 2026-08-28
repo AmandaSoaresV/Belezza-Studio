@@ -69,6 +69,7 @@ BEGIN
         SELECT
             id_servico,
             nome_servico,
+            preco_servico,
             status
         FROM vw_agendamentos_completos
         WHERE status IN ('pendente', 'confirmado', 'concluido')
@@ -76,9 +77,11 @@ BEGIN
     SELECT
         id_servico,
         nome_servico,
-        COUNT(*) AS total_agendamentos
+        preco_servico,
+        COUNT(*) AS total_agendamentos,
+        SUM(CASE WHEN status = 'concluido' THEN 1 ELSE 0 END) AS total_concluidos
     FROM agendamentos_limpos
-    GROUP BY id_servico, nome_servico
+    GROUP BY id_servico, nome_servico, preco_servico
     ORDER BY total_agendamentos DESC, nome_servico ASC;
 END$$
 
