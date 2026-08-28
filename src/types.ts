@@ -49,3 +49,12 @@ type RespostaDashboard = {
 type RespostaErroApi = {
     error: string;
 };
+
+type LinhaRankingFormatada = {
+    posicao: number;
+    nome: string;
+    totalAgendamentos: number;
+    precoFormatado: string;
+    faturamentoFormatado: string;
+    larguraBarra: number;
+};
