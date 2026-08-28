@@ -1,5 +1,4 @@
-<!doctype html>
-   <?php
+<?php
     require_once __DIR__ . '/../../../api/conexao.php';
     require_once __DIR__ . '/../../../includes/analytics.php';
 
@@ -21,30 +20,12 @@
     }
     ?>
 
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Relatório</title>
-        <link rel="stylesheet" href="/assets/css/global.css" />
-        <link rel="stylesheet" href="/assets/css/admin.css" />
-        <link rel="stylesheet" href="/assets/css/dashboard.css" />
-        <link rel="stylesheet" href="/assets/css/relatorio.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="/assets/js/relatorio.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-
-
-  <body class="pagina-relatorio">
+<?php
+$tituloPagina = 'Relatório';
+$classeBody = 'pagina-relatorio';
+$cssPagina = ['dashboard.css', 'relatorio.css'];
+include __DIR__ . '/../../../includes/admin-head.php';
+?>
     <?php $paginaAdminAtiva = 'relatorio'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
@@ -334,5 +315,9 @@
     </main>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="/assets/js/relatorio.js"></script>
   </body>
 </html>

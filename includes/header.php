@@ -1,16 +1,34 @@
+<?php
+
+$tituloPagina    = $tituloPagina ?? 'Belezza Studio';
+$classeBody      = $classeBody ?? '';
+$cssPagina       = $cssPagina ?? [];
+$usarFormularios = $usarFormularios ?? false;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <title><?php echo $tituloPagina; ?> — Belezza Studio</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/global.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+<?php foreach ($cssPagina as $arquivoCss): ?>
+  <link rel="stylesheet" href="/assets/css/<?php echo $arquivoCss; ?>">
+<?php endforeach; ?>
+<?php if ($usarFormularios): ?>
+  <?php include __DIR__ . '/form-validacao-head.php'; ?>
+<?php endif; ?>
+
   <style>
     .topo-site {
       background-color: rgba(11, 11, 15, 0.85);
@@ -45,7 +63,8 @@
     }
   </style>
 </head>
-<body>
+
+<body class="<?php echo $classeBody; ?>">
   <header class="topo-site text-white">
     <div class="container-marca">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between gap-3">

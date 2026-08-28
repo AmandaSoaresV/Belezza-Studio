@@ -20,25 +20,11 @@
     }
   ?>
   
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agendamento</title>
-     <link rel="stylesheet" href="/assets/css/global.css" />
-    <link rel="stylesheet" href="/assets/css/seushorarios.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
-    />
-  </head>
-
-  <body class="pagina-horarios">
+<?php
+    $tituloPagina = 'Meus Horários';
+    $classeBody = 'pagina-horarios';
+    $cssPagina = ['seushorarios.css'];
+?>
 
      <?php
         $header = __DIR__ . '/../../../includes/header.php';
