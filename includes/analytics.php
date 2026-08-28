@@ -47,6 +47,25 @@ function listarAgendamentosDashboard(
     );
 }
 
+function obterRankingServicos(PDO $pdo): array
+{
+    $linhas = chamarProcedure($pdo, 'CALL sp_ranking_servicos()');
+
+    $ranking = [];
+
+    foreach ($linhas as $linha) {
+        $ranking[] = [
+            'id_servico' => (int) ($linha['id_servico'] ?? 0),
+            'nome_servico' => (string) ($linha['nome_servico'] ?? ''),
+            'preco_servico' => (float) ($linha['preco_servico'] ?? 0),
+            'total_agendamentos' => (int) ($linha['total_agendamentos'] ?? 0),
+            'total_concluidos' => (int) ($linha['total_concluidos'] ?? 0),
+        ];
+    }
+
+    return $ranking;
+}
+
 function obterResumoRelatorio(PDO $pdo): array
 {
     $sql = <<<SQL
