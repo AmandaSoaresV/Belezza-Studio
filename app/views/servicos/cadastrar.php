@@ -1,4 +1,66 @@
 <?php
+require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/app.php';
+
+$erros = [];
+$valores = [
+    'nome' => '',
+    'preco' => '',
+    'duracao_em_minutos' => '',
+    'descricao' => '',
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $valores['nome'] = trim($_POST['nome'] ?? '');
+    $valores['preco'] = trim($_POST['preco'] ?? '');
+    $valores['duracao_em_minutos'] = trim($_POST['duracao_em_minutos'] ?? '');
+    $valores['descricao'] = trim($_POST['descricao'] ?? '');
+
+    $preco = converterPrecoParaDecimal($valores['preco']);
+    $duracao = (int) $valores['duracao_em_minutos'];
+
+    if ($valores['nome'] === '') {
+        $erros[] = 'Informe o nome do serviço.';
+    } elseif (mb_strlen($valores['nome']) > 100) {
+        $erros[] = 'O nome do serviço deve ter no máximo 100 caracteres.';
+    }
+
+    if ($preco === null || $preco <= 0) {
+        $erros[] = 'Informe um preço maior que zero.';
+    }
+
+    if ($duracao < 1) {
+        $erros[] = 'Informe a duração em minutos.';
+    }
+
+    if ($valores['descricao'] === '') {
+        $erros[] = 'Informe a descrição do serviço.';
+    }
+
+    if (empty($erros)) {
+        try {
+            $sql = <<<SQL
+            INSERT INTO servicos (nome, descricao, preco, duracao_em_minutos, created_at, updated_at)
+            VALUES (:nome, :descricao, :preco, :duracao, NOW(), NOW())
+            SQL;
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':nome', $valores['nome']);
+            $stmt->bindValue(':descricao', $valores['descricao']);
+            $stmt->bindValue(':preco', $preco);
+            $stmt->bindValue(':duracao', $duracao, PDO::PARAM_INT);
+            $stmt->execute();
+
+            header('Location: /servicos?salvo=1');
+            exit;
+        } catch (PDOException $e) {
+            $erros[] = 'Não foi possível salvar o serviço, tente novamente.';
+        }
+    }
+}
+?>
+
+<?php
 $tituloPagina = 'Cadastrar Serviço';
 $usarFormularios = true;
 include __DIR__ . '/../../../includes/admin-head.php';
@@ -13,8 +75,18 @@ include __DIR__ . '/../../../includes/admin-head.php';
     </header>
 
     <div class="admin-container">
+        <?php if (!empty($erros)): ?>
+        <div class="alert alert-danger" role="alert">
+            <ul class="mb-0">
+                <?php foreach ($erros as $erro): ?>
+                <li><?php echo htmlspecialchars($erro); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
+
         <div class="superficie p-4 p-md-5">
-            <form method="POST" action="" data-parsley-validate="" data-form-demo="1">
+            <form method="POST" action="/servicos/cadastrar" data-parsley-validate="">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="nome" class="form-label">Nome</label>
@@ -25,6 +97,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                             name="nome"
                             maxlength="100"
                             placeholder="Nome do serviço"
+                            value="<?php echo htmlspecialchars($valores['nome']); ?>"
                             required
                             data-parsley-required-message="Preencha este campo"
                         >
@@ -38,6 +111,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                             id="preco"
                             name="preco"
                             placeholder="0,00"
+                            value="<?php echo htmlspecialchars($valores['preco']); ?>"
                             required
                             data-parsley-required-message="Preencha este campo"
                         >
@@ -52,6 +126,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                             name="duracao_em_minutos"
                             min="1"
                             placeholder="Ex.: 60"
+                            value="<?php echo htmlspecialchars($valores['duracao_em_minutos']); ?>"
                             required
                             data-parsley-required-message="Preencha este campo"
                             data-parsley-min="1"
@@ -69,7 +144,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                             placeholder="Descreva o serviço"
                             required
                             data-parsley-required-message="Preencha este campo"
-                        ></textarea>
+                        ><?php echo htmlspecialchars($valores['descricao']); ?></textarea>
                     </div>
                 </div>
 
@@ -86,10 +161,5 @@ include __DIR__ . '/../../../includes/admin-head.php';
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
-    <script>
-        $(document).ready(function () {
-            $('#preco').mask('000.000.000.000.000,00', { reverse: true });
-        });
-    </script>
 </body>
 </html>

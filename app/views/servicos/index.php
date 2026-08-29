@@ -6,6 +6,8 @@ $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
+$servicoSalvo = isset($_GET['salvo']);
+
 $servicos = [];
 $totalRegistros = 0;
 $totalPaginas = 1;
@@ -46,6 +48,12 @@ include __DIR__ . '/../../../includes/admin-head.php';
     </header>
 
     <div class="admin-container">
+      <?php if ($servicoSalvo): ?>
+      <div class="alert alert-success text-center" role="alert">
+        Serviço cadastrado com sucesso.
+      </div>
+      <?php endif; ?>
+
       <?php if ($erroConsulta): ?>
       <div class="alert alert-warning text-center" role="alert">
         Não foi possível carregar os serviços, verifique se o banco foi importado.
