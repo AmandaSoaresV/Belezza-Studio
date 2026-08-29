@@ -79,7 +79,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--info">
                 <i class="ph ph-calendar"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade"><?php echo $totalHoje; ?></h2>
                 <p class="text-card mb-0">Hoje</p>
               </div>
@@ -93,7 +93,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--sucesso">
                 <i class="ph ph-check-circle"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade"><?php echo $totalConfirmados; ?></h2>
                 <p class="text-card mb-0">Confirmados</p>
               </div>
@@ -107,7 +107,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--aviso">
                 <i class="ph ph-clock"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade"><?php echo $totalPendentes; ?></h2>
                 <p class="text-card mb-0">Pendentes</p>
               </div>
@@ -121,8 +121,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--marca">
                 <i class="ph ph-currency-dollar"></i>
               </div>
-              <div>
-                <h2 class="quantidade">R$
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--valor">R$
                    <?php echo number_format($receitaHoje, 2, ',', '.'); ?></h2>
                 <p class="text-card mb-0">Receita hoje</p>
               </div>
@@ -138,7 +138,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--info">
                 <i class="ph ph-scissors"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade" id="total-servicos">—</h2>
                 <p class="text-card mb-0">Serviços cadastrados</p>
               </div>
@@ -152,8 +152,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--sucesso">
                 <i class="ph ph-tag"></i>
               </div>
-              <div>
-                <h2 class="quantidade" id="media-precos">—</h2>
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--valor" id="media-precos">—</h2>
                 <p class="text-card mb-0">Preço médio</p>
               </div>
             </div>
@@ -166,8 +166,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--aviso">
                 <i class="ph ph-star"></i>
               </div>
-              <div>
-                <h2 class="quantidade" id="servico-mais-caro">—</h2>
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--texto" id="servico-mais-caro">—</h2>
                 <p class="text-card mb-0">Serviço mais caro</p>
               </div>
             </div>
@@ -180,7 +180,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--marca">
                 <i class="ph ph-crown"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade" id="total-premium">—</h2>
                 <p class="text-card mb-0">Serviços premium</p>
               </div>
@@ -196,8 +196,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--marca">
                 <i class="ph ph-trend-up"></i>
               </div>
-              <div>
-                <h2 class="quantidade" id="faturamento-previsto">&mdash;</h2>
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--valor" id="faturamento-previsto">&mdash;</h2>
                 <p class="text-card mb-0">Faturamento previsto</p>
               </div>
             </div>
@@ -210,8 +210,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--sucesso">
                 <i class="ph ph-wallet"></i>
               </div>
-              <div>
-                <h2 class="quantidade" id="faturamento-realizado">&mdash;</h2>
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--valor" id="faturamento-realizado">&mdash;</h2>
                 <p class="text-card mb-0">Faturamento realizado</p>
               </div>
             </div>
@@ -224,8 +224,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--aviso">
                 <i class="ph ph-trophy"></i>
               </div>
-              <div>
-                <h2 class="quantidade" id="servico-mais-agendado">&mdash;</h2>
+              <div class="dashboard-card-texto">
+                <h2 class="quantidade quantidade--texto" id="servico-mais-agendado">&mdash;</h2>
                 <p class="text-card mb-0">Serviço mais agendado</p>
               </div>
             </div>
@@ -238,7 +238,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="icone-tile icone-tile--info">
                 <i class="ph ph-list-checks"></i>
               </div>
-              <div>
+              <div class="dashboard-card-texto">
                 <h2 class="quantidade" id="total-agendamentos">&mdash;</h2>
                 <p class="text-card mb-0">Total de agendamentos</p>
               </div>
