@@ -45,7 +45,7 @@ $queryPaginacao = $statusFiltro ? '&status=' . urlencode($statusFiltro) : '';
 
 <?php
 $tituloPagina = 'Dashboard';
-$cssPagina = ['dashboard.css'];
+$cssPagina = ['dashboard.css', 'relatorio.css'];
 include __DIR__ . '/../../../includes/admin-head.php';
 ?>
     <?php $paginaAdminAtiva = 'dashboard'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
@@ -185,6 +185,83 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <p class="text-card mb-0">Serviços premium</p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mt-1">
+        <div class="col-md-3">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--marca">
+                <i class="ph ph-trend-up"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="faturamento-previsto">&mdash;</h2>
+                <p class="text-card mb-0">Faturamento previsto</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--sucesso">
+                <i class="ph ph-wallet"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="faturamento-realizado">&mdash;</h2>
+                <p class="text-card mb-0">Faturamento realizado</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--aviso">
+                <i class="ph ph-trophy"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="servico-mais-agendado">&mdash;</h2>
+                <p class="text-card mb-0">Serviço mais agendado</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="superficie dashboard-card">
+            <div class="card-body d-flex align-items-center gap-4">
+              <div class="icone-tile icone-tile--info">
+                <i class="ph ph-list-checks"></i>
+              </div>
+              <div>
+                <h2 class="quantidade" id="total-agendamentos">&mdash;</h2>
+                <p class="text-card mb-0">Total de agendamentos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="superficie mt-5">
+        <div class="card-body">
+          <div class="mb-4">
+            <h4 class="mb-1">
+              <i class="ph ph-trophy"></i>
+              Serviços mais populares
+            </h4>
+
+            <p class="text-body-secondary small mb-0">
+              Ranking por número de agendamentos
+            </p>
+          </div>
+
+          <div id="lista-ranking">
+            <p class="text-center mb-0">Carregando o ranking&hellip;</p>
           </div>
         </div>
       </div>
