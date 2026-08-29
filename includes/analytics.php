@@ -115,7 +115,7 @@ function listarServicos(PDO $pdo, int $limite, int $offset): array
     $sql = <<<SQL
     SELECT id_servico, nome, descricao, preco, duracao_em_minutos
     FROM servicos
-    ORDER BY nome
+    ORDER BY id_servico DESC
     LIMIT :limite OFFSET :offset
     SQL;
 

@@ -33,3 +33,21 @@ function asset(string $arquivo): string
 {
     return url('assets/' . ltrim($arquivo, '/'));
 }
+
+function converterPrecoParaDecimal(string $preco): ?float
+{
+    $preco = trim($preco);
+
+    if ($preco === '') {
+        return null;
+    }
+
+    $preco = str_replace('.', '', $preco);
+    $preco = str_replace(',', '.', $preco);
+
+    if (!is_numeric($preco)) {
+        return null;
+    }
+
+    return (float) $preco;
+}
