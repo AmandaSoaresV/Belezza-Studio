@@ -52,6 +52,10 @@ switch ($page) {
         require_once __DIR__ . '/../app/views/servicos/index.php';
         break;
 
+    case 'servicos/cadastrar':
+        require_once __DIR__ . '/../app/views/servicos/cadastrar.php';
+        break;
+
     case 'agendamentos/cadastrar':
         require_once __DIR__ . '/../app/views/agendamentos/cadastrar.php';
         break;

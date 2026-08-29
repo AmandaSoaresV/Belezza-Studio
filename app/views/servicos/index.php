@@ -1,95 +1,128 @@
 <?php
-$tituloPagina = 'Cadastrar Serviço';
-$usarFormularios = true;
+require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/analytics.php';
+
+$porPagina = 10;
+$paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
+$offset = ($paginaAtual - 1) * $porPagina;
+
+$servicos = [];
+$totalRegistros = 0;
+$totalPaginas = 1;
+$erroConsulta = false;
+
+try {
+    $totalRegistros = contarServicos($pdo);
+    $totalPaginas = max(1, (int) ceil($totalRegistros / $porPagina));
+
+    if ($paginaAtual > $totalPaginas) {
+        $paginaAtual = $totalPaginas;
+        $offset = ($paginaAtual - 1) * $porPagina;
+    }
+
+    $servicos = listarServicos($pdo, $porPagina, $offset);
+} catch (PDOException $e) {
+    $erroConsulta = true;
+}
+?>
+
+<?php
+$tituloPagina = 'Serviços';
 include __DIR__ . '/../../../includes/admin-head.php';
 ?>
     <?php $paginaAdminAtiva = 'servicos'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
-        <div>
-            <h1 class="admin-topbar-titulo">Cadastrar Serviço</h1>
-            <p class="admin-topbar-subtitulo">Formulário com validação e máscara de preço</p>
-        </div>
+      <div>
+        <h1 class="admin-topbar-titulo">Serviços</h1>
+        <p class="admin-topbar-subtitulo">
+          <?php echo $totalRegistros; ?> serviço<?php echo $totalRegistros === 1 ? '' : 's'; ?> cadastrado<?php echo $totalRegistros === 1 ? '' : 's'; ?>
+        </p>
+      </div>
+
+      <a href="/servicos/cadastrar" class="btn-marca btn-marca--pequeno">
+        <i class="ph ph-plus"></i> Novo Serviço
+      </a>
     </header>
 
     <div class="admin-container">
-        <div class="superficie p-4 p-md-5">
-            <form method="POST" action="" data-parsley-validate="" data-form-demo="1">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="nome" class="form-label">Nome</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="nome"
-                            name="nome"
-                            maxlength="100"
-                            placeholder="Nome do serviço"
-                            required
-                            data-parsley-required-message="Preencha este campo"
-                        >
-                    </div>
+      <?php if ($erroConsulta): ?>
+      <div class="alert alert-warning text-center" role="alert">
+        Não foi possível carregar os serviços, verifique se o banco foi importado.
+      </div>
+      <?php endif; ?>
 
-                    <div class="col-md-6">
-                        <label for="preco" class="form-label">Preço (R$)</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="preco"
-                            name="preco"
-                            placeholder="0,00"
-                            required
-                            data-parsley-required-message="Preencha este campo"
-                        >
-                    </div>
+      <div class="superficie">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle tabela-marca">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Preço</th>
+                  <th>Duração</th>
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
 
-                    <div class="col-md-6">
-                        <label for="duracao_em_minutos" class="form-label">Duração (minutos)</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            id="duracao_em_minutos"
-                            name="duracao_em_minutos"
-                            min="1"
-                            placeholder="Ex.: 60"
-                            required
-                            data-parsley-required-message="Preencha este campo"
-                            data-parsley-min="1"
-                            data-parsley-min-message="Informe uma duração válida"
-                        >
-                    </div>
+              <tbody>
+                <?php if (empty($servicos)): ?>
+                <tr>
+                  <td colspan="5" class="text-center py-4">Nenhum serviço cadastrado.</td>
+                </tr>
+                <?php else: ?>
+                <?php foreach ($servicos as $servico): ?>
+                <tr>
+                  <td><?php echo htmlspecialchars($servico['nome']); ?></td>
+                  <td class="text-body-secondary"><?php echo htmlspecialchars($servico['descricao']); ?></td>
+                  <td>R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?></td>
+                  <td><?php echo $servico['duracao_em_minutos']; ?> min</td>
+                  <td>
+                    <div class="d-flex justify-content-center gap-2">
+                      <button class="btn btn-outline-primary btn-sm">
+                        <i class="ph ph-pencil"></i>
+                      </button>
 
-                    <div class="col-12">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <textarea
-                            class="form-control"
-                            id="descricao"
-                            name="descricao"
-                            rows="4"
-                            placeholder="Descreva o serviço"
-                            required
-                            data-parsley-required-message="Preencha este campo"
-                        ></textarea>
+                      <button class="btn btn-outline-danger btn-sm">
+                        <i class="ph ph-trash"></i>
+                      </button>
                     </div>
-                </div>
+                  </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+              </tbody>
+            </table>
 
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a href="/dashboard" class="btn-marca btn-marca--contorno btn-marca--pequeno"><i class="ph ph-arrow-left"></i> Voltar</a>
-                    <button type="submit" class="btn-marca btn-marca--pequeno">
-                        Salvar <i class="ph ph-floppy-disk"></i>
-                    </button>
-                </div>
-            </form>
+            <nav aria-label="Paginação de serviços">
+              <ul class="pagination justify-content-center mt-3">
+                <li class="page-item <?php echo $paginaAtual <= 1 ? 'disabled' : ''; ?>">
+                  <a class="page-link" href="?pagina=<?php echo $paginaAtual - 1; ?>">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+
+                <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <li class="page-item <?php echo $i === $paginaAtual ? 'active' : ''; ?>">
+                  <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+                <?php endfor; ?>
+
+                <li class="page-item <?php echo $paginaAtual >= $totalPaginas ? 'disabled' : ''; ?>">
+                  <a class="page-link" href="?pagina=<?php echo $paginaAtual + 1; ?>">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
+      </div>
     </div>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
-    <script>
-        $(document).ready(function () {
-            $('#preco').mask('000.000.000.000.000,00', { reverse: true });
-        });
-    </script>
-</body>
+  </body>
 </html>

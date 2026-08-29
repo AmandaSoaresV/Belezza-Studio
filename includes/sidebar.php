@@ -13,6 +13,9 @@
       <a href="/relatorio" class="admin-nav-link <?php echo $paginaAdminAtiva === 'relatorio' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-chart-line-up"></i> Relatório
       </a>
+      <a href="/servicos" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-scissors"></i> Serviços
+      </a>
       <a href="/agendamento" class="admin-nav-link">
         <i class="ph ph-calendar-plus"></i> Agendar (cliente)
       </a>
@@ -22,7 +25,7 @@
       <a href="/usuarios/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-users"></i> Cadastrar Usuário
       </a>
-      <a href="/servicos" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos' ? 'admin-nav-link--ativo' : ''; ?>">
+      <a href="/servicos/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-scissors"></i> Cadastrar Serviço
       </a>
       <a href="/agendamentos/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'agendamentos-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
