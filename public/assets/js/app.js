@@ -1,6 +1,7 @@
 "use strict";
 const caminho_api = '/api/servicos';
 const caminho_dashboard = '/api/dashboard?limite=100';
+const total_ranking_exibido = 4;
 
 async function buscarServicos() {
     const resposta = await fetch(caminho_api);
@@ -93,7 +94,7 @@ function encontrarServicoMaisAgendado(contagem) {
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', {
         style: 'currency',
-        currency: 'BRL'
+        currency: 'BRL',
     });
 }
 
@@ -102,7 +103,7 @@ function formatarRanking(ranking) {
     const maiorTotal = ranking.reduce((maior, servico) => {
         return servico.total_agendamentos > maior ? servico.total_agendamentos : maior;
     }, 0);
-    return ranking.map((servico, indice) => ({
+    return ranking.slice(0, total_ranking_exibido).map((servico, indice) => ({
         posicao: indice + 1,
         nome: servico.nome_servico,
         totalAgendamentos: servico.total_agendamentos,
@@ -208,7 +209,6 @@ function mostrarSemDados() {
     definirTexto('total-agendamentos', '0');
     renderizarRanking([]);
 }
-
 async function carregarDashboard() {
     try {
         const [servicos, dados] = await Promise.all([

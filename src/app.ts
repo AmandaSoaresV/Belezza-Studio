@@ -1,5 +1,6 @@
 const caminho_api = '/api/servicos';
 const caminho_dashboard = '/api/dashboard?limite=100';
+const total_ranking_exibido = 4;
 
 
 async function buscarServicos(): Promise<Servico[]> {
@@ -114,7 +115,7 @@ function formatarRanking(ranking: ServicoRanking[]): LinhaRankingFormatada[] {
         return servico.total_agendamentos > maior ? servico.total_agendamentos : maior;
     }, 0);
 
-    return ranking.map((servico, indice) => ({
+    return ranking.slice(0, total_ranking_exibido).map((servico, indice) => ({
         posicao: indice + 1,
         nome: servico.nome_servico,
         totalAgendamentos: servico.total_agendamentos,
