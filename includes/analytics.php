@@ -102,3 +102,39 @@ function obterResumoRelatorio(PDO $pdo): array
         'receita_hoje' => (float) ($linha['receita_hoje'] ?? 0),
     ];
 }
+
+function contarServicos(PDO $pdo): int
+{
+    $linha = $pdo->query('SELECT COUNT(*) AS total FROM servicos')->fetch(PDO::FETCH_ASSOC) ?: [];
+
+    return (int) ($linha['total'] ?? 0);
+}
+
+function listarServicos(PDO $pdo, int $limite, int $offset): array
+{
+    $sql = <<<SQL
+    SELECT id_servico, nome, descricao, preco, duracao_em_minutos
+    FROM servicos
+    ORDER BY nome
+    LIMIT :limite OFFSET :offset
+    SQL;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $servicos = [];
+
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $linha) {
+        $servicos[] = [
+            'id_servico' => (int) ($linha['id_servico'] ?? 0),
+            'nome' => (string) ($linha['nome'] ?? ''),
+            'descricao' => (string) ($linha['descricao'] ?? ''),
+            'preco' => (float) ($linha['preco'] ?? 0),
+            'duracao_em_minutos' => (int) ($linha['duracao_em_minutos'] ?? 0),
+        ];
+    }
+
+    return $servicos;
+}
