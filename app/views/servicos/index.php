@@ -7,6 +7,8 @@ $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
 $servicoSalvo = isset($_GET['salvo']);
+$servicoAtualizado = isset($_GET['atualizado']);
+$servicoNaoEncontrado = isset($_GET['naoencontrado']);
 
 $servicos = [];
 $totalRegistros = 0;
@@ -54,6 +56,18 @@ include __DIR__ . '/../../../includes/admin-head.php';
       </div>
       <?php endif; ?>
 
+      <?php if ($servicoAtualizado): ?>
+      <div class="alert alert-success text-center" role="alert">
+        Serviço atualizado com sucesso.
+      </div>
+      <?php endif; ?>
+
+      <?php if ($servicoNaoEncontrado): ?>
+      <div class="alert alert-warning text-center" role="alert">
+        Serviço não encontrado.
+      </div>
+      <?php endif; ?>
+
       <?php if ($erroConsulta): ?>
       <div class="alert alert-warning text-center" role="alert">
         Não foi possível carregar os serviços, verifique se o banco foi importado.
@@ -88,9 +102,9 @@ include __DIR__ . '/../../../includes/admin-head.php';
                   <td><?php echo $servico['duracao_em_minutos']; ?> min</td>
                   <td>
                     <div class="d-flex justify-content-center gap-2">
-                      <button class="btn btn-outline-primary btn-sm">
+                      <a href="/servicos/editar?id=<?php echo $servico['id_servico']; ?>" class="btn btn-outline-primary btn-sm" aria-label="Editar serviço">
                         <i class="ph ph-pencil"></i>
-                      </button>
+                      </a>
 
                       <button class="btn btn-outline-danger btn-sm">
                         <i class="ph ph-trash"></i>
