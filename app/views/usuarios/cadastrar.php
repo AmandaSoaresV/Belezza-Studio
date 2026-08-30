@@ -4,7 +4,6 @@ require_once __DIR__ . '/../../../includes/app.php';
 require_once __DIR__ . '/../../../includes/analytics.php';
 
 $erros = [];
-$cadastrado = isset($_GET['cadastrado']);
 $valores = [
     'nome' => '',
     'cpf' => '',
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindValue(':data_nasc', $dataNascimento);
             $stmt->execute();
 
-            header('Location: /usuarios/cadastrar?cadastrado=1');
+            header('Location: /login?cadastrado=1');
             exit;
         } catch (PDOException $e) {
             $erros[] = 'Não foi possível criar a conta, tente novamente.';
@@ -106,12 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h1 class="display-marca" style="font-size: clamp(1.9rem, 4vw, 2.4rem);">Cadastrar usuário</h1>
                     <p class="texto-lead">Preencha os dados abaixo. A validação ocorre antes do envio.</p>
                 </div>
-
-                <?php if ($cadastrado): ?>
-                <div class="alert alert-success text-center" role="alert">
-                    Conta criada com sucesso. <a href="/login" class="alert-link">Entrar agora</a>.
-                </div>
-                <?php endif; ?>
 
                 <?php if (!empty($erros)): ?>
                 <div class="alert alert-danger" role="alert">

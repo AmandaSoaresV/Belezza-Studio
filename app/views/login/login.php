@@ -1,14 +1,40 @@
 <?php
-session_start(); 
+require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/app.php';
+require_once __DIR__ . '/../../../includes/analytics.php';
+require_once __DIR__ . '/../../../includes/sessao.php';
 
-if (isset($_POST['login'])){
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-    if (($email == 'admin@gmail.com') && ($senha == 'admin')) {
-        $_SESSION['usuario'] = $email; 
-        echo "Login bem-sucedido!";
-    } else {
-        echo "Login ou senha incorretos.";
+$destino = destinoInterno($_GET['destino'] ?? '');
+$erro = '';
+$email = '';
+
+$mensagens = mensagensDeRetorno($_GET, [
+    'cadastrado' => ['tipo' => 'success', 'texto' => 'Conta criada com sucesso. Faça login para continuar.'],
+    'saiu' => ['tipo' => 'success', 'texto' => 'Você saiu da sua conta.'],
+    'precisalogin' => ['tipo' => 'warning', 'texto' => 'Faça login para continuar.'],
+]);
+
+if (estaLogado()) {
+    header('Location: ' . ($destino ?? paginaInicialDoPerfil(usuarioLogado()['tipo_perfil'])));
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $senha = (string) ($_POST['senha'] ?? '');
+
+    try {
+        $usuario = obterUsuarioPorEmail($pdo, $email);
+
+        if ($usuario === null || !password_verify($senha, $usuario['hash_senha'])) {
+            $erro = 'E-mail ou senha incorretos.';
+        } else {
+            entrarNaSessao($usuario);
+            header('Location: ' . ($destino ?? paginaInicialDoPerfil($usuario['tipo_perfil'])));
+            exit;
+        }
+    } catch (PDOException $e) {
+        $erro = 'Não foi possível entrar agora, tente novamente.';
     }
 }
 ?>
@@ -34,8 +60,16 @@ if (isset($_POST['login'])){
                     <p class="texto-lead">Acesse sua conta para gerenciar agendamentos.</p>
                 </div>
 
+                <?php include __DIR__ . '/../../../includes/alertas.php'; ?>
+
+                <?php if ($erro !== ''): ?>
+                <div class="alert alert-danger text-center" role="alert">
+                    <?php echo htmlspecialchars($erro); ?>
+                </div>
+                <?php endif; ?>
+
                 <div class="superficie superficie--elevada p-4 p-md-5">
-                    <form method="POST" action="" name="formLogin" data-parsley-validate="">
+                    <form method="POST" action="/login<?php echo $destino !== null ? '?destino=' . urlencode($destino) : ''; ?>" name="formLogin" data-parsley-validate="">
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
                             <input
@@ -43,6 +77,7 @@ if (isset($_POST['login'])){
                                 class="form-control form-control-lg"
                                 id="email"
                                 name="email"
+                                value="<?php echo htmlspecialchars($email); ?>"
                                 placeholder="seu@email.com"
                                 required
                                 data-parsley-required-message="Digite seu email"

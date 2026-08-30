@@ -257,3 +257,24 @@ function existeUsuarioComEmail(PDO $pdo, string $email, int $ignorarId = 0): boo
 
     return ((int) $stmt->fetchColumn()) > 0;
 }
+
+function obterUsuarioPorEmail(PDO $pdo, string $email): ?array
+{
+    $stmt = $pdo->prepare(
+        'SELECT id_usuario, nome, email, hash_senha, tipo_perfil FROM usuarios WHERE email = ?'
+    );
+    $stmt->execute([$email]);
+    $linha = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$linha) {
+        return null;
+    }
+
+    return [
+        'id_usuario' => (int) $linha['id_usuario'],
+        'nome' => (string) $linha['nome'],
+        'email' => (string) $linha['email'],
+        'hash_senha' => (string) $linha['hash_senha'],
+        'tipo_perfil' => (string) $linha['tipo_perfil'],
+    ];
+}
