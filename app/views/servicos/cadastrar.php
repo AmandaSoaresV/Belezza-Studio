@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../api/conexao.php';
 require_once __DIR__ . '/../../../includes/app.php';
+require_once __DIR__ . '/../../../includes/analytics.php';
 
 $erros = [];
 $valores = [
@@ -23,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erros[] = 'Informe o nome do serviço.';
     } elseif (mb_strlen($valores['nome']) > 100) {
         $erros[] = 'O nome do serviço deve ter no máximo 100 caracteres.';
+    } elseif (existeServicoComNome($pdo, $valores['nome'])) {
+        $erros[] = 'Já existe um serviço com esse nome.';
     }
 
     if ($preco === null || $preco <= 0) {

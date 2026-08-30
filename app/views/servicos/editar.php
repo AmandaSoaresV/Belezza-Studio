@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erros[] = 'Informe o nome do serviço.';
     } elseif (mb_strlen($valores['nome']) > 100) {
         $erros[] = 'O nome do serviço deve ter no máximo 100 caracteres.';
+    } elseif (existeServicoComNome($pdo, $valores['nome'], $idServico)) {
+        $erros[] = 'Já existe outro serviço com esse nome.';
     }
 
     if ($preco === null || $preco <= 0) {

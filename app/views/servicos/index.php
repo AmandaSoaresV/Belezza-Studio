@@ -159,6 +159,17 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         <i class="ph ph-pencil"></i>
                       </a>
 
+                      <?php if ($servico['total_agendamentos'] > 0): ?>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        disabled
+                        aria-label="Excluir serviço"
+                        title="Não é possível excluir: <?php echo $servico['total_agendamentos']; ?> agendamento<?php echo $servico['total_agendamentos'] === 1 ? '' : 's'; ?> vinculado<?php echo $servico['total_agendamentos'] === 1 ? '' : 's'; ?>"
+                      >
+                        <i class="ph ph-trash"></i>
+                      </button>
+                      <?php else: ?>
                       <button
                         type="button"
                         class="btn btn-outline-danger btn-sm"
@@ -168,6 +179,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                       >
                         <i class="ph ph-trash"></i>
                       </button>
+                      <?php endif; ?>
                     </div>
                   </td>
                 </tr>
@@ -203,6 +215,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
     </div>
 
     <?php foreach ($servicos as $servico): ?>
+    <?php if ($servico['total_agendamentos'] > 0) { continue; } ?>
     <div class="modal fade" id="modal-excluir-<?php echo $servico['id_servico']; ?>" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

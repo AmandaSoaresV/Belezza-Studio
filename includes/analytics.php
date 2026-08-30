@@ -113,9 +113,12 @@ function contarServicos(PDO $pdo): int
 function listarServicos(PDO $pdo, int $limite, int $offset): array
 {
     $sql = <<<SQL
-    SELECT id_servico, nome, descricao, preco, duracao_em_minutos
-    FROM servicos
-    ORDER BY id_servico DESC
+    SELECT s.id_servico, s.nome, s.descricao, s.preco, s.duracao_em_minutos,
+           COUNT(a.id_agendamento) AS total_agendamentos
+    FROM servicos s
+    LEFT JOIN agendamentos a ON a.id_servico = s.id_servico
+    GROUP BY s.id_servico, s.nome, s.descricao, s.preco, s.duracao_em_minutos
+    ORDER BY s.id_servico DESC
     LIMIT :limite OFFSET :offset
     SQL;
 
@@ -133,6 +136,7 @@ function listarServicos(PDO $pdo, int $limite, int $offset): array
             'descricao' => (string) ($linha['descricao'] ?? ''),
             'preco' => (float) ($linha['preco'] ?? 0),
             'duracao_em_minutos' => (int) ($linha['duracao_em_minutos'] ?? 0),
+            'total_agendamentos' => (int) ($linha['total_agendamentos'] ?? 0),
         ];
     }
 
@@ -184,4 +188,14 @@ function excluirServico(PDO $pdo, int $idServico): void
         $pdo->rollBack();
         throw $e;
     }
+}
+
+function existeServicoComNome(PDO $pdo, string $nome, int $ignorarId = 0): bool
+{
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM servicos WHERE nome = ? AND id_servico <> ?'
+    );
+    $stmt->execute([$nome, $ignorarId]);
+
+    return ((int) $stmt->fetchColumn()) > 0;
 }
