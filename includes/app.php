@@ -51,3 +51,24 @@ function converterPrecoParaDecimal(string $preco): ?float
 
     return (float) $preco;
 }
+
+function mensagensDeRetorno(array $parametros, array $definicoes): array
+{
+    $mensagens = [];
+
+    foreach ($definicoes as $chave => $definicao) {
+        if (!isset($parametros[$chave])) {
+            continue;
+        }
+
+        $valor = (string) $parametros[$chave];
+        $plural = ((int) $valor) === 1 ? '' : 's';
+
+        $mensagens[] = [
+            'tipo' => $definicao['tipo'],
+            'texto' => str_replace(['{valor}', '{plural}'], [$valor, $plural], $definicao['texto']),
+        ];
+    }
+
+    return $mensagens;
+}

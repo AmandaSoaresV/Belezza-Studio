@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/app.php';
 require_once __DIR__ . '/../../../includes/analytics.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,17 +39,18 @@ $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
-$servicoSalvo = isset($_GET['salvo']);
-$servicoAtualizado = isset($_GET['atualizado']);
-$servicoNaoEncontrado = isset($_GET['naoencontrado']);
-$servicoExcluido = isset($_GET['excluido']);
-$erroExclusao = isset($_GET['erroexclusao']);
-$agendamentosDoServico = isset($_GET['vinculado']) ? (int) $_GET['vinculado'] : 0;
+$mensagens = mensagensDeRetorno($_GET, [
+    'salvo' => ['tipo' => 'success', 'texto' => 'Serviço cadastrado com sucesso.'],
+    'atualizado' => ['tipo' => 'success', 'texto' => 'Serviço atualizado com sucesso.'],
+    'excluido' => ['tipo' => 'success', 'texto' => 'Serviço excluído com sucesso.'],
+    'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Serviço não encontrado.'],
+    'vinculado' => ['tipo' => 'warning', 'texto' => 'Não é possível excluir: o serviço tem {valor} agendamento{plural} vinculado{plural}.'],
+    'erroexclusao' => ['tipo' => 'danger', 'texto' => 'Não foi possível excluir o serviço, tente novamente.'],
+]);
 
 $servicos = [];
 $totalRegistros = 0;
 $totalPaginas = 1;
-$erroConsulta = false;
 
 try {
     $totalRegistros = contarServicos($pdo);
@@ -61,7 +63,10 @@ try {
 
     $servicos = listarServicos($pdo, $porPagina, $offset);
 } catch (PDOException $e) {
-    $erroConsulta = true;
+    $mensagens[] = [
+        'tipo' => 'warning',
+        'texto' => 'Não foi possível carregar os serviços, verifique se o banco foi importado.',
+    ];
 }
 ?>
 
@@ -85,47 +90,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
     </header>
 
     <div class="admin-container">
-      <?php if ($servicoSalvo): ?>
-      <div class="alert alert-success text-center" role="alert">
-        Serviço cadastrado com sucesso.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($servicoAtualizado): ?>
-      <div class="alert alert-success text-center" role="alert">
-        Serviço atualizado com sucesso.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($servicoNaoEncontrado): ?>
-      <div class="alert alert-warning text-center" role="alert">
-        Serviço não encontrado.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($servicoExcluido): ?>
-      <div class="alert alert-success text-center" role="alert">
-        Serviço excluído com sucesso.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($agendamentosDoServico > 0): ?>
-      <div class="alert alert-warning text-center" role="alert">
-        Não é possível excluir: o serviço tem <?php echo $agendamentosDoServico; ?> agendamento<?php echo $agendamentosDoServico === 1 ? '' : 's'; ?> vinculado<?php echo $agendamentosDoServico === 1 ? '' : 's'; ?>.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($erroExclusao): ?>
-      <div class="alert alert-danger text-center" role="alert">
-        Não foi possível excluir o serviço, tente novamente.
-      </div>
-      <?php endif; ?>
-
-      <?php if ($erroConsulta): ?>
-      <div class="alert alert-warning text-center" role="alert">
-        Não foi possível carregar os serviços, verifique se o banco foi importado.
-      </div>
-      <?php endif; ?>
+      <?php include __DIR__ . '/../../../includes/alertas.php'; ?>
 
       <div class="superficie">
         <div class="card-body">
