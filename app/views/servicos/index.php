@@ -2,6 +2,38 @@
 require_once __DIR__ . '/../../../api/conexao.php';
 require_once __DIR__ . '/../../../includes/analytics.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idParaExcluir = isset($_POST['id_servico']) ? (int) $_POST['id_servico'] : 0;
+
+    if ($idParaExcluir < 1) {
+        header('Location: /servicos?naoencontrado=1');
+        exit;
+    }
+
+    try {
+        $servicoParaExcluir = obterServico($pdo, $idParaExcluir);
+
+        if ($servicoParaExcluir === null) {
+            header('Location: /servicos?naoencontrado=1');
+            exit;
+        }
+
+        $agendamentosVinculados = contarAgendamentosDoServico($pdo, $idParaExcluir);
+
+        if ($agendamentosVinculados > 0) {
+            header('Location: /servicos?vinculado=' . $agendamentosVinculados);
+            exit;
+        }
+
+        excluirServico($pdo, $idParaExcluir);
+        header('Location: /servicos?excluido=1');
+        exit;
+    } catch (PDOException $e) {
+        header('Location: /servicos?erroexclusao=1');
+        exit;
+    }
+}
+
 $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
@@ -9,6 +41,9 @@ $offset = ($paginaAtual - 1) * $porPagina;
 $servicoSalvo = isset($_GET['salvo']);
 $servicoAtualizado = isset($_GET['atualizado']);
 $servicoNaoEncontrado = isset($_GET['naoencontrado']);
+$servicoExcluido = isset($_GET['excluido']);
+$erroExclusao = isset($_GET['erroexclusao']);
+$agendamentosDoServico = isset($_GET['vinculado']) ? (int) $_GET['vinculado'] : 0;
 
 $servicos = [];
 $totalRegistros = 0;
@@ -68,6 +103,24 @@ include __DIR__ . '/../../../includes/admin-head.php';
       </div>
       <?php endif; ?>
 
+      <?php if ($servicoExcluido): ?>
+      <div class="alert alert-success text-center" role="alert">
+        Serviço excluído com sucesso.
+      </div>
+      <?php endif; ?>
+
+      <?php if ($agendamentosDoServico > 0): ?>
+      <div class="alert alert-warning text-center" role="alert">
+        Não é possível excluir: o serviço tem <?php echo $agendamentosDoServico; ?> agendamento<?php echo $agendamentosDoServico === 1 ? '' : 's'; ?> vinculado<?php echo $agendamentosDoServico === 1 ? '' : 's'; ?>.
+      </div>
+      <?php endif; ?>
+
+      <?php if ($erroExclusao): ?>
+      <div class="alert alert-danger text-center" role="alert">
+        Não foi possível excluir o serviço, tente novamente.
+      </div>
+      <?php endif; ?>
+
       <?php if ($erroConsulta): ?>
       <div class="alert alert-warning text-center" role="alert">
         Não foi possível carregar os serviços, verifique se o banco foi importado.
@@ -106,7 +159,13 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         <i class="ph ph-pencil"></i>
                       </a>
 
-                      <button class="btn btn-outline-danger btn-sm">
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-excluir-<?php echo $servico['id_servico']; ?>"
+                        aria-label="Excluir serviço"
+                      >
                         <i class="ph ph-trash"></i>
                       </button>
                     </div>
@@ -142,6 +201,32 @@ include __DIR__ . '/../../../includes/admin-head.php';
         </div>
       </div>
     </div>
+
+    <?php foreach ($servicos as $servico): ?>
+    <div class="modal fade" id="modal-excluir-<?php echo $servico['id_servico']; ?>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Excluir serviço</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+
+          <div class="modal-body">
+            Tem certeza que deseja excluir <strong><?php echo htmlspecialchars($servico['nome']); ?></strong>? Essa ação não pode ser desfeita.
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+            <form method="POST" action="/servicos">
+              <input type="hidden" name="id_servico" value="<?php echo $servico['id_servico']; ?>">
+              <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 

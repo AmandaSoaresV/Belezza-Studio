@@ -159,3 +159,29 @@ function obterServico(PDO $pdo, int $idServico): ?array
         'duracao_em_minutos' => (int) $linha['duracao_em_minutos'],
     ];
 }
+
+function contarAgendamentosDoServico(PDO $pdo, int $idServico): int
+{
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM agendamentos WHERE id_servico = ?');
+    $stmt->execute([$idServico]);
+
+    return (int) $stmt->fetchColumn();
+}
+
+function excluirServico(PDO $pdo, int $idServico): void
+{
+    $pdo->beginTransaction();
+
+    try {
+        $stmt = $pdo->prepare('DELETE FROM profissional_servico WHERE id_servico = ?');
+        $stmt->execute([$idServico]);
+
+        $stmt = $pdo->prepare('DELETE FROM servicos WHERE id_servico = ?');
+        $stmt->execute([$idServico]);
+
+        $pdo->commit();
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
