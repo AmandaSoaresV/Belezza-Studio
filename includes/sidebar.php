@@ -16,13 +16,16 @@
       <a href="/servicos" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-scissors"></i> Serviços
       </a>
+      <a href="/usuarios" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-users"></i> Usuários
+      </a>
       <a href="/agendamento" class="admin-nav-link">
         <i class="ph ph-calendar-plus"></i> Agendar (cliente)
       </a>
 
       <span class="admin-sidebar-secao">Formulários</span>
 
-      <a href="/usuarios/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios' ? 'admin-nav-link--ativo' : ''; ?>">
+      <a href="/usuarios/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-users"></i> Cadastrar Usuário
       </a>
       <a href="/servicos/cadastrar" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos-cadastrar' ? 'admin-nav-link--ativo' : ''; ?>">

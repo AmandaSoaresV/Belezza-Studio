@@ -40,6 +40,10 @@ switch ($page) {
         require_once __DIR__ . '/../app/views/login/login.php';
         break;
 
+    case 'usuarios':
+        require_once __DIR__ . '/../app/views/usuarios/index.php';
+        break;
+
     case 'usuarios/cadastrar':
         require_once __DIR__ . '/../app/views/usuarios/cadastrar.php';
         break;

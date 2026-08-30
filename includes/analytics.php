@@ -199,3 +199,45 @@ function existeServicoComNome(PDO $pdo, string $nome, int $ignorarId = 0): bool
 
     return ((int) $stmt->fetchColumn()) > 0;
 }
+
+function contarUsuarios(PDO $pdo): int
+{
+    $linha = $pdo->query('SELECT COUNT(*) AS total FROM usuarios')->fetch(PDO::FETCH_ASSOC) ?: [];
+
+    return (int) ($linha['total'] ?? 0);
+}
+
+function listarUsuarios(PDO $pdo, int $limite, int $offset): array
+{
+    $sql = <<<SQL
+    SELECT u.id_usuario, u.nome, u.cpf, u.email, u.telefone, u.tipo_perfil, u.data_nasc,
+           COUNT(a.id_agendamento) AS total_agendamentos
+    FROM usuarios u
+    LEFT JOIN agendamentos a ON a.id_cliente = u.id_usuario
+    GROUP BY u.id_usuario, u.nome, u.cpf, u.email, u.telefone, u.tipo_perfil, u.data_nasc
+    ORDER BY u.id_usuario DESC
+    LIMIT :limite OFFSET :offset
+    SQL;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $usuarios = [];
+
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $linha) {
+        $usuarios[] = [
+            'id_usuario' => (int) ($linha['id_usuario'] ?? 0),
+            'nome' => (string) ($linha['nome'] ?? ''),
+            'cpf' => (string) ($linha['cpf'] ?? ''),
+            'email' => (string) ($linha['email'] ?? ''),
+            'telefone' => (string) ($linha['telefone'] ?? ''),
+            'tipo_perfil' => (string) ($linha['tipo_perfil'] ?? ''),
+            'data_nasc' => (string) ($linha['data_nasc'] ?? ''),
+            'total_agendamentos' => (int) ($linha['total_agendamentos'] ?? 0),
+        ];
+    }
+
+    return $usuarios;
+}
