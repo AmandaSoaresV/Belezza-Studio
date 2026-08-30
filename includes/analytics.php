@@ -138,3 +138,24 @@ function listarServicos(PDO $pdo, int $limite, int $offset): array
 
     return $servicos;
 }
+
+function obterServico(PDO $pdo, int $idServico): ?array
+{
+    $stmt = $pdo->prepare(
+        'SELECT id_servico, nome, descricao, preco, duracao_em_minutos FROM servicos WHERE id_servico = ?'
+    );
+    $stmt->execute([$idServico]);
+    $linha = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$linha) {
+        return null;
+    }
+
+    return [
+        'id_servico' => (int) $linha['id_servico'],
+        'nome' => (string) $linha['nome'],
+        'descricao' => (string) $linha['descricao'],
+        'preco' => (float) $linha['preco'],
+        'duracao_em_minutos' => (int) $linha['duracao_em_minutos'],
+    ];
+}
