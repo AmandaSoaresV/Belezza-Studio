@@ -1,4 +1,91 @@
 <?php
+require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/app.php';
+require_once __DIR__ . '/../../../includes/analytics.php';
+
+$erros = [];
+$cadastrado = isset($_GET['cadastrado']);
+$valores = [
+    'nome' => '',
+    'cpf' => '',
+    'datanascimento' => '',
+    'telefone' => '',
+    'email' => '',
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $valores['nome'] = trim($_POST['nome'] ?? '');
+    $valores['cpf'] = trim($_POST['cpf'] ?? '');
+    $valores['datanascimento'] = trim($_POST['datanascimento'] ?? '');
+    $valores['telefone'] = trim($_POST['telefone'] ?? '');
+    $valores['email'] = trim($_POST['email'] ?? '');
+    $senha = (string) ($_POST['senha'] ?? '');
+    $senha2 = (string) ($_POST['senha2'] ?? '');
+
+    $dataNascimento = converterDataParaBanco($valores['datanascimento']);
+
+    if ($valores['nome'] === '') {
+        $erros[] = 'Informe o nome.';
+    } elseif (mb_strlen($valores['nome']) > 40) {
+        $erros[] = 'O nome deve ter no máximo 40 caracteres.';
+    }
+
+    if ($valores['cpf'] === '') {
+        $erros[] = 'Informe o CPF.';
+    } elseif (existeUsuarioComCpf($pdo, $valores['cpf'])) {
+        $erros[] = 'Já existe uma conta com esse CPF.';
+    }
+
+    if ($dataNascimento === null) {
+        $erros[] = 'Informe uma data de nascimento válida.';
+    } elseif ($dataNascimento > date('Y-m-d')) {
+        $erros[] = 'A data de nascimento não pode ser no futuro.';
+    }
+
+    if ($valores['telefone'] === '') {
+        $erros[] = 'Informe o telefone.';
+    }
+
+    if ($valores['email'] === '') {
+        $erros[] = 'Informe o e-mail.';
+    } elseif (!filter_var($valores['email'], FILTER_VALIDATE_EMAIL)) {
+        $erros[] = 'Informe um e-mail válido.';
+    } elseif (existeUsuarioComEmail($pdo, $valores['email'])) {
+        $erros[] = 'Já existe uma conta com esse e-mail.';
+    }
+
+    if (mb_strlen($senha) < 6) {
+        $erros[] = 'A senha deve ter pelo menos 6 caracteres.';
+    } elseif ($senha !== $senha2) {
+        $erros[] = 'As senhas digitadas não são iguais.';
+    }
+
+    if (empty($erros)) {
+        try {
+            $sql = <<<SQL
+            INSERT INTO usuarios (nome, cpf, email, hash_senha, telefone, tipo_perfil, data_nasc, created_at, updated_at)
+            VALUES (:nome, :cpf, :email, :hash_senha, :telefone, 'cliente', :data_nasc, NOW(), NOW())
+            SQL;
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':nome', $valores['nome']);
+            $stmt->bindValue(':cpf', $valores['cpf']);
+            $stmt->bindValue(':email', $valores['email']);
+            $stmt->bindValue(':hash_senha', password_hash($senha, PASSWORD_DEFAULT));
+            $stmt->bindValue(':telefone', $valores['telefone']);
+            $stmt->bindValue(':data_nasc', $dataNascimento);
+            $stmt->execute();
+
+            header('Location: /usuarios/cadastrar?cadastrado=1');
+            exit;
+        } catch (PDOException $e) {
+            $erros[] = 'Não foi possível criar a conta, tente novamente.';
+        }
+    }
+}
+?>
+
+<?php
     $tituloPagina = 'Cadastrar Usuário';
     $usarFormularios = true;
 ?>
@@ -20,8 +107,24 @@
                     <p class="texto-lead">Preencha os dados abaixo. A validação ocorre antes do envio.</p>
                 </div>
 
+                <?php if ($cadastrado): ?>
+                <div class="alert alert-success text-center" role="alert">
+                    Conta criada com sucesso. <a href="/login" class="alert-link">Entrar agora</a>.
+                </div>
+                <?php endif; ?>
+
+                <?php if (!empty($erros)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                        <?php foreach ($erros as $erro): ?>
+                        <li><?php echo htmlspecialchars($erro); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
                 <div class="superficie superficie--elevada p-4 p-md-5">
-                    <form method="POST" action="" data-parsley-validate="" data-form-demo="1">
+                    <form method="POST" action="/usuarios/cadastrar" data-parsley-validate="">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="nome" class="form-label">Nome</label>
@@ -30,6 +133,7 @@
                                     class="form-control form-control-lg"
                                     id="nome"
                                     name="nome"
+                                    value="<?php echo htmlspecialchars($valores['nome']); ?>"
                                     maxlength="40"
                                     placeholder="Digite o nome completo"
                                     required
@@ -44,6 +148,7 @@
                                     class="form-control form-control-lg"
                                     id="cpf"
                                     name="cpf"
+                                    value="<?php echo htmlspecialchars($valores['cpf']); ?>"
                                     placeholder="000.000.000-00"
                                     inputmode="numeric"
                                     data-inputmask="'mask': '999.999.999-99'"
@@ -59,6 +164,7 @@
                                     class="form-control form-control-lg"
                                     id="datanascimento"
                                     name="datanascimento"
+                                    value="<?php echo htmlspecialchars($valores['datanascimento']); ?>"
                                     placeholder="dd/mm/aaaa"
                                     inputmode="numeric"
                                     data-inputmask="'mask': '99/99/9999'"
@@ -74,6 +180,7 @@
                                     class="form-control form-control-lg"
                                     id="telefone"
                                     name="telefone"
+                                    value="<?php echo htmlspecialchars($valores['telefone']); ?>"
                                     placeholder="(44) 99999-9999"
                                     inputmode="tel"
                                     required
@@ -88,27 +195,13 @@
                                     class="form-control form-control-lg"
                                     id="email"
                                     name="email"
+                                    value="<?php echo htmlspecialchars($valores['email']); ?>"
                                     maxlength="40"
                                     placeholder="seu@email.com"
                                     required
                                     data-parsley-required-message="Preencha este campo"
                                     data-parsley-type-message="Preencha com um e-mail válido"
                                 >
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="tipo_perfil" class="form-label">Perfil</label>
-                                <select
-                                    class="form-select form-select-lg"
-                                    id="tipo_perfil"
-                                    name="tipo_perfil"
-                                    required
-                                    data-parsley-required-message="Preencha este campo"
-                                >
-                                    <option value="" selected disabled>Selecione</option>
-                                    <option value="cliente">Cliente</option>
-                                    <option value="admin">Administrador</option>
-                                </select>
                             </div>
 
                             <div class="col-md-6">

@@ -241,3 +241,19 @@ function listarUsuarios(PDO $pdo, int $limite, int $offset): array
 
     return $usuarios;
 }
+
+function existeUsuarioComCpf(PDO $pdo, string $cpf, int $ignorarId = 0): bool
+{
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE cpf = ? AND id_usuario <> ?');
+    $stmt->execute([$cpf, $ignorarId]);
+
+    return ((int) $stmt->fetchColumn()) > 0;
+}
+
+function existeUsuarioComEmail(PDO $pdo, string $email, int $ignorarId = 0): bool
+{
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = ? AND id_usuario <> ?');
+    $stmt->execute([$email, $ignorarId]);
+
+    return ((int) $stmt->fetchColumn()) > 0;
+}

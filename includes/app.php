@@ -72,3 +72,20 @@ function mensagensDeRetorno(array $parametros, array $definicoes): array
 
     return $mensagens;
 }
+
+function converterDataParaBanco(string $data): ?string
+{
+    $partes = explode('/', trim($data));
+
+    if (count($partes) !== 3) {
+        return null;
+    }
+
+    [$dia, $mes, $ano] = $partes;
+
+    if (!checkdate((int) $mes, (int) $dia, (int) $ano)) {
+        return null;
+    }
+
+    return sprintf('%04d-%02d-%02d', $ano, $mes, $dia);
+}
