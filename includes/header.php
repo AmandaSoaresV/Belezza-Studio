@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/sessao.php'; ?>
 <?php
 
 $tituloPagina    = $tituloPagina ?? 'Belezza Studio';
@@ -80,21 +81,33 @@ $usarFormularios = $usarFormularios ?? false;
           <li>
             <a href="/#servicos" class="nav-link">Serviços</a>
           </li>
+          <?php if (estaLogado() && !ehAdmin()): ?>
           <li>
             <a href="/seushorarios" class="nav-link">Meus Horários</a>
           </li>
+          <?php endif; ?>
+
+          <?php if (ehAdmin()): ?>
           <li>
             <a href="/dashboard" class="nav-link">Dashboard</a>
           </li>
           <li>
             <a href="/relatorio" class="nav-link">Relatório</a>
           </li>
+          <?php endif; ?>
+
+          <?php if (!estaLogado()): ?>
           <li>
             <a href="/login" class="nav-link">Entrar</a>
           </li>
           <li>
             <a href="/usuarios/cadastrar" class="nav-link">Cadastrar</a>
           </li>
+          <?php else: ?>
+          <li>
+            <a href="/logout" class="nav-link">Sair (<?php echo htmlspecialchars(usuarioLogado()['nome']); ?>)</a>
+          </li>
+          <?php endif; ?>
           <li>
             <a href="/agendamento" class="nav-link nav-link--cta">Agendar</a>
           </li>

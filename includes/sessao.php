@@ -52,3 +52,42 @@ function destinoInterno(string $destino): ?string
 
     return $destino;
 }
+
+function exigirLogin(): void
+{
+    if (estaLogado()) {
+        return;
+    }
+
+    $destino = destinoInterno($_SERVER['REQUEST_URI'] ?? '');
+    $url = '/login?precisalogin=1';
+
+    if ($destino !== null) {
+        $url .= '&destino=' . urlencode($destino);
+    }
+
+    header('Location: ' . $url);
+    exit;
+}
+
+function exigirAdmin(): void
+{
+    exigirLogin();
+
+    if (!ehAdmin()) {
+        header('Location: /seushorarios?semacesso=1');
+        exit;
+    }
+}
+
+function exigirAdminNaApi(): void
+{
+    if (ehAdmin()) {
+        return;
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(403);
+    echo json_encode(['error' => 'Acesso restrito.']);
+    exit;
+}

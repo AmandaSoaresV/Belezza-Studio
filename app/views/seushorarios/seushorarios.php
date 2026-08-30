@@ -1,5 +1,13 @@
   <?php
     require_once __DIR__ . '/../../../api/conexao.php';
+    require_once __DIR__ . '/../../../includes/app.php';
+    require_once __DIR__ . '/../../../includes/sessao.php';
+
+    $idCliente = usuarioLogado()['id_usuario'];
+
+    $mensagens = mensagensDeRetorno($_GET, [
+        'semacesso' => ['tipo' => 'warning', 'texto' => 'Essa área é restrita aos administradores.'],
+    ]);
 
     $sqlSeusHorarios = <<<CONSULTA
       SELECT
@@ -8,15 +16,22 @@
         nome_servico,
         status
       FROM vw_agendamentos_completos
-      WHERE id_cliente = 3
+      WHERE id_cliente = :id_cliente
       ORDER BY data_hora_servico ASC
     CONSULTA;
 
+    $seusHorarios = [];
+
     try {
-        $resultado = $pdo->query($sqlSeusHorarios);
-        $seusHorarios = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        $consulta = $pdo->prepare($sqlSeusHorarios);
+        $consulta->bindValue(':id_cliente', $idCliente, PDO::PARAM_INT);
+        $consulta->execute();
+        $seusHorarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        die("erro na consulta: " . $e->getMessage());
+        $mensagens[] = [
+            'tipo' => 'warning',
+            'texto' => 'Não foi possível carregar seus horários, tente novamente.',
+        ];
     }
   ?>
   
@@ -47,6 +62,8 @@
     </div>
 
     <div class="container-marca secao">
+
+      <?php include __DIR__ . '/../../../includes/alertas.php'; ?>
 
       <?php if (empty($seusHorarios)): ?>
         <div class="superficie text-center p-5">
