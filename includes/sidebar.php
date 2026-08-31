@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/sessao.php'; ?>
 <?php $paginaAdminAtiva = $paginaAdminAtiva ?? ''; ?>
 <div class="admin-shell">
   <aside class="admin-sidebar">
@@ -47,6 +48,12 @@
     <a href="/" class="admin-sidebar-voltar">
       <i class="ph ph-arrow-left"></i> Voltar ao site
     </a>
+
+    <?php if (estaLogado()): ?>
+    <a href="/logout" class="admin-sidebar-voltar">
+      <i class="ph ph-sign-out"></i> Sair (<?php echo htmlspecialchars(usuarioLogado()['nome']); ?>)
+    </a>
+    <?php endif; ?>
   </aside>
 
   <div class="admin-conteudo">

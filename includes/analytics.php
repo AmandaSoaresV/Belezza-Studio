@@ -278,3 +278,26 @@ function obterUsuarioPorEmail(PDO $pdo, string $email): ?array
         'tipo_perfil' => (string) $linha['tipo_perfil'],
     ];
 }
+
+function obterUsuario(PDO $pdo, int $idUsuario): ?array
+{
+    $stmt = $pdo->prepare(
+        'SELECT id_usuario, nome, cpf, email, telefone, tipo_perfil, data_nasc FROM usuarios WHERE id_usuario = ?'
+    );
+    $stmt->execute([$idUsuario]);
+    $linha = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$linha) {
+        return null;
+    }
+
+    return [
+        'id_usuario' => (int) $linha['id_usuario'],
+        'nome' => (string) $linha['nome'],
+        'cpf' => (string) $linha['cpf'],
+        'email' => (string) $linha['email'],
+        'telefone' => (string) $linha['telefone'],
+        'tipo_perfil' => (string) $linha['tipo_perfil'],
+        'data_nasc' => (string) $linha['data_nasc'],
+    ];
+}
