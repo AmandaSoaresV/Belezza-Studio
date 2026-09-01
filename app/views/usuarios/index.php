@@ -2,6 +2,46 @@
 require_once __DIR__ . '/../../../api/conexao.php';
 require_once __DIR__ . '/../../../includes/app.php';
 require_once __DIR__ . '/../../../includes/analytics.php';
+require_once __DIR__ . '/../../../includes/sessao.php';
+
+$idLogado = usuarioLogado()['id_usuario'] ?? 0;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idParaExcluir = isset($_POST['id_usuario']) ? (int) $_POST['id_usuario'] : 0;
+
+    if ($idParaExcluir < 1) {
+        header('Location: /usuarios?naoencontrado=1');
+        exit;
+    }
+
+    if ($idParaExcluir === $idLogado) {
+        header('Location: /usuarios?propriaconta=1');
+        exit;
+    }
+
+    try {
+        $usuarioParaExcluir = obterUsuario($pdo, $idParaExcluir);
+
+        if ($usuarioParaExcluir === null) {
+            header('Location: /usuarios?naoencontrado=1');
+            exit;
+        }
+
+        $agendamentosVinculados = contarAgendamentosDoUsuario($pdo, $idParaExcluir);
+
+        if ($agendamentosVinculados > 0) {
+            header('Location: /usuarios?vinculado=' . $agendamentosVinculados);
+            exit;
+        }
+
+        excluirUsuario($pdo, $idParaExcluir);
+        header('Location: /usuarios?excluido=1');
+        exit;
+    } catch (PDOException $e) {
+        header('Location: /usuarios?erroexclusao=1');
+        exit;
+    }
+}
 
 $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
@@ -12,6 +52,9 @@ $mensagens = mensagensDeRetorno($_GET, [
     'atualizado' => ['tipo' => 'success', 'texto' => 'Usuário atualizado com sucesso.'],
     'excluido' => ['tipo' => 'success', 'texto' => 'Usuário excluído com sucesso.'],
     'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Usuário não encontrado.'],
+    'vinculado' => ['tipo' => 'warning', 'texto' => 'Não é possível excluir: o usuário tem {valor} agendamento{plural} vinculado{plural}.'],
+    'propriaconta' => ['tipo' => 'warning', 'texto' => 'Você não pode excluir a própria conta.'],
+    'erroexclusao' => ['tipo' => 'danger', 'texto' => 'Não foi possível excluir o usuário, tente novamente.'],
 ]);
 
 $usuarios = [];
@@ -96,9 +139,37 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         <i class="ph ph-pencil"></i>
                       </a>
 
-                      <button type="button" class="btn btn-outline-danger btn-sm" aria-label="Excluir usuário">
+                      <?php if ($usuario['id_usuario'] === $idLogado): ?>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        disabled
+                        aria-label="Excluir usuário"
+                        title="Não é possível excluir a própria conta"
+                      >
                         <i class="ph ph-trash"></i>
                       </button>
+                      <?php elseif ($usuario['total_agendamentos'] > 0): ?>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        disabled
+                        aria-label="Excluir usuário"
+                        title="Não é possível excluir: <?php echo $usuario['total_agendamentos']; ?> agendamento<?php echo $usuario['total_agendamentos'] === 1 ? '' : 's'; ?> vinculado<?php echo $usuario['total_agendamentos'] === 1 ? '' : 's'; ?>"
+                      >
+                        <i class="ph ph-trash"></i>
+                      </button>
+                      <?php else: ?>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-excluir-<?php echo $usuario['id_usuario']; ?>"
+                        aria-label="Excluir usuário"
+                      >
+                        <i class="ph ph-trash"></i>
+                      </button>
+                      <?php endif; ?>
                     </div>
                   </td>
                 </tr>
@@ -132,6 +203,33 @@ include __DIR__ . '/../../../includes/admin-head.php';
         </div>
       </div>
     </div>
+
+    <?php foreach ($usuarios as $usuario): ?>
+    <?php if ($usuario['id_usuario'] === $idLogado || $usuario['total_agendamentos'] > 0) { continue; } ?>
+    <div class="modal fade" id="modal-excluir-<?php echo $usuario['id_usuario']; ?>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Excluir usuário</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+
+          <div class="modal-body">
+            Tem certeza que deseja excluir <strong><?php echo htmlspecialchars($usuario['nome']); ?></strong>? Essa ação não pode ser desfeita.
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+            <form method="POST" action="/usuarios">
+              <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
+              <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 

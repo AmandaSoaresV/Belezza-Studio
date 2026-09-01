@@ -301,3 +301,17 @@ function obterUsuario(PDO $pdo, int $idUsuario): ?array
         'data_nasc' => (string) $linha['data_nasc'],
     ];
 }
+
+function contarAgendamentosDoUsuario(PDO $pdo, int $idUsuario): int
+{
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM agendamentos WHERE id_cliente = ?');
+    $stmt->execute([$idUsuario]);
+
+    return (int) $stmt->fetchColumn();
+}
+
+function excluirUsuario(PDO $pdo, int $idUsuario): void
+{
+    $stmt = $pdo->prepare('DELETE FROM usuarios WHERE id_usuario = ?');
+    $stmt->execute([$idUsuario]);
+}
