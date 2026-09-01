@@ -6,6 +6,7 @@
     $idCliente = usuarioLogado()['id_usuario'];
 
     $mensagens = mensagensDeRetorno($_GET, [
+        'criado' => ['tipo' => 'success', 'texto' => 'Agendamento solicitado com sucesso. Ele ficará pendente até a confirmação do salão.'],
         'semacesso' => ['tipo' => 'warning', 'texto' => 'Essa área é restrita aos administradores.'],
     ]);
 

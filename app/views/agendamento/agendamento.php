@@ -1,19 +1,72 @@
-  <?php
+<?php
     require_once __DIR__ . '/../../../api/conexao.php';
+    require_once __DIR__ . '/../../../includes/app.php';
+    require_once __DIR__ . '/../../../includes/analytics.php';
+    require_once __DIR__ . '/../../../includes/sessao.php';
 
-    $sqlServicos = <<<CONSULTA
-      SELECT
-        nome 
-      FROM `servicos` 
-    CONSULTA;
+    $idCliente = usuarioLogado()['id_usuario'];
+
+    $servicos = [];
+    $profissionais = [];
+    $cliente = null;
+    $erros = [];
 
     try {
-        $resultado = $pdo->query($sqlServicos);
-        $servicos = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        $servicos = listarServicosParaSelecao($pdo);
+        $profissionais = listarProfissionais($pdo);
+        $cliente = obterUsuario($pdo, $idCliente);
     } catch (PDOException $e) {
-        die("erro na consulta: " . $e->getMessage());
+        $erros[] = 'Não foi possível carregar os serviços e profissionais, tente novamente.';
     }
-  ?>
+
+    $valores = [
+        'id_servico' => '',
+        'id_profissional' => '',
+        'data' => '',
+        'horario' => '',
+    ];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erros)) {
+        $valores['id_servico'] = trim($_POST['id_servico'] ?? '');
+        $valores['id_profissional'] = trim($_POST['id_profissional'] ?? '');
+        $valores['data'] = trim($_POST['data'] ?? '');
+        $valores['horario'] = trim($_POST['horario'] ?? '');
+
+        $idServico = (int) $valores['id_servico'];
+        $idProfissional = (int) $valores['id_profissional'];
+        $dataHora = converterDataHoraParaBanco($valores['data'] . 'T' . $valores['horario']);
+
+        if (!existeIdNaLista($servicos, 'id_servico', $idServico)) {
+            $erros[] = 'Selecione um serviço da lista.';
+        }
+
+        if (!existeIdNaLista($profissionais, 'id_profissional', $idProfissional)) {
+            $erros[] = 'Selecione um profissional da lista.';
+        }
+
+        if ($dataHora === null) {
+            $erros[] = 'Escolha uma data e um horário válidos.';
+        }
+
+        if (empty($erros)) {
+            try {
+                criarAgendamento($pdo, [
+                    'id_cliente' => $idCliente,
+                    'id_profissional' => $idProfissional,
+                    'id_servico' => $idServico,
+                    'data_hora_servico' => $dataHora,
+                    'status' => 'pendente',
+                    'observacao' => '',
+                ]);
+
+                header('Location: /seushorarios?criado=1');
+                exit;
+            } catch (PDOException $e) {
+                $erros[] = 'Não foi possível confirmar o agendamento, tente novamente.';
+            }
+        }
+    }
+?>
 
 <?php
     $tituloPagina = 'Agendamento';
@@ -37,6 +90,16 @@
             <p class="texto-lead">Três passos rápidos e seu horário está garantido.</p>
           </div>
 
+          <?php if (!empty($erros)): ?>
+          <div class="alert alert-danger" role="alert">
+            <ul class="mb-0">
+              <?php foreach ($erros as $erro): ?>
+              <li><?php echo htmlspecialchars($erro); ?></li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+          <?php endif; ?>
+
           <div class="passos-indicador mb-4" id="passosIndicador">
             <div class="passo-item passo-item--ativo" data-passo="1">
               <span class="passo-numero">1</span>
@@ -55,26 +118,55 @@
           </div>
 
           <div class="superficie superficie--elevada p-4 p-md-5">
-            <form class="form-agendamento" action="" method="POST" id="formAgendamento" data-parsley-validate="">
+            <form class="form-agendamento" action="/agendamento" method="POST" id="formAgendamento" data-parsley-validate="">
               <section class="etapa-agendamento" data-etapa="1">
                 <h2 class="h5 fw-semibold mb-4">Qual serviço você deseja?</h2>
 
                 <div class="mb-4">
+                  <label for="id_servico" class="form-label">Serviço</label>
                   <select
                     class="form-select form-select-lg"
-                    id="servico"
-                    name="servico"
+                    id="id_servico"
+                    name="id_servico"
                     required
                     data-parsley-group="passo1"
                     data-parsley-required-message="Preencha este campo"
                   >
-                    <option value="" selected disabled>
+                    <option value="" disabled <?php echo $valores['id_servico'] === '' ? 'selected' : ''; ?>>
                       Selecione um serviço
                     </option>
 
                     <?php foreach ($servicos as $servico): ?>
-                    <option value="<?php echo $servico['nome']; ?>">
-                      <?php echo $servico['nome']; ?>
+                    <option
+                      value="<?php echo $servico['id_servico']; ?>"
+                      <?php echo (string) $servico['id_servico'] === $valores['id_servico'] ? 'selected' : ''; ?>
+                    >
+                      <?php echo htmlspecialchars($servico['nome']); ?> &mdash; R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
+                    </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+
+                <div class="mb-4">
+                  <label for="id_profissional" class="form-label">Profissional</label>
+                  <select
+                    class="form-select form-select-lg"
+                    id="id_profissional"
+                    name="id_profissional"
+                    required
+                    data-parsley-group="passo1"
+                    data-parsley-required-message="Preencha este campo"
+                  >
+                    <option value="" disabled <?php echo $valores['id_profissional'] === '' ? 'selected' : ''; ?>>
+                      Selecione um profissional
+                    </option>
+
+                    <?php foreach ($profissionais as $profissional): ?>
+                    <option
+                      value="<?php echo $profissional['id_profissional']; ?>"
+                      <?php echo (string) $profissional['id_profissional'] === $valores['id_profissional'] ? 'selected' : ''; ?>
+                    >
+                      <?php echo htmlspecialchars($profissional['nome']); ?> &mdash; <?php echo htmlspecialchars($profissional['especialidade']); ?>
                     </option>
                     <?php endforeach; ?>
                   </select>
@@ -100,6 +192,7 @@
                     class="form-control form-control-lg"
                     id="data"
                     name="data"
+                    value="<?php echo htmlspecialchars($valores['data']); ?>"
                     required
                     data-parsley-group="passo2"
                     data-parsley-required-message="Preencha este campo"
@@ -113,16 +206,27 @@
 
                   <div class="d-flex flex-wrap gap-2" id="horarios">
                     <button type="button" class="botao-horario botao-horario--livre">09:00</button>
-                    <button type="button" class="botao-horario" disabled>09:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">09:30</button>
                     <button type="button" class="botao-horario botao-horario--livre">10:00</button>
-                    <button type="button" class="botao-horario" disabled>10:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">10:30</button>
                     <button type="button" class="botao-horario botao-horario--livre">11:00</button>
-                    <button type="button" class="botao-horario" disabled>11:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">12:00</button>
-                    <button type="button" class="botao-horario" disabled>12:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">13:00</button>
+                    <button type="button" class="botao-horario botao-horario--livre">11:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">14:00</button>
+                    <button type="button" class="botao-horario botao-horario--livre">14:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">15:00</button>
+                    <button type="button" class="botao-horario botao-horario--livre">15:30</button>
+                    <button type="button" class="botao-horario botao-horario--livre">16:00</button>
+                    <button type="button" class="botao-horario botao-horario--livre">16:30</button>
                   </div>
-                  <input type="hidden" name="horario" id="horarioEscolhido" data-parsley-group="passo2" required data-parsley-required-message="Preencha este campo" />
+                  <input
+                    type="hidden"
+                    name="horario"
+                    id="horarioEscolhido"
+                    value="<?php echo htmlspecialchars($valores['horario']); ?>"
+                    data-parsley-group="passo2"
+                    required
+                    data-parsley-required-message="Escolha um horário"
+                  />
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -138,37 +242,30 @@
               <section class="etapa-agendamento d-none" data-etapa="3">
                 <h2 class="h5 fw-semibold mb-4">Seus dados</h2>
 
-                <div class="mb-3">
-                  <label for="inputNome" class="form-label">
-                    Nome Completo
-                  </label>
+                <p class="texto-lead mb-4">
+                  O agendamento será feito em nome da conta que está logada. Para alterar esses dados,
+                  fale com a recepção do salão.
+                </p>
 
+                <div class="mb-3">
+                  <label for="nomeCliente" class="form-label">Nome Completo</label>
                   <input
                     type="text"
                     class="form-control form-control-lg"
-                    id="inputNome"
-                    name="nome"
-                    placeholder="Digite seu nome completo"
-                    required
-                    data-parsley-group="passo3"
-                    data-parsley-required-message="Preencha este campo"
+                    id="nomeCliente"
+                    value="<?php echo htmlspecialchars($cliente['nome'] ?? ''); ?>"
+                    readonly
                   />
                 </div>
 
                 <div class="mb-4">
-                  <label for="telefone" class="form-label">
-                    Telefone
-                  </label>
-
+                  <label for="telefoneCliente" class="form-label">Telefone</label>
                   <input
                     type="text"
                     class="form-control form-control-lg"
-                    id="telefone"
-                    name="telefone"
-                    placeholder="(44) 99999-9999"
-                    required
-                    data-parsley-group="passo3"
-                    data-parsley-required-message="Preencha este campo"
+                    id="telefoneCliente"
+                    value="<?php echo htmlspecialchars($cliente['telefone'] ?? ''); ?>"
+                    readonly
                   />
                 </div>
 

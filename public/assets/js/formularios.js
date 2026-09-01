@@ -110,13 +110,5 @@
       aplicarMascarasImdb(evento.target);
       inicializarValidacao(evento.target);
     });
-
-    $(document).on('submit', 'form[data-form-demo="1"]', function (evento) {
-      var instancia = $(this).parsley();
-
-      if (instancia && instancia.isValid()) {
-        evento.preventDefault();
-      }
-    });
   });
 })(window.jQuery);
