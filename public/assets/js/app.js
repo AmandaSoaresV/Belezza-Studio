@@ -2,7 +2,6 @@
 const caminho_api = '/api/servicos';
 const caminho_dashboard = '/api/dashboard?limite=100';
 const total_ranking_exibido = 4;
-
 async function buscarServicos() {
     const resposta = await fetch(caminho_api);
     if (!resposta.ok) {
@@ -10,7 +9,6 @@ async function buscarServicos() {
     }
     return await resposta.json();
 }
-
 async function buscarDashboard() {
     const resposta = await fetch(caminho_dashboard);
     if (!resposta.ok) {
@@ -18,21 +16,15 @@ async function buscarDashboard() {
     }
     return await resposta.json();
 }
-
-
 function somarPrecos(servicos) {
     return servicos.reduce((acumulador, servico) => acumulador + servico.preco, 0);
 }
-
-
 function calcularMediaPrecos(servicos) {
     if (servicos.length === 0) {
         return 0;
     }
     return somarPrecos(servicos) / servicos.length;
 }
-
-
 function encontrarServicoMaisCaro(servicos) {
     if (servicos.length === 0) {
         return null;
@@ -41,32 +33,22 @@ function encontrarServicoMaisCaro(servicos) {
         return servico.preco > maisCaro.preco ? servico : maisCaro;
     });
 }
-
-
 function filtrarServicosPremium(servicos) {
     return servicos.filter((servico) => servico.preco > 300);
 }
-
-
 function filtrarAgendamentosAtivos(agendamentos) {
     return agendamentos.filter((agendamento) => agendamento.status !== 'cancelado');
 }
-
-
 function calcularFaturamentoPrevisto(ranking) {
     return ranking.reduce((total, servico) => {
         return total + servico.total_agendamentos * servico.preco_servico;
     }, 0);
 }
-
-
 function calcularFaturamentoRealizado(ranking) {
     return ranking.reduce((total, servico) => {
         return total + servico.total_concluidos * servico.preco_servico;
     }, 0);
 }
-
-
 function contarAgendamentosPorServico(agendamentos) {
     const contagem = {};
     for (const agendamento of agendamentos) {
@@ -75,8 +57,6 @@ function contarAgendamentosPorServico(agendamentos) {
     }
     return contagem;
 }
-
-
 function encontrarServicoMaisAgendado(contagem) {
     let nomeDestaque = '';
     let maiorTotal = 0;
@@ -89,16 +69,12 @@ function encontrarServicoMaisAgendado(contagem) {
     }
     return nomeDestaque;
 }
-
-
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL',
     });
 }
-
-
 function formatarRanking(ranking) {
     const maiorTotal = ranking.reduce((maior, servico) => {
         return servico.total_agendamentos > maior ? servico.total_agendamentos : maior;
@@ -112,16 +88,12 @@ function formatarRanking(ranking) {
         larguraBarra: maiorTotal > 0 ? Math.round((servico.total_agendamentos / maiorTotal) * 100) : 0,
     }));
 }
-
-
 function definirTexto(id, texto) {
     const elemento = document.getElementById(id);
     if (elemento) {
         elemento.innerText = texto;
     }
 }
-
-
 function renderizarCardsServicos(servicos) {
     const servicoMaisCaro = encontrarServicoMaisCaro(servicos);
     const servicosPremium = filtrarServicosPremium(servicos);
@@ -130,8 +102,6 @@ function renderizarCardsServicos(servicos) {
     definirTexto('servico-mais-caro', servicoMaisCaro ? servicoMaisCaro.nome : 'Nenhum serviço registrado');
     definirTexto('total-premium', servicosPremium.length.toString());
 }
-
-
 function renderizarCardsDashboard(dados) {
     const agendamentosAtivos = filtrarAgendamentosAtivos(dados.agendamentos);
     const contagem = contarAgendamentosPorServico(agendamentosAtivos);
@@ -141,8 +111,6 @@ function renderizarCardsDashboard(dados) {
     definirTexto('servico-mais-agendado', servicoMaisAgendado !== '' ? servicoMaisAgendado : 'Nenhum dado registrado');
     definirTexto('total-agendamentos', dados.paginacao.total.toString());
 }
-
-
 function renderizarRanking(linhas) {
     const lista = document.getElementById('lista-ranking');
     if (!lista) {
@@ -186,8 +154,6 @@ function renderizarRanking(linhas) {
         lista.appendChild(item);
     }
 }
-
-
 function mostrarMensagem(texto) {
     const mensagem = document.getElementById('mensagem-dashboard');
     if (mensagem) {
@@ -195,8 +161,6 @@ function mostrarMensagem(texto) {
         mensagem.classList.remove('d-none');
     }
 }
-
-
 function mostrarSemDados() {
     mostrarMensagem('Nenhum dado registrado.');
     definirTexto('total-servicos', '0');

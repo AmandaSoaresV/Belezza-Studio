@@ -155,14 +155,14 @@ include __DIR__ . '/../../../includes/admin-head.php';
         <div class="col-12 col-lg-8">
           <div class="card shadow-sm border-0 rounded-4 grafico-card h-100">
             <div class="card-body p-3 p-lg-4">
-              <h2 class="h5 mb-1">Receita por período</h2>
+              <h2 class="h5 mb-1">Agendamentos por mês</h2>
 
               <p class="text-body-secondary mb-3">
-                Receita diária acumulada nos últimos 30 dias
+                Quantidade de agendamentos registrados em cada mês
               </p>
 
               <div class="grafico-container rounded-3 p-2 p-lg-3">
-                <canvas id="graficoReceita"></canvas>
+                <canvas id="graficoAgendamentos"></canvas>
               </div>
             </div>
           </div>
@@ -227,7 +227,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
                     <i class="ph ph-list-checks"></i>
-                    <?php echo $totalAgendamentos; ?>
+                    <span id="resumo-agendamentos"><?php echo $totalAgendamentos; ?></span>
                   </h5>
 
                   <small class="fw-light">Agendamentos no total</small>
@@ -240,7 +240,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
                     <i class="ph ph-scissors"></i>
-                    <?php echo $totalServicos; ?>
+                    <span id="resumo-servicos"><?php echo $totalServicos; ?></span>
                   </h5>
 
                   <small class="fw-light">Serviços cadastrados</small>
@@ -253,7 +253,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
                     <i class="ph ph-users"></i>
-                    <?php echo $totalUsuarios; ?>
+                    <span id="resumo-usuarios"><?php echo $totalUsuarios; ?></span>
                   </h5>
 
                   <small class="fw-light">Usuários cadastrados</small>
@@ -266,7 +266,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
                     <i class="ph ph-currency-dollar"></i>
-                    R$ <?php echo number_format($receitaTotal, 2, ',', '.'); ?>
+                    <span id="resumo-receita">R$ <?php echo number_format($receitaTotal, 2, ',', '.'); ?></span>
                   </h5>
 
                   <small class="fw-light">Receita total</small>
@@ -280,6 +280,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="/assets/js/relatorio.js"></script>

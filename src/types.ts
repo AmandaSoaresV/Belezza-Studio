@@ -58,3 +58,20 @@ type LinhaRankingFormatada = {
     faturamentoFormatado: string;
     larguraBarra: number;
 };
+type SerieDoGrafico = {
+    rotulos: string[];
+    valores: number[];
+};
+
+declare const Chart: {
+    new (contexto: CanvasRenderingContext2D, configuracao: object): unknown;
+    defaults: { color: string; borderColor: string };
+};
+
+type ExportadorPdf = {
+    set(opcoes: object): ExportadorPdf;
+    from(elemento: HTMLElement): ExportadorPdf;
+    save(): Promise<void>;
+};
+
+declare function html2pdf(): ExportadorPdf;

@@ -1,72 +1,89 @@
-"use strict";
 const caminho_dashboard_relatorio = '/api/dashboard?limite=100';
 const total_ranking_relatorio = 4;
+
 const meses_abreviados = [
     'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
     'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez',
 ];
+
 const cores_ranking = ['#7c3aed', '#34d399', '#fbbf24', '#e879f9'];
-async function buscarDadosRelatorio() {
+
+async function buscarDadosRelatorio(): Promise<RespostaDashboard | null> {
     try {
         const resposta = await fetch(caminho_dashboard_relatorio);
+
         if (!resposta.ok) {
             return null;
         }
-        return await resposta.json();
-    }
-    catch (erro) {
+
+        return await resposta.json() as RespostaDashboard;
+    } catch (erro) {
         return null;
     }
 }
-function contarAgendamentosPorMes(agendamentos) {
-    return agendamentos.reduce((contagem, agendamento) => {
+
+function contarAgendamentosPorMes(agendamentos: AgendamentoResumo[]): Record<string, number> {
+    return agendamentos.reduce((contagem: Record<string, number>, agendamento) => {
         const mes = agendamento.data_hora_servico.slice(0, 7);
+
         contagem[mes] = (contagem[mes] ?? 0) + 1;
+
         return contagem;
     }, {});
 }
-function formatarRotuloDoMes(mes) {
+
+function formatarRotuloDoMes(mes: string): string {
     const [ano, numero] = mes.split('-');
+
     return `${meses_abreviados[Number(numero) - 1]}/${ano.slice(2)}`;
 }
-function montarSerieDeMeses(agendamentos) {
+
+function montarSerieDeMeses(agendamentos: AgendamentoResumo[]): SerieDoGrafico {
     const contagem = contarAgendamentosPorMes(agendamentos);
     const meses = Object.keys(contagem).sort();
+
     return {
         rotulos: meses.map(formatarRotuloDoMes),
         valores: meses.map((mes) => contagem[mes]),
     };
 }
-function montarSerieDoRanking(ranking) {
+
+function montarSerieDoRanking(ranking: ServicoRanking[]): SerieDoGrafico {
     const primeiros = ranking.slice(0, total_ranking_relatorio);
+
     return {
         rotulos: primeiros.map((servico) => servico.nome_servico),
         valores: primeiros.map((servico) => servico.total_agendamentos),
     };
 }
-function desenharGrafico(id, configuracao) {
-    const canvas = document.getElementById(id);
+
+function desenharGrafico(id: string, configuracao: object): void {
+    const canvas = document.getElementById(id) as HTMLCanvasElement | null;
+
     if (!canvas) {
         return;
     }
+
     const contexto = canvas.getContext('2d');
+
     if (contexto) {
         new Chart(contexto, configuracao);
     }
 }
-function desenharGraficoDeAgendamentos(serie) {
+
+function desenharGraficoDeAgendamentos(serie: SerieDoGrafico): void {
     desenharGrafico('graficoAgendamentos', {
         type: 'line',
         data: {
             labels: serie.rotulos,
             datasets: [{
-                    label: 'Agendamentos',
-                    data: serie.valores,
-                    borderColor: '#a78bfa',
-                    backgroundColor: 'rgba(124, 58, 237, 0.18)',
-                    fill: true,
-                    tension: 0.4,
-                }],
+                label: 'Agendamentos',
+                data: serie.valores,
+                borderColor: '#a78bfa',
+                backgroundColor: 'rgba(124, 58, 237, 0.18)',
+                fill: true,
+                tension: 0.4,
+            }],
         },
         options: {
             responsive: true,
@@ -81,16 +98,17 @@ function desenharGraficoDeAgendamentos(serie) {
         },
     });
 }
-function desenharGraficoDeServicos(serie) {
+
+function desenharGraficoDeServicos(serie: SerieDoGrafico): void {
     desenharGrafico('graficoServicos', {
         type: 'doughnut',
         data: {
             labels: serie.rotulos,
             datasets: [{
-                    data: serie.valores,
-                    backgroundColor: cores_ranking,
-                    borderWidth: 0,
-                }],
+                data: serie.valores,
+                backgroundColor: cores_ranking,
+                borderWidth: 0,
+            }],
         },
         options: {
             responsive: true,
@@ -101,14 +119,18 @@ function desenharGraficoDeServicos(serie) {
         },
     });
 }
-function lerTextoDoElemento(id) {
+
+function lerTextoDoElemento(id: string): string {
     return document.getElementById(id)?.textContent?.trim() ?? '—';
 }
-function montarBarrasDoPdf(serie) {
+
+function montarBarrasDoPdf(serie: SerieDoGrafico): string {
     const maiorValor = serie.valores[0] ?? 0;
+
     return serie.rotulos.map((nome, posicao) => {
         const total = serie.valores[posicao];
         const largura = maiorValor > 0 ? Math.round((total / maiorValor) * 100) : 0;
+
         return `
         <div style="margin-bottom: 14px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -122,13 +144,15 @@ function montarBarrasDoPdf(serie) {
       `;
     }).join('');
 }
-function montarCardsDoPdf() {
+
+function montarCardsDoPdf(): string {
     const resumo = [
         { rotulo: 'Agendamentos no total', valor: lerTextoDoElemento('resumo-agendamentos') },
         { rotulo: 'Serviços cadastrados', valor: lerTextoDoElemento('resumo-servicos') },
         { rotulo: 'Usuários cadastrados', valor: lerTextoDoElemento('resumo-usuarios') },
         { rotulo: 'Receita total', valor: lerTextoDoElemento('resumo-receita') },
     ];
+
     return resumo.map((item) => `
         <div style="flex: 1; text-align: center; border: 1px solid #eee; border-radius: 10px; padding: 12px 8px;">
           <div style="font-size: 16px; font-weight: bold; color: #3f2d52;">${item.valor}</div>
@@ -136,7 +160,8 @@ function montarCardsDoPdf() {
         </div>
       `).join('');
 }
-function montarPaginaDoPdf(serieRanking) {
+
+function montarPaginaDoPdf(serieRanking: SerieDoGrafico): HTMLDivElement {
     const agora = new Date();
     const dataFormatada = agora.toLocaleDateString('pt-BR', {
         day: '2-digit',
@@ -145,11 +170,15 @@ function montarPaginaDoPdf(serieRanking) {
         hour: '2-digit',
         minute: '2-digit',
     });
-    const graficoAgendamentos = document.getElementById('graficoAgendamentos');
-    const graficoServicos = document.getElementById('graficoServicos');
+
+    const graficoAgendamentos = document.getElementById('graficoAgendamentos') as HTMLCanvasElement | null;
+    const graficoServicos = document.getElementById('graficoServicos') as HTMLCanvasElement | null;
+
     const imagemAgendamentos = graficoAgendamentos ? graficoAgendamentos.toDataURL('image/png') : '';
     const imagemServicos = graficoServicos ? graficoServicos.toDataURL('image/png') : '';
+
     const container = document.createElement('div');
+
     container.innerHTML = `
         <div style="padding: 36px; font-family: sans-serif; background: #fff; color: #1a1a1a;">
 
@@ -185,16 +214,21 @@ function montarPaginaDoPdf(serieRanking) {
 
         </div>
       `;
+
     return container;
 }
-function ligarBotaoDeExportar(serieRanking) {
-    const botao = document.querySelector('.btn-exportar');
+
+function ligarBotaoDeExportar(serieRanking: SerieDoGrafico): void {
+    const botao = document.querySelector('.btn-exportar') as HTMLButtonElement | null;
+
     if (!botao) {
         return;
     }
+
     botao.addEventListener('click', () => {
         botao.disabled = true;
         botao.innerHTML = 'Gerando... <i class="ph ph-spinner"></i>';
+
         const opcoes = {
             margin: 0,
             filename: `relatorio-${new Date().toISOString().slice(0, 10)}.pdf`,
@@ -202,25 +236,31 @@ function ligarBotaoDeExportar(serieRanking) {
             html2canvas: { scale: 2, useCORS: true, logging: false },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         };
+
         html2pdf()
             .set(opcoes)
             .from(montarPaginaDoPdf(serieRanking))
             .save()
             .then(() => {
-            botao.disabled = false;
-            botao.innerHTML = 'Exportar Relatório <i class="ph ph-download"></i>';
-        });
+                botao.disabled = false;
+                botao.innerHTML = 'Exportar Relatório <i class="ph ph-download"></i>';
+            });
     });
 }
+
 document.addEventListener('DOMContentLoaded', async () => {
     Chart.defaults.color = '#a6a6b3';
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+
     const dados = await buscarDadosRelatorio();
+
     if (dados === null) {
         return;
     }
+
     const serieDeMeses = montarSerieDeMeses(dados.agendamentos);
     const serieDoRanking = montarSerieDoRanking(dados.ranking);
+
     desenharGraficoDeAgendamentos(serieDeMeses);
     desenharGraficoDeServicos(serieDoRanking);
     ligarBotaoDeExportar(serieDoRanking);
