@@ -1,15 +1,55 @@
 <?php
 require_once __DIR__ . '/../../../api/conexao.php';
+require_once __DIR__ . '/../../../includes/app.php';
 require_once __DIR__ . '/../../../includes/analytics.php';
+
+$statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idParaExcluir = isset($_POST['id_agendamento']) ? (int) $_POST['id_agendamento'] : 0;
+    $paginaDeOrigem = isset($_POST['pagina']) ? max(1, (int) $_POST['pagina']) : 1;
+    $statusDeOrigem = isset($_POST['status']) && in_array($_POST['status'], $statusPermitidos, true)
+        ? $_POST['status']
+        : null;
+
+    $voltarPara = '/dashboard?pagina=' . $paginaDeOrigem
+        . ($statusDeOrigem ? '&status=' . urlencode($statusDeOrigem) : '');
+
+    if ($idParaExcluir < 1) {
+        header('Location: ' . $voltarPara . '&naoencontrado=1');
+        exit;
+    }
+
+    try {
+        $agendamentoParaExcluir = obterAgendamento($pdo, $idParaExcluir);
+
+        if ($agendamentoParaExcluir === null) {
+            header('Location: ' . $voltarPara . '&naoencontrado=1');
+            exit;
+        }
+
+        excluirAgendamento($pdo, $idParaExcluir);
+        header('Location: ' . $voltarPara . '&excluido=1');
+        exit;
+    } catch (PDOException $e) {
+        header('Location: ' . $voltarPara . '&erroexclusao=1');
+        exit;
+    }
+}
 
 $porPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
 $offset = ($paginaAtual - 1) * $porPagina;
 
-$statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
 $statusFiltro = isset($_GET['status']) && in_array($_GET['status'], $statusPermitidos, true)
     ? $_GET['status']
     : null;
+
+$mensagens = mensagensDeRetorno($_GET, [
+    'excluido' => ['tipo' => 'success', 'texto' => 'Agendamento excluído com sucesso.'],
+    'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Agendamento não encontrado.'],
+    'erroexclusao' => ['tipo' => 'danger', 'texto' => 'Não foi possível excluir o agendamento, tente novamente.'],
+]);
 
 $totalHoje = 0;
 $totalConfirmados = 0;
@@ -67,6 +107,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
         Não foi possível carregar os dados verifique se a view e as procedures foram importadas no banco.
       </div>
       <?php endif; ?>
+
+      <?php include __DIR__ . '/../../../includes/alertas.php'; ?>
 
       <div id="mensagem-dashboard" class="alert alert-light border text-center d-none" role="status">
         Nenhum dado registrado.
@@ -318,11 +360,23 @@ include __DIR__ . '/../../../includes/admin-head.php';
                   </td>
                   <td>
                     <div class="d-flex justify-content-center gap-2">
-                      <button class="btn btn-outline-primary btn-sm">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary btn-sm"
+                        disabled
+                        aria-label="Editar agendamento"
+                        title="A edição de agendamento ainda não está disponível"
+                      >
                         <i class="ph ph-pencil"></i>
                       </button>
 
-                      <button class="btn btn-outline-danger btn-sm">
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-excluir-<?php echo $agendamento['id_agendamento']; ?>"
+                        aria-label="Excluir agendamento"
+                      >
                         <i class="ph ph-trash"></i>
                       </button>
                     </div>
@@ -357,6 +411,46 @@ include __DIR__ . '/../../../includes/admin-head.php';
         </div>
       </div>
     </div>
+
+    <?php foreach ($agendamentos as $agendamento): ?>
+    <div class="modal fade" id="modal-excluir-<?php echo $agendamento['id_agendamento']; ?>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Excluir agendamento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+
+          <div class="modal-body">
+            <p>
+              Tem certeza que deseja excluir o agendamento de
+              <strong><?php echo htmlspecialchars($agendamento['nome_cliente']); ?></strong>
+              para <strong><?php echo htmlspecialchars($agendamento['nome_servico']); ?></strong>
+              em <?php echo date('d/m/Y', strtotime($agendamento['data_hora_servico'])); ?> às <?php echo date('H:i', strtotime($agendamento['data_hora_servico'])); ?>?
+              Essa ação não pode ser desfeita.
+            </p>
+
+            <?php if ($agendamento['status'] === 'concluido'): ?>
+            <p class="text-danger mb-0">
+              Atenção: esse agendamento está concluído.
+            </p>
+            <?php endif; ?>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+            <form method="POST" action="/dashboard">
+              <input type="hidden" name="id_agendamento" value="<?php echo $agendamento['id_agendamento']; ?>">
+              <input type="hidden" name="pagina" value="<?php echo $paginaAtual; ?>">
+              <input type="hidden" name="status" value="<?php echo htmlspecialchars((string) $statusFiltro); ?>">
+              <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 

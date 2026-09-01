@@ -315,3 +315,32 @@ function excluirUsuario(PDO $pdo, int $idUsuario): void
     $stmt = $pdo->prepare('DELETE FROM usuarios WHERE id_usuario = ?');
     $stmt->execute([$idUsuario]);
 }
+
+function obterAgendamento(PDO $pdo, int $idAgendamento): ?array
+{
+    $stmt = $pdo->prepare(
+        'SELECT id_agendamento, nome_cliente, nome_servico, nome_profissional, data_hora_servico, status
+         FROM vw_agendamentos_completos WHERE id_agendamento = ?'
+    );
+    $stmt->execute([$idAgendamento]);
+    $linha = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$linha) {
+        return null;
+    }
+
+    return [
+        'id_agendamento' => (int) $linha['id_agendamento'],
+        'nome_cliente' => (string) $linha['nome_cliente'],
+        'nome_servico' => (string) $linha['nome_servico'],
+        'nome_profissional' => (string) $linha['nome_profissional'],
+        'data_hora_servico' => (string) $linha['data_hora_servico'],
+        'status' => (string) $linha['status'],
+    ];
+}
+
+function excluirAgendamento(PDO $pdo, int $idAgendamento): void
+{
+    $stmt = $pdo->prepare('DELETE FROM agendamentos WHERE id_agendamento = ?');
+    $stmt->execute([$idAgendamento]);
+}
