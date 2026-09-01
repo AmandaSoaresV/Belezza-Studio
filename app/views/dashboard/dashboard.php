@@ -370,15 +370,24 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         <i class="ph ph-pencil"></i>
                       </a>
 
+                      <form
+                        method="POST"
+                        action="/dashboard"
+                        class="d-inline"
+                        data-confirmar-exclusao="Excluir o agendamento de <?php echo htmlspecialchars($agendamento['nome_cliente']); ?>?"
+                        data-confirmar-detalhe="<?php echo htmlspecialchars($agendamento['nome_servico']); ?> em <?php echo date('d/m/Y \à\s H:i', strtotime($agendamento['data_hora_servico'])); ?>. Essa ação não pode ser desfeita.<?php echo $agendamento['status'] === 'concluido' ? ' Atenção: esse agendamento está concluído.' : ''; ?>"
+                      >
+                        <input type="hidden" name="id_agendamento" value="<?php echo $agendamento['id_agendamento']; ?>">
+                        <input type="hidden" name="pagina" value="<?php echo $paginaAtual; ?>">
+                        <input type="hidden" name="status" value="<?php echo htmlspecialchars((string) $statusFiltro); ?>">
                       <button
-                        type="button"
+                        type="submit"
                         class="btn btn-outline-danger btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal-excluir-<?php echo $agendamento['id_agendamento']; ?>"
                         aria-label="Excluir agendamento"
                       >
                         <i class="ph ph-trash"></i>
                       </button>
+                      </form>
                     </div>
                   </td>
                 </tr>
@@ -412,45 +421,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
       </div>
     </div>
 
-    <?php foreach ($agendamentos as $agendamento): ?>
-    <div class="modal fade" id="modal-excluir-<?php echo $agendamento['id_agendamento']; ?>" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Excluir agendamento</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-          </div>
-
-          <div class="modal-body">
-            <p>
-              Tem certeza que deseja excluir o agendamento de
-              <strong><?php echo htmlspecialchars($agendamento['nome_cliente']); ?></strong>
-              para <strong><?php echo htmlspecialchars($agendamento['nome_servico']); ?></strong>
-              em <?php echo date('d/m/Y', strtotime($agendamento['data_hora_servico'])); ?> às <?php echo date('H:i', strtotime($agendamento['data_hora_servico'])); ?>?
-              Essa ação não pode ser desfeita.
-            </p>
-
-            <?php if ($agendamento['status'] === 'concluido'): ?>
-            <p class="text-danger mb-0">
-              Atenção: esse agendamento está concluído.
-            </p>
-            <?php endif; ?>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-
-            <form method="POST" action="/dashboard">
-              <input type="hidden" name="id_agendamento" value="<?php echo $agendamento['id_agendamento']; ?>">
-              <input type="hidden" name="pagina" value="<?php echo $paginaAtual; ?>">
-              <input type="hidden" name="status" value="<?php echo htmlspecialchars((string) $statusFiltro); ?>">
-              <button type="submit" class="btn btn-danger">Excluir</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endforeach; ?>
+    
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 

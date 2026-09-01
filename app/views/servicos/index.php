@@ -135,15 +135,18 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         <i class="ph ph-trash"></i>
                       </button>
                       <?php else: ?>
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal-excluir-<?php echo $servico['id_servico']; ?>"
-                        aria-label="Excluir serviço"
+                      <form
+                        method="POST"
+                        action="/servicos"
+                        class="d-inline"
+                        data-confirmar-exclusao="Excluir <?php echo htmlspecialchars($servico['nome']); ?>?"
+                        data-confirmar-detalhe="Essa ação não pode ser desfeita."
                       >
-                        <i class="ph ph-trash"></i>
-                      </button>
+                        <input type="hidden" name="id_servico" value="<?php echo $servico['id_servico']; ?>">
+                        <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Excluir serviço">
+                          <i class="ph ph-trash"></i>
+                        </button>
+                      </form>
                       <?php endif; ?>
                     </div>
                   </td>
@@ -178,33 +181,6 @@ include __DIR__ . '/../../../includes/admin-head.php';
         </div>
       </div>
     </div>
-
-    <?php foreach ($servicos as $servico): ?>
-    <?php if ($servico['total_agendamentos'] > 0) { continue; } ?>
-    <div class="modal fade" id="modal-excluir-<?php echo $servico['id_servico']; ?>" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Excluir serviço</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-          </div>
-
-          <div class="modal-body">
-            Tem certeza que deseja excluir <strong><?php echo htmlspecialchars($servico['nome']); ?></strong>? Essa ação não pode ser desfeita.
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-
-            <form method="POST" action="/servicos">
-              <input type="hidden" name="id_servico" value="<?php echo $servico['id_servico']; ?>">
-              <button type="submit" class="btn btn-danger">Excluir</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endforeach; ?>
 
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
 
