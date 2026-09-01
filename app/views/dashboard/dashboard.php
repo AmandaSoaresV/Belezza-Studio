@@ -46,6 +46,7 @@ $statusFiltro = isset($_GET['status']) && in_array($_GET['status'], $statusPermi
     : null;
 
 $mensagens = mensagensDeRetorno($_GET, [
+    'atualizado' => ['tipo' => 'success', 'texto' => 'Agendamento atualizado com sucesso.'],
     'excluido' => ['tipo' => 'success', 'texto' => 'Agendamento excluído com sucesso.'],
     'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Agendamento não encontrado.'],
     'erroexclusao' => ['tipo' => 'danger', 'texto' => 'Não foi possível excluir o agendamento, tente novamente.'],
@@ -360,15 +361,13 @@ include __DIR__ . '/../../../includes/admin-head.php';
                   </td>
                   <td>
                     <div class="d-flex justify-content-center gap-2">
-                      <button
-                        type="button"
+                      <a
+                        href="/agendamentos/editar?id=<?php echo $agendamento['id_agendamento']; ?>"
                         class="btn btn-outline-primary btn-sm"
-                        disabled
                         aria-label="Editar agendamento"
-                        title="A edição de agendamento ainda não está disponível"
                       >
                         <i class="ph ph-pencil"></i>
-                      </button>
+                      </a>
 
                       <button
                         type="button"

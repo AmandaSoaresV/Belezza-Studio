@@ -89,3 +89,25 @@ function converterDataParaBanco(string $data): ?string
 
     return sprintf('%04d-%02d-%02d', $ano, $mes, $dia);
 }
+
+function converterDataHoraParaBanco(string $dataHora): ?string
+{
+    $data = DateTime::createFromFormat('Y-m-d\TH:i', trim($dataHora));
+
+    if ($data === false) {
+        return null;
+    }
+
+    return $data->format('Y-m-d H:i:s');
+}
+
+function existeIdNaLista(array $lista, string $chave, int $id): bool
+{
+    foreach ($lista as $item) {
+        if ((int) ($item[$chave] ?? 0) === $id) {
+            return true;
+        }
+    }
+
+    return false;
+}
