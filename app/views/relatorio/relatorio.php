@@ -8,6 +8,13 @@
     $receitaHoje = 0;
     $erroConsulta = false;
 
+    $totalRankingExibido = 4;
+    $ranking = [];
+    $maiorTotalRanking = 0;
+    $totalAgendamentos = 0;
+    $totalServicos = 0;
+    $totalUsuarios = 0;
+
     try {
       $resumo = obterResumoRelatorio($pdo);
 
@@ -15,6 +22,13 @@
       $totalHoje = $resumo['total_hoje'];
       $totalClientes = $resumo['total_clientes'];
       $receitaHoje = $resumo['receita_hoje'];
+
+      $ranking = array_slice(obterRankingServicos($pdo), 0, $totalRankingExibido);
+      $maiorTotalRanking = $ranking[0]['total_agendamentos'] ?? 0;
+
+      $totalAgendamentos = contarAgendamentosDashboard($pdo);
+      $totalServicos = contarServicos($pdo);
+      $totalUsuarios = contarUsuarios($pdo);
     } catch (PDOException $e) {
       $erroConsulta = true;
     }
@@ -168,76 +182,32 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 </p>
               </div>
 
+              <?php if (empty($ranking)): ?>
+              <p class="text-center text-body-secondary">Nenhum serviço agendado ainda.</p>
+              <?php else: ?>
+              <?php foreach ($ranking as $posicao => $servico): ?>
+              <?php $largura = $maiorTotalRanking > 0
+                  ? round(($servico['total_agendamentos'] / $maiorTotalRanking) * 100)
+                  : 0; ?>
               <div class="mb-4">
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                >
+                <div class="d-flex justify-content-between align-items-center mb-2">
                   <div class="d-flex align-items-center gap-2">
-                    <span class="ranking ranking-1">1</span>
-                    <strong>Escova Progressiva</strong>
+                    <span class="ranking ranking-<?php echo $posicao + 1; ?>"><?php echo $posicao + 1; ?></span>
+                    <strong><?php echo htmlspecialchars($servico['nome_servico']); ?></strong>
                   </div>
 
-                  <span class="text-secondary">58 agend.</span>
+                  <span class="text-secondary"><?php echo $servico['total_agendamentos']; ?> agend.</span>
                 </div>
 
                 <div class="progress progress-custom">
                   <div
-                    class="progress-bar barra-1"
-                    style="width: 100%"
+                    class="progress-bar barra-<?php echo $posicao + 1; ?>"
+                    style="width: <?php echo $largura; ?>%"
                   ></div>
                 </div>
               </div>
-
-              <div class="mb-4">
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                >
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="ranking ranking-2">2</span>
-                    <strong>Dia da Noiva</strong>
-                  </div>
-
-                  <span class="text-secondary">42 agend.</span>
-                </div>
-
-                <div class="progress progress-custom">
-                  <div class="progress-bar barra-2" style="width: 75%"></div>
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                >
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="ranking ranking-3">3</span>
-                    <strong>Tratamento Facial Gold Therapy</strong>
-                  </div>
-
-                  <span class="text-secondary">28 agend.</span>
-                </div>
-
-                <div class="progress progress-custom">
-                  <div class="progress-bar barra-3" style="width: 48%"></div>
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                >
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="ranking ranking-4">4</span>
-                    <strong>Tratamento Facial</strong>
-                  </div>
-
-                  <span class="text-secondary">15 agend.</span>
-                </div>
-
-                <div class="progress progress-custom">
-                  <div class="progress-bar barra-4" style="width: 26%"></div>
-                </div>
-              </div>
+              <?php endforeach; ?>
+              <?php endif; ?>
 
               <div class="grafico-donut">
                 <canvas id="graficoServicos"></canvas>
@@ -256,13 +226,11 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="card h-100 border-0">
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
-                    <i class="ph ph-users-four"></i>
-                    94%
+                    <i class="ph ph-list-checks"></i>
+                    <?php echo $totalAgendamentos; ?>
                   </h5>
 
-                  <small class="fw-light">
-                    Taxa de comparecimento
-                  </small>
+                  <small class="fw-light">Agendamentos no total</small>
                 </div>
               </div>
             </div>
@@ -271,11 +239,11 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="card h-100 border-0">
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
-                    <i class="ph ph-star"></i>
-                    4.8
+                    <i class="ph ph-scissors"></i>
+                    <?php echo $totalServicos; ?>
                   </h5>
 
-                  <small class="fw-light">Avaliação média</small>
+                  <small class="fw-light">Serviços cadastrados</small>
                 </div>
               </div>
             </div>
@@ -285,12 +253,10 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
                     <i class="ph ph-users"></i>
-                    67%
+                    <?php echo $totalUsuarios; ?>
                   </h5>
 
-                  <small class="fw-light">
-                    Clientes recorrentes
-                  </small>
+                  <small class="fw-light">Usuários cadastrados</small>
                 </div>
               </div>
             </div>
@@ -299,13 +265,11 @@ include __DIR__ . '/../../../includes/admin-head.php';
               <div class="card h-100 border-0">
                 <div class="card-body text-center p-2">
                   <h5 class="mb-0 fw-bold">
-                    <i class="ph ph-clock"></i>
-                    45 min
+                    <i class="ph ph-currency-dollar"></i>
+                    R$ <?php echo number_format($receitaTotal, 2, ',', '.'); ?>
                   </h5>
 
-                  <small class="fw-light">
-                    Tempo médio de atendimento
-                  </small>
+                  <small class="fw-light">Receita total</small>
                 </div>
               </div>
             </div>
