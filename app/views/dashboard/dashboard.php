@@ -349,8 +349,8 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 <?php else: ?>
                 <?php foreach ($agendamentos as $agendamento): ?>
                 <tr>
-                  <td><?php echo $agendamento['nome_cliente']; ?></td>
-                  <td><?php echo $agendamento['nome_servico']; ?></td>
+                  <td><?php echo htmlspecialchars($agendamento['nome_cliente']); ?></td>
+                  <td><?php echo htmlspecialchars($agendamento['nome_servico']); ?></td>
                   <td><?php echo date('d/m/Y', strtotime($agendamento['data_hora_servico'])); ?></td>
                   <td><?php echo date('H:i', strtotime($agendamento['data_hora_servico'])); ?></td>
 
