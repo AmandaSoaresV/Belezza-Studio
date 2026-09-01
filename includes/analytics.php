@@ -388,6 +388,16 @@ function listarProfissionais(PDO $pdo): array
     return $profissionais;
 }
 
+function criarProfissional(PDO $pdo, string $nome, string $especialidade): int
+{
+    $stmt = $pdo->prepare(
+        'INSERT INTO profissionais (nome, especialidade, created_at, updated_at) VALUES (?, ?, NOW(), NOW())'
+    );
+    $stmt->execute([$nome, $especialidade]);
+
+    return (int) $pdo->lastInsertId();
+}
+
 function listarServicosParaSelecao(PDO $pdo): array
 {
     $linhas = $pdo->query(
@@ -430,4 +440,25 @@ function atualizarAgendamento(PDO $pdo, int $idAgendamento, array $valores): voi
     $stmt->bindValue(':observacao', $valores['observacao']);
     $stmt->bindValue(':id', $idAgendamento, PDO::PARAM_INT);
     $stmt->execute();
+}
+
+function criarAgendamento(PDO $pdo, array $valores): int
+{
+    $sql = <<<SQL
+    INSERT INTO agendamentos
+        (id_cliente, id_profissional, id_servico, data_hora_servico, status, observacao, created_at, updated_at)
+    VALUES
+        (:cliente, :profissional, :servico, :data_hora, :status, :observacao, NOW(), NOW())
+    SQL;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':cliente', $valores['id_cliente'], PDO::PARAM_INT);
+    $stmt->bindValue(':profissional', $valores['id_profissional'], PDO::PARAM_INT);
+    $stmt->bindValue(':servico', $valores['id_servico'], PDO::PARAM_INT);
+    $stmt->bindValue(':data_hora', $valores['data_hora_servico']);
+    $stmt->bindValue(':status', $valores['status']);
+    $stmt->bindValue(':observacao', $valores['observacao']);
+    $stmt->execute();
+
+    return (int) $pdo->lastInsertId();
 }

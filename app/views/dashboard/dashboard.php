@@ -46,6 +46,7 @@ $statusFiltro = isset($_GET['status']) && in_array($_GET['status'], $statusPermi
     : null;
 
 $mensagens = mensagensDeRetorno($_GET, [
+    'criado' => ['tipo' => 'success', 'texto' => 'Agendamento cadastrado com sucesso.'],
     'atualizado' => ['tipo' => 'success', 'texto' => 'Agendamento atualizado com sucesso.'],
     'excluido' => ['tipo' => 'success', 'texto' => 'Agendamento excluído com sucesso.'],
     'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Agendamento não encontrado.'],
