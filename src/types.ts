@@ -75,3 +75,17 @@ type ExportadorPdf = {
 };
 
 declare function html2pdf(): ExportadorPdf;
+
+type PersonalizacaoWebchat = {
+    color: string;
+    themeMode: "light" | "dark";
+    botAvatar: string;
+    welcomeHeading: string;
+    welcomeSubtitle: string;
+};
+
+interface Window {
+    botpress?: {
+        config(opcoes: { configuration: PersonalizacaoWebchat }): void;
+    };
+}
