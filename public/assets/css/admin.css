@@ -119,6 +119,27 @@ body.pagina-relatorio {
   border-bottom: none !important;
 }
 
+.btn-excluir-bloqueado {
+  position: relative;
+  cursor: not-allowed;
+  pointer-events: auto;
+  opacity: 0.55;
+}
+
+.btn-excluir-bloqueado::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
 @media (max-width: 900px) {
   body.body-dashboard,
   body.pagina-relatorio {

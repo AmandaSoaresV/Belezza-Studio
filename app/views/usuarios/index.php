@@ -142,7 +142,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                       <?php if ($usuario['id_usuario'] === $idLogado): ?>
                       <button
                         type="button"
-                        class="btn btn-outline-danger btn-sm"
+                        class="btn btn-outline-danger btn-sm btn-excluir-bloqueado"
                         disabled
                         aria-label="Excluir usuário"
                         title="Não é possível excluir a própria conta"
@@ -152,7 +152,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                       <?php elseif ($usuario['total_agendamentos'] > 0): ?>
                       <button
                         type="button"
-                        class="btn btn-outline-danger btn-sm"
+                        class="btn btn-outline-danger btn-sm btn-excluir-bloqueado"
                         disabled
                         aria-label="Excluir usuário"
                         title="Não é possível excluir: <?php echo $usuario['total_agendamentos']; ?> agendamento<?php echo $usuario['total_agendamentos'] === 1 ? '' : 's'; ?> vinculado<?php echo $usuario['total_agendamentos'] === 1 ? '' : 's'; ?>"

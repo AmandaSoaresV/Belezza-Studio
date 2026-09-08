@@ -127,7 +127,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                       <?php if ($servico['total_agendamentos'] > 0): ?>
                       <button
                         type="button"
-                        class="btn btn-outline-danger btn-sm"
+                        class="btn btn-outline-danger btn-sm btn-excluir-bloqueado"
                         disabled
                         aria-label="Excluir serviço"
                         title="Não é possível excluir: <?php echo $servico['total_agendamentos']; ?> agendamento<?php echo $servico['total_agendamentos'] === 1 ? '' : 's'; ?> vinculado<?php echo $servico['total_agendamentos'] === 1 ? '' : 's'; ?>"
