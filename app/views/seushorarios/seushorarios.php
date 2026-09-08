@@ -18,7 +18,7 @@
         status
       FROM vw_agendamentos_completos
       WHERE id_cliente = :id_cliente
-      ORDER BY data_hora_servico ASC
+      ORDER BY data_hora_servico DESC
     CONSULTA;
 
     $seusHorarios = [];

@@ -17,7 +17,7 @@ WITH agendamentos_limpos AS (
 )
 SELECT *
 FROM agendamentos_limpos
-ORDER BY data_hora_servico ASC;
+ORDER BY data_hora_servico DESC;
 
 
 WITH agendamentos_limpos AS (

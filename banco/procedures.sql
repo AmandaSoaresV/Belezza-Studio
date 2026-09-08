@@ -46,7 +46,7 @@ BEGIN
     WHERE p_status IS NULL
        OR p_status = ''
        OR status = p_status
-    ORDER BY data_hora_servico ASC
+    ORDER BY data_hora_servico DESC
     LIMIT p_limite OFFSET p_offset;
 END$$
 
