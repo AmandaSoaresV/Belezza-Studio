@@ -8,12 +8,14 @@ $statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
 $clientes = [];
 $profissionais = [];
 $servicos = [];
+$servicosPorProfissional = [];
 $erros = [];
 
 try {
     $clientes = listarUsuariosParaSelecao($pdo);
     $profissionais = listarProfissionais($pdo);
     $servicos = listarServicosParaSelecao($pdo);
+    $servicosPorProfissional = listarServicosPorProfissional($pdo);
 } catch (PDOException $e) {
     $erros[] = 'Não foi possível carregar as listas de clientes, profissionais e serviços.';
 }
@@ -46,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erros)) {
 
     if (!existeIdNaLista($profissionais, 'id_profissional', $idProfissional)) {
         $erros[] = 'Selecione um profissional da lista.';
+    } elseif ($idServico > 0 && !profissionalAtendeServico($pdo, $idProfissional, $idServico)) {
+        $erros[] = 'Esse profissional não atende o serviço escolhido.';
     }
 
     if (!existeIdNaLista($servicos, 'id_servico', $idServico)) {
@@ -130,10 +134,11 @@ include __DIR__ . '/../../../includes/admin-head.php';
                     <div class="col-md-6">
                         <label for="id_profissional" class="form-label">Profissional</label>
                         <select class="form-select" id="id_profissional" name="id_profissional" required data-parsley-required-message="Preencha este campo">
-                            <option value="" disabled <?php echo $valores['id_profissional'] === '' ? 'selected' : ''; ?>>Selecione o profissional</option>
+                            <option value="" disabled <?php echo $valores['id_profissional'] === '' ? 'selected' : ''; ?>>Escolha o serviço primeiro</option>
                             <?php foreach ($profissionais as $profissional): ?>
                             <option
                                 value="<?php echo $profissional['id_profissional']; ?>"
+                                data-servicos="<?php echo implode(',', $servicosPorProfissional[$profissional['id_profissional']] ?? []); ?>"
                                 <?php echo (string) $profissional['id_profissional'] === $valores['id_profissional'] ? 'selected' : ''; ?>
                             >
                                 <?php echo htmlspecialchars($profissional['nome']); ?> &mdash; <?php echo htmlspecialchars($profissional['especialidade']); ?>
@@ -207,5 +212,6 @@ include __DIR__ . '/../../../includes/admin-head.php';
     <?php include __DIR__ . '/../../../includes/admin-footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
+    <script src="/assets/js/profissional-por-servico.js"></script>
 </body>
 </html>

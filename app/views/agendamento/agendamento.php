@@ -8,12 +8,14 @@
 
     $servicos = [];
     $profissionais = [];
+    $servicosPorProfissional = [];
     $cliente = null;
     $erros = [];
 
     try {
         $servicos = listarServicosParaSelecao($pdo);
         $profissionais = listarProfissionais($pdo);
+        $servicosPorProfissional = listarServicosPorProfissional($pdo);
         $cliente = obterUsuario($pdo, $idCliente);
     } catch (PDOException $e) {
         $erros[] = 'Não foi possível carregar os serviços e profissionais, tente novamente.';
@@ -42,6 +44,8 @@
 
         if (!existeIdNaLista($profissionais, 'id_profissional', $idProfissional)) {
             $erros[] = 'Selecione um profissional da lista.';
+        } elseif ($idServico > 0 && !profissionalAtendeServico($pdo, $idProfissional, $idServico)) {
+            $erros[] = 'Esse profissional não atende o serviço escolhido.';
         }
 
         if ($dataHora === null) {
@@ -158,12 +162,13 @@
                     data-parsley-required-message="Preencha este campo"
                   >
                     <option value="" disabled <?php echo $valores['id_profissional'] === '' ? 'selected' : ''; ?>>
-                      Selecione um profissional
+                      Escolha o serviço primeiro
                     </option>
 
                     <?php foreach ($profissionais as $profissional): ?>
                     <option
                       value="<?php echo $profissional['id_profissional']; ?>"
+                      data-servicos="<?php echo implode(',', $servicosPorProfissional[$profissional['id_profissional']] ?? []); ?>"
                       <?php echo (string) $profissional['id_profissional'] === $valores['id_profissional'] ? 'selected' : ''; ?>
                     >
                       <?php echo htmlspecialchars($profissional['nome']); ?> &mdash; <?php echo htmlspecialchars($profissional['especialidade']); ?>
@@ -286,6 +291,7 @@
     </main>
 
     <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
+    <script src="/assets/js/profissional-por-servico.js"></script>
     <script src="/assets/js/agendamento.js"></script>
 
    <?php
