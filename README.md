@@ -346,7 +346,8 @@ Tudo passa por `public/index.php`, um `switch` sobre `?page=`. O `.htaccess` de 
 │   ├── header.php  sidebar.php  footer.php  admin-head.php  admin-footer.php
 │   ├── alertas.php  form-validacao-head.php  form-validacao-foot.php
 │   ├── agente.php                # scripts do webchat do Botpress
-│   ├── analytics.php             # helpers de consulta ao banco
+│   ├── analytics.php             # helpers de indicadores, ranking e relatório (dashboard)
+│   ├── usuarios.php  servicos.php  agendamentos.php  profissionais.php   # CRUD por recurso
 │   ├── app.php                   # helpers gerais e mensagensDeRetorno()
 │   └── sessao.php                # login, perfis e guardas de acesso
 ├── src/                          # TypeScript (strict, escopo global)

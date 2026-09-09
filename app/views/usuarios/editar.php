@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../api/conexao.php';
 require_once __DIR__ . '/../../../includes/app.php';
-require_once __DIR__ . '/../../../includes/analytics.php';
+require_once __DIR__ . '/../../../includes/usuarios.php';
 require_once __DIR__ . '/../../../includes/sessao.php';
 
 $idUsuario = isset($_GET['id']) ? (int) $_GET['id'] : 0;
