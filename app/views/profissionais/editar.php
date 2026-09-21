@@ -4,22 +4,42 @@ require_once __DIR__ . '/../../../includes/app.php';
 require_once __DIR__ . '/../../../includes/servicos.php';
 require_once __DIR__ . '/../../../includes/profissionais.php';
 
+$idProfissional = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+if ($idProfissional < 1) {
+    header('Location: /profissionais?naoencontrado=1');
+    exit;
+}
+
+try {
+    $profissional = obterProfissional($pdo, $idProfissional);
+} catch (PDOException $e) {
+    $profissional = null;
+}
+
+if ($profissional === null) {
+    header('Location: /profissionais?naoencontrado=1');
+    exit;
+}
+
 $erros = [];
 $servicos = [];
+$servicosAtendidos = [];
 
 try {
     $servicos = listarServicosParaSelecao($pdo);
+    $servicosAtendidos = servicosDoProfissional($pdo, $idProfissional);
 } catch (PDOException $e) {
     $erros[] = 'Não foi possível carregar a lista de serviços.';
 }
 
 $valores = [
-    'nome' => '',
-    'especialidade' => '',
-    'servicos' => [],
+    'nome' => $profissional['nome'],
+    'especialidade' => $profissional['especialidade'],
+    'servicos' => $servicosAtendidos,
 ];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erros)) {
     $valores['nome'] = trim($_POST['nome'] ?? '');
     $valores['especialidade'] = trim($_POST['especialidade'] ?? '');
     $valores['servicos'] = array_map('intval', (array) ($_POST['servicos'] ?? []));
@@ -51,38 +71,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erros)) {
         try {
-            criarProfissional($pdo, $valores['nome'], $valores['especialidade'], $servicosValidos);
+            atualizarProfissional($pdo, $idProfissional, $valores['nome'], $valores['especialidade'], $servicosValidos);
 
-            header('Location: /profissionais?criado=1');
+            header('Location: /profissionais?atualizado=1');
             exit;
         } catch (PDOException $e) {
-            $erros[] = 'Não foi possível cadastrar o profissional, tente novamente.';
+            $erros[] = 'Não foi possível salvar as alterações, tente novamente.';
         }
     }
 }
-
-$mensagens = mensagensDeRetorno($_GET, [
-    'criado' => ['tipo' => 'success', 'texto' => 'Profissional cadastrado com sucesso.'],
-]);
 ?>
 
 <?php
-$tituloPagina = 'Cadastrar Profissional';
+$tituloPagina = 'Editar Profissional';
 $usarFormularios = true;
 include __DIR__ . '/../../../includes/admin-head.php';
 ?>
-    <?php $paginaAdminAtiva = 'profissionais-cadastrar'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
+    <?php $paginaAdminAtiva = 'profissionais'; include __DIR__ . '/../../../includes/sidebar.php'; ?>
 
     <header class="admin-topbar">
         <div>
-            <h1 class="admin-topbar-titulo">Cadastrar Profissional</h1>
-            <p class="admin-topbar-subtitulo">Formulário com validação de campos obrigatórios</p>
+            <h1 class="admin-topbar-titulo">Editar Profissional</h1>
+            <p class="admin-topbar-subtitulo">
+                Alterando o cadastro de <?php echo htmlspecialchars($profissional['nome']); ?>
+            </p>
         </div>
     </header>
 
     <div class="admin-container">
-        <?php include __DIR__ . '/../../../includes/alertas.php'; ?>
-
         <?php if (!empty($erros)): ?>
         <div class="alert alert-danger" role="alert">
             <ul class="mb-0">
@@ -94,7 +110,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
         <?php endif; ?>
 
         <div class="superficie p-4 p-md-5">
-            <form method="POST" action="/profissionais/cadastrar" data-parsley-validate="">
+            <form method="POST" action="/profissionais/editar?id=<?php echo $idProfissional; ?>" data-parsley-validate="">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="nome" class="form-label">Nome completo</label>
@@ -132,7 +148,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                         </p>
 
                         <?php if (empty($servicos)): ?>
-                        <p class="mb-0">Nenhum serviço cadastrado. Cadastre um serviço antes do profissional.</p>
+                        <p class="mb-0">Nenhum serviço cadastrado.</p>
                         <?php else: ?>
                         <div class="row g-2">
                             <?php foreach ($servicos as $servico): ?>
@@ -158,7 +174,7 @@ include __DIR__ . '/../../../includes/admin-head.php';
                 </div>
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <a href="/profissionais" class="btn-marca btn-marca--contorno btn-marca--pequeno"><i class="ph ph-arrow-left"></i> Voltar</a>
-                    <button type="submit" class="btn-marca btn-marca--pequeno">Cadastrar profissional <i class="ph ph-user-plus"></i></button>
+                    <button type="submit" class="btn-marca btn-marca--pequeno">Salvar <i class="ph ph-floppy-disk"></i></button>
                 </div>
             </form>
         </div>

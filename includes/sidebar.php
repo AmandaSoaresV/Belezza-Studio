@@ -17,6 +17,9 @@
       <a href="/servicos" class="admin-nav-link <?php echo $paginaAdminAtiva === 'servicos' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-scissors"></i> Serviços
       </a>
+      <a href="/profissionais" class="admin-nav-link <?php echo $paginaAdminAtiva === 'profissionais' ? 'admin-nav-link--ativo' : ''; ?>">
+        <i class="ph ph-identification-badge"></i> Profissionais
+      </a>
       <a href="/usuarios" class="admin-nav-link <?php echo $paginaAdminAtiva === 'usuarios' ? 'admin-nav-link--ativo' : ''; ?>">
         <i class="ph ph-users"></i> Usuários
       </a>

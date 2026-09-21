@@ -100,9 +100,19 @@ switch ($page) {
         require_once __DIR__ . '/../app/views/agendamentos/editar.php';
         break;
 
+    case 'profissionais':
+        exigirAdmin();
+        require_once __DIR__ . '/../app/views/profissionais/index.php';
+        break;
+
     case 'profissionais/cadastrar':
         exigirAdmin();
         require_once __DIR__ . '/../app/views/profissionais/cadastrar.php';
+        break;
+
+    case 'profissionais/editar':
+        exigirAdmin();
+        require_once __DIR__ . '/../app/views/profissionais/editar.php';
         break;
 
     default:
