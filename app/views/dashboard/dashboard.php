@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../../includes/agendamentos.php';
 $statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $acao = $_POST['acao'] ?? 'excluir';
     $idParaExcluir = isset($_POST['id_agendamento']) ? (int) $_POST['id_agendamento'] : 0;
     $paginaDeOrigem = isset($_POST['pagina']) ? max(1, (int) $_POST['pagina']) : 1;
     $statusDeOrigem = isset($_POST['status']) && in_array($_POST['status'], $statusPermitidos, true)
@@ -29,11 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        if ($acao === 'concluir') {
+            if (!in_array($agendamentoParaExcluir['status'], ['pendente', 'confirmado'], true)) {
+                header('Location: ' . $voltarPara . '&naopodeconcluir=1');
+                exit;
+            }
+
+            concluirAgendamento($pdo, $idParaExcluir);
+            header('Location: ' . $voltarPara . '&concluido=1');
+            exit;
+        }
+
         excluirAgendamento($pdo, $idParaExcluir);
         header('Location: ' . $voltarPara . '&excluido=1');
         exit;
     } catch (PDOException $e) {
-        header('Location: ' . $voltarPara . '&erroexclusao=1');
+        header('Location: ' . $voltarPara . ($acao === 'concluir' ? '&erroconcluir=1' : '&erroexclusao=1'));
         exit;
     }
 }
@@ -52,6 +64,9 @@ $mensagens = mensagensDeRetorno($_GET, [
     'excluido' => ['tipo' => 'success', 'texto' => 'Agendamento excluído com sucesso.'],
     'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Agendamento não encontrado.'],
     'erroexclusao' => ['tipo' => 'danger', 'texto' => 'Não foi possível excluir o agendamento, tente novamente.'],
+    'concluido' => ['tipo' => 'success', 'texto' => 'Agendamento marcado como concluído. A receita já entra no painel.'],
+    'naopodeconcluir' => ['tipo' => 'warning', 'texto' => 'Só agendamentos pendentes ou confirmados podem ser concluídos.'],
+    'erroconcluir' => ['tipo' => 'danger', 'texto' => 'Não foi possível concluir o agendamento, tente novamente.'],
 ]);
 
 $totalHoje = 0;
@@ -370,6 +385,30 @@ include __DIR__ . '/../../../includes/admin-head.php';
                       >
                         <i class="ph ph-pencil"></i>
                       </a>
+
+                      <?php if (in_array($agendamento['status'], ['pendente', 'confirmado'], true)): ?>
+                      <form
+                        method="POST"
+                        action="/dashboard"
+                        class="d-inline"
+                        data-confirmar-acao="Marcar como concluído?"
+                        data-confirmar-detalhe="<?php echo htmlspecialchars($agendamento['nome_servico']); ?> de <?php echo htmlspecialchars($agendamento['nome_cliente']); ?>. O valor do serviço passa a contar na receita."
+                        data-confirmar-botao="Concluir"
+                      >
+                        <input type="hidden" name="acao" value="concluir">
+                        <input type="hidden" name="id_agendamento" value="<?php echo $agendamento['id_agendamento']; ?>">
+                        <input type="hidden" name="pagina" value="<?php echo $paginaAtual; ?>">
+                        <input type="hidden" name="status" value="<?php echo htmlspecialchars((string) $statusFiltro); ?>">
+                        <button
+                          type="submit"
+                          class="btn btn-outline-success btn-sm"
+                          aria-label="Marcar agendamento como concluído"
+                          title="Marcar como concluído"
+                        >
+                          <i class="ph ph-check-circle"></i>
+                        </button>
+                      </form>
+                      <?php endif; ?>
 
                       <form
                         method="POST"
