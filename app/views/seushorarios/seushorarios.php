@@ -20,8 +20,11 @@
       SELECT
         id_agendamento,
         nome_cliente,
+        nome_profissional,
+        especialidade_profissional,
         data_hora_servico,
         nome_servico,
+        observacao,
         status
       FROM vw_agendamentos_completos
       WHERE id_cliente = :id_cliente
@@ -87,6 +90,8 @@
           $classeStatus = 'status-chip--' . $status;
           $podeCancelar = in_array($status, ['pendente', 'confirmado'], true)
               && !dataHoraJaPassou($agendamentos['data_hora_servico']);
+          $quando = strtotime($agendamentos['data_hora_servico']);
+          $observacao = trim((string) ($agendamentos['observacao'] ?? ''));
         ?>
 
         <div class="superficie cartao-horario mb-4">
@@ -94,15 +99,28 @@
 
           <div class="cartao-horario-corpo">
             <div>
-              <h3 class="cartao-horario-servico"><?php echo $agendamentos['nome_servico']; ?></h3>
+              <h3 class="cartao-horario-servico"><?php echo htmlspecialchars($agendamentos['nome_servico']); ?></h3>
               <p class="cartao-horario-data">
                 <i class="ph ph-clock"></i>
-                <?php echo $agendamentos['data_hora_servico']; ?>
+                <?php echo date('d/m/Y', $quando); ?> às <?php echo date('H:i', $quando); ?>
               </p>
               <p class="cartao-horario-cliente">
                 <i class="ph ph-user"></i>
-                <?php echo $agendamentos['nome_cliente']; ?>
+                <?php echo htmlspecialchars($agendamentos['nome_cliente']); ?>
               </p>
+              <p class="cartao-horario-cliente">
+                <i class="ph ph-scissors"></i>
+                <?php echo htmlspecialchars($agendamentos['nome_profissional']); ?>
+                <span class="text-body-secondary">
+                  &mdash; <?php echo htmlspecialchars($agendamentos['especialidade_profissional']); ?>
+                </span>
+              </p>
+              <?php if ($observacao !== ''): ?>
+              <p class="cartao-horario-cliente">
+                <i class="ph ph-note"></i>
+                <?php echo htmlspecialchars($observacao); ?>
+              </p>
+              <?php endif; ?>
             </div>
 
             <div class="cartao-horario-acoes">
