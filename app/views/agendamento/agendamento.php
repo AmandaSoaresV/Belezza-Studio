@@ -5,6 +5,7 @@
     require_once __DIR__ . '/../../../includes/profissionais.php';
     require_once __DIR__ . '/../../../includes/usuarios.php';
     require_once __DIR__ . '/../../../includes/agendamentos.php';
+    require_once __DIR__ . '/../../../includes/horarios.php';
     require_once __DIR__ . '/../../../includes/sessao.php';
 
     $idCliente = usuarioLogado()['id_usuario'];
@@ -53,6 +54,13 @@
 
         if ($dataHora === null) {
             $erros[] = 'Escolha uma data e um horário válidos.';
+        }
+
+        if (empty($erros)) {
+            $erros = array_merge(
+                $erros,
+                validarHorarioDoAgendamento($pdo, $idProfissional, $idServico, $dataHora)
+            );
         }
 
         if (empty($erros)) {
@@ -201,6 +209,7 @@
                     id="data"
                     name="data"
                     value="<?php echo htmlspecialchars($valores['data']); ?>"
+                    min="<?php echo date('Y-m-d'); ?>"
                     required
                     data-parsley-group="passo2"
                     data-parsley-required-message="Preencha este campo"
@@ -213,18 +222,7 @@
                   </label>
 
                   <div class="d-flex flex-wrap gap-2" id="horarios">
-                    <button type="button" class="botao-horario botao-horario--livre">09:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">09:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">10:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">10:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">11:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">11:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">14:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">14:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">15:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">15:30</button>
-                    <button type="button" class="botao-horario botao-horario--livre">16:00</button>
-                    <button type="button" class="botao-horario botao-horario--livre">16:30</button>
+                    <p class="texto-lead mb-0 aviso-horarios">Escolha o serviço e o profissional primeiro.</p>
                   </div>
                   <input
                     type="hidden"
@@ -232,6 +230,7 @@
                     id="horarioEscolhido"
                     value="<?php echo htmlspecialchars($valores['horario']); ?>"
                     data-parsley-group="passo2"
+                    data-parsley-excluded="false"
                     required
                     data-parsley-required-message="Escolha um horário"
                   />
@@ -295,6 +294,7 @@
 
     <?php include __DIR__ . '/../../../includes/form-validacao-foot.php'; ?>
     <script src="/assets/js/profissional-por-servico.js"></script>
+    <script src="/assets/js/horarios-disponiveis.js"></script>
     <script src="/assets/js/agendamento.js"></script>
 
    <?php

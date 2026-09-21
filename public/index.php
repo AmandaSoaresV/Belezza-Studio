@@ -13,6 +13,11 @@ switch ($page) {
         require_once __DIR__ . '/../api/agendamento.php';
         exit;
 
+    case 'api/horarios':
+        exigirLoginNaApi();
+        require_once __DIR__ . '/../api/horarios.php';
+        exit;
+
     case 'api/servico':
     case 'api/servicos':
         require_once __DIR__ . '/../api/servico.php';
@@ -78,6 +83,11 @@ switch ($page) {
     case 'servicos/editar':
         exigirAdmin();
         require_once __DIR__ . '/../app/views/servicos/editar.php';
+        break;
+
+    case 'agendamentos/cancelar':
+        exigirLogin();
+        require_once __DIR__ . '/../app/views/agendamentos/cancelar.php';
         break;
 
     case 'agendamentos/cadastrar':

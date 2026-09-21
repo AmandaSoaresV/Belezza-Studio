@@ -39,17 +39,8 @@ $(document).ready(function () {
     mostrarEtapa(Number(etapaAtual.data('etapa')) - 1);
   });
 
-  var horarios = $('.botao-horario--livre');
-  var horarioEscolhido = $('#horarioEscolhido');
-
-  horarios.on('click', function () {
-    horarios.removeClass('botao-horario--selecionado');
-    $(this).addClass('botao-horario--selecionado');
-    horarioEscolhido.val($(this).text().trim());
-
-    var campoHorario = horarioEscolhido.parsley();
-    if (campoHorario) campoHorario.reset();
-  });
+  // A seleção de horário vive em horarios-disponiveis.js, que monta a grade
+  // do dia sob demanda e usa evento delegado (os botões não existem no load).
 
   form.on('submit', function (evento) {
     if (parsleyForm && !parsleyForm.validate()) {

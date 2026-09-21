@@ -48,7 +48,7 @@
   };
 
   document.addEventListener('submit', function (evento) {
-    var formulario = evento.target.closest('form[data-confirmar-exclusao]');
+    var formulario = evento.target.closest('form[data-confirmar-exclusao], form[data-confirmar-acao]');
 
     if (!formulario || formulario.dataset.confirmado === '1') {
       return;
@@ -56,13 +56,15 @@
 
     evento.preventDefault();
 
+    var ehExclusao = typeof formulario.dataset.confirmarExclusao !== 'undefined';
+
     Swal.fire({
-      title: formulario.dataset.confirmarExclusao,
+      title: ehExclusao ? formulario.dataset.confirmarExclusao : formulario.dataset.confirmarAcao,
       text: formulario.dataset.confirmarDetalhe || 'Essa ação não pode ser desfeita.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Excluir',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: formulario.dataset.confirmarBotao || (ehExclusao ? 'Excluir' : 'Confirmar'),
+      cancelButtonText: formulario.dataset.confirmarVoltar || 'Cancelar',
       confirmButtonColor: CORES.excluir,
       cancelButtonColor: CORES.cancelar,
       reverseButtons: true,

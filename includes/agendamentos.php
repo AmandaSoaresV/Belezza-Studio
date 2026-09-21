@@ -34,6 +34,14 @@ function excluirAgendamento(PDO $pdo, int $idAgendamento): void
     $stmt->execute([$idAgendamento]);
 }
 
+function cancelarAgendamento(PDO $pdo, int $idAgendamento): void
+{
+    $stmt = $pdo->prepare(
+        "UPDATE agendamentos SET status = 'cancelado', updated_at = NOW() WHERE id_agendamento = ?"
+    );
+    $stmt->execute([$idAgendamento]);
+}
+
 function atualizarAgendamento(PDO $pdo, int $idAgendamento, array $valores): void
 {
     $sql = <<<SQL

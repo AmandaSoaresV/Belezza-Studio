@@ -80,6 +80,18 @@ function exigirAdmin(): void
     }
 }
 
+function exigirLoginNaApi(): void
+{
+    if (estaLogado()) {
+        return;
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(401);
+    echo json_encode(['error' => 'Faça login para continuar.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 function exigirAdminNaApi(): void
 {
     if (ehAdmin()) {

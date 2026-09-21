@@ -1,6 +1,7 @@
   <?php
     require_once __DIR__ . '/../../../api/conexao.php';
     require_once __DIR__ . '/../../../includes/app.php';
+    require_once __DIR__ . '/../../../includes/horarios.php';
     require_once __DIR__ . '/../../../includes/sessao.php';
 
     $idCliente = usuarioLogado()['id_usuario'];
@@ -8,10 +9,16 @@
     $mensagens = mensagensDeRetorno($_GET, [
         'criado' => ['tipo' => 'success', 'texto' => 'Agendamento solicitado com sucesso. Ele ficará pendente até a confirmação do salão.'],
         'semacesso' => ['tipo' => 'warning', 'texto' => 'Essa área é restrita aos administradores.'],
+        'cancelado' => ['tipo' => 'success', 'texto' => 'Agendamento cancelado.'],
+        'naopodecancelar' => ['tipo' => 'warning', 'texto' => 'Esse agendamento não pode mais ser cancelado.'],
+        'horariopassou' => ['tipo' => 'warning', 'texto' => 'Esse horário já passou. Fale com a recepção do salão.'],
+        'naoencontrado' => ['tipo' => 'warning', 'texto' => 'Agendamento não encontrado.'],
+        'errocancelar' => ['tipo' => 'danger', 'texto' => 'Não foi possível cancelar agora, tente novamente.'],
     ]);
 
     $sqlSeusHorarios = <<<CONSULTA
       SELECT
+        id_agendamento,
         nome_cliente,
         data_hora_servico,
         nome_servico,
@@ -78,6 +85,8 @@
         <?php
           $status = $agendamentos['status'];
           $classeStatus = 'status-chip--' . $status;
+          $podeCancelar = in_array($status, ['pendente', 'confirmado'], true)
+              && !dataHoraJaPassou($agendamentos['data_hora_servico']);
         ?>
 
         <div class="superficie cartao-horario mb-4">
@@ -104,12 +113,23 @@
               <div class="d-flex flex-column flex-sm-row gap-2">
 
                 <?php if ($status == 'confirmado'): ?>
-                  <button
-                    type="button"
-                    class="btn-marca btn-marca--contorno btn-marca--pequeno">
-                    <i class="ph ph-x-circle"></i>
-                     Cancelar
-                  </button>
+                  <?php if ($podeCancelar): ?>
+                  <form
+                    method="POST"
+                    action="/agendamentos/cancelar"
+                    class="d-inline"
+                    data-confirmar-acao="Cancelar este agendamento?"
+                    data-confirmar-detalhe="<?php echo htmlspecialchars($agendamentos['nome_servico']); ?> &mdash; essa ação não pode ser desfeita."
+                    data-confirmar-botao="Sim, cancelar"
+                    data-confirmar-voltar="Voltar"
+                  >
+                    <input type="hidden" name="id_agendamento" value="<?php echo (int) $agendamentos['id_agendamento']; ?>">
+                    <button type="submit" class="btn-marca btn-marca--contorno btn-marca--pequeno">
+                      <i class="ph ph-x-circle"></i>
+                      Cancelar
+                    </button>
+                  </form>
+                  <?php endif; ?>
 
                 <?php elseif ($status == 'pendente'): ?>
                   <a
@@ -121,12 +141,23 @@
                     <i class="ph ph-whatsapp-logo"></i> Confirmar no WhatsApp
                   </a>
 
-                  <button
-                   type="button"
-                   class="btn-marca btn-marca--contorno btn-marca--pequeno">
-                    <i class="ph ph-x-circle"></i>
-                     Cancelar
-                  </button>
+                  <?php if ($podeCancelar): ?>
+                  <form
+                    method="POST"
+                    action="/agendamentos/cancelar"
+                    class="d-inline"
+                    data-confirmar-acao="Cancelar este agendamento?"
+                    data-confirmar-detalhe="<?php echo htmlspecialchars($agendamentos['nome_servico']); ?> &mdash; essa ação não pode ser desfeita."
+                    data-confirmar-botao="Sim, cancelar"
+                    data-confirmar-voltar="Voltar"
+                  >
+                    <input type="hidden" name="id_agendamento" value="<?php echo (int) $agendamentos['id_agendamento']; ?>">
+                    <button type="submit" class="btn-marca btn-marca--contorno btn-marca--pequeno">
+                      <i class="ph ph-x-circle"></i>
+                      Cancelar
+                    </button>
+                  </form>
+                  <?php endif; ?>
 
                 <?php elseif ($status == 'concluido'): ?>
                   <button

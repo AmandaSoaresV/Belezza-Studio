@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../../includes/agendamentos.php';
 require_once __DIR__ . '/../../../includes/usuarios.php';
 require_once __DIR__ . '/../../../includes/profissionais.php';
 require_once __DIR__ . '/../../../includes/servicos.php';
+require_once __DIR__ . '/../../../includes/horarios.php';
 
 $statusPermitidos = ['pendente', 'confirmado', 'cancelado', 'concluido'];
 
@@ -69,6 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erros)) {
 
     if (mb_strlen($valores['observacao']) > 500) {
         $erros[] = 'A observação deve ter no máximo 500 caracteres.';
+    }
+
+    if (empty($erros)) {
+        // O admin pode registrar encaixes fora do expediente, mas nunca dois
+        // atendimentos do mesmo profissional no mesmo horário.
+        $erros = array_merge($erros, validarHorarioDoAgendamento(
+            $pdo,
+            $idProfissional,
+            $idServico,
+            $dataHora,
+            0,
+            false
+        ));
     }
 
     if (empty($erros)) {
